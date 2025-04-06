@@ -7,26 +7,45 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/MedicalCenterRegistration.styles.css" asp-append-version="true" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar-lg navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 mt-1">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MedicalCenterRegistration</a>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                            <i style="color: #ff5f72; font-size: 32px;" class="bi bi-heart-pulse"></i>
+                            <span style="font-size: 36px;color: #ff5f72; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem;"><span>MEDI</span><span style="color: #235ecd">NOW</span></span>
+                        </a>
+                    </div>
+                    <span class="gradient-line"></span>
+                    <partial name="_LoginPartial" />
+                </div>
+
+
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav sections flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            @* TODO links *@
+                            <div class="d-flex">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Register Your Visit</a>
+                            </div>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>

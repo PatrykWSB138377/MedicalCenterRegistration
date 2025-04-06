@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj": {}
+    "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj": {
+    "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj",
+        "projectUniqueName": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj",
         "projectName": "MedicalCenterRegistration",
-        "projectPath": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj",
+        "projectPath": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration.csproj",
         "packagesPath": "C:\\Users\\Patryk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\MedicalCenterRegistration\\obj\\",
+        "outputPath": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Patryk\\AppData\\Roaming\\NuGet\\NuGet.Config",
