@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Ofl2Khg7RRkXcDvOhSCmWm8UtMkTRWLpshHtMqUOfvA=",
+  "Hash": "zbffAtdNj86xDVmYsGVMccE7Z6P1kBZAx1ZfWkHNOCA=",
   "Source": "MedicalCenterRegistration",
   "BasePath": "_content/MedicalCenterRegistration",
   "Mode": "Default",
@@ -1193,6 +1193,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\MedicalCenterRegistration.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\navbar.css",
+      "SourceId": "MedicalCenterRegistration",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\",
+      "BasePath": "_content/MedicalCenterRegistration",
+      "RelativePath": "css/navbar.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\navbar.css"
     },
     {
       "Identity": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\site.css",
