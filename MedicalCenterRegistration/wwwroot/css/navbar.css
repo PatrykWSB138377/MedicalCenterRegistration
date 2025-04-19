@@ -8,11 +8,12 @@
 }
 
 
-/* BOOTSTRAP OVERRIDES */
-.navbar-lg {
-    margin-inline: var(--global-margin) !important;
+.navbar-inner {
+    margin-inline: auto;
+    max-width: var(--global-max-width);
 }
 
+/* BOOTSTRAP OVERRIDES */
 .navbar.border-bottom {
     border-bottom: 1px solid var(--color-secondary) !important;
 }

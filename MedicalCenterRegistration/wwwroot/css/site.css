@@ -26,6 +26,7 @@ html {
 html {
     position: relative;
     min-height: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -34,11 +35,13 @@ body {
 }
 
 .app {
-    margin-inline: auto;
-    max-width: var(--global-max-width);
+
 }
 
 .content {
+    margin-inline: auto;
+    max-width: var(--global-max-width);
+    max-width: calc(var(--global-max-width) - var(--global-margin);
     margin-top: 48px;
     margin-inline: calc(24px + var(--global-margin)) !important;
 }

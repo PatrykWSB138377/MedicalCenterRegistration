@@ -11,10 +11,9 @@
 using System;
 using System.Reflection;
 
-[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("aspnet-MedicalCenterRegistration-db180f46-4bec-433b-aff0-b245e2c3cdf8")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("MedicalCenterRegistration")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5c7a9854ac236d07ebf5bd8ac0db3f38f46d95f")]
 [assembly: System.Reflection.AssemblyProductAttribute("MedicalCenterRegistration")]

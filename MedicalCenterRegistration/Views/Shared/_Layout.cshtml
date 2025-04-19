@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/navbar.css" rel="stylesheet" />
+    <link href="~/css/carousel.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/MedicalCenterRegistration.styles.css" asp-append-version="true" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
@@ -16,16 +17,22 @@
 
 </head>
 <body>
-    <div class="app">
         <header class="navbar__header">
             <nav class="navbar-lg navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 mt-1">
-                <div class="container-fluid">
+                <div class="container-fluid navbar-inner">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                                 <i style="color: #ff5f72; font-size: 32px;" class="bi bi-heart-pulse"></i>
                                 <span style="font-size: 36px;color: #ff5f72; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem;"><span>MEDI</span><span style="color: #235ecd">NOW</span></span>
                             </a>
+                        </div>
+                        <span class="navbar__gradient-line"></span>
+                        <div class="container d-flex justify-content-center w-auto px-4">
+                            <span style="font-size: 18px;color: #ff5f72; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem; white-space: nowrap;">
+                                <span>SYSTEM REJESTRACJI</span>
+                                <span>ONLINE</span>
+                            </span>
                         </div>
                         <span class="navbar__gradient-line"></span>
                         <partial name="_LoginPartial" />
@@ -64,7 +71,6 @@
                 &copy; 2025 - MedicalCenterRegistration - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </div>
         </footer>
-    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
