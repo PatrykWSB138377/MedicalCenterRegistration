@@ -101,3 +101,10 @@
         .navbar-nav.auth .nav-link:hover {
             opacity: 0.85;
         }
+
+
+@media screen and (min-width: 1700px) {
+    .navbar-inner {
+        padding-inline: 0px !important;
+    }
+}
