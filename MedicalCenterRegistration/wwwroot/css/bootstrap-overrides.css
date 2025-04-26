@@ -1,0 +1,97 @@
+﻿
+:root {
+    --carousel-height: 500px;
+    --carousel-width: 100%;
+    --card-border-radius: 8px;
+}
+
+/* CARD OVERRDIES */
+
+.card {
+    border: 0px !important;
+    border-radius: var(--card-border-radius) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    background-color: var(--color-secondary-dark);
+}
+
+.card-body {
+    padding: 26px;
+    color: white;
+}
+
+
+/* CAROUSEL OVERRDIES */
+
+.carousel-section {
+    height: var(--carousel-height);
+    width: var(--carousel-width);
+}
+
+.carousel-inner {
+    border-radius: var(--card-border-radius) !important;
+}
+
+
+.carousel-item {
+    height: var(--carousel-height) !important;
+    max-width: var(--carousel-width) !important;
+}
+
+.carousel-image {
+    max-width: var(--carousel-width);
+    height: var(--carousel-height);
+    object-fit: cover;
+}
+
+.carousel-caption {
+    background-color: rgba(56, 131, 219, 0.8) !important;
+    border-radius: var(--card-border-radius) !important;
+}
+
+
+.carousel-item::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-box-shadow: inset 0px 0px 100px -10px rgba(66, 68, 90, 1);
+    -moz-box-shadow: inset 0px 0px 100px -10px rgba(66, 68, 90, 1);
+    box-shadow: inset 0px 0px 100px -10px rgba(66, 68, 90, 1);
+}
+
+.carousel-caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding-inline: 16px;
+}
+
+/* BUTTON OVERRDIES */
+
+
+.btn {
+    text-align: center;
+    transition: var(--std-transition-duration);
+    padding: var(--std-button-padding) !important;
+    border-radius: var(--std-button-radius) !important;
+}
+
+.btn.btn-primary {
+    color: white;
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+
+    .btn.btn-primary-dark {
+        color: white;
+        background-color: var(--color-primary-dark) !important;
+        border-color: var(--color-primary-dark) !important;
+    }
+
+
+.btn-cta:hover  {
+    padding-inline: 46px !important;
+}

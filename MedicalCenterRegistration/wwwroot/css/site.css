@@ -1,12 +1,20 @@
 :root {
+    --color-text-light: white;
     --color-neutral-1: #212529;
-    --color-primary: #ff5f72;
-    --color-primary-light: #fff6f7;
-    --color-secondary: #235ecd;
+    --color-primary: #4A90E2;
+    --color-primary-light: #70AEEE;
+    --color-primary-dark: #3883db;
+    --color-secondary: #50C9A7;
+    --color-secondary-light: #68C0AC;
+    --color-secondary-dark: #2eab8e;
+    --card-bg-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
     --global-margin: 24px;
     --global-max-width: 1648px;
+    --section-padding: 24px;
     --std-transition-duration: 0.15s;
     --std-transition-timing-fn: ease-in-outl;
+    --std-button-radius: 50px;
+    --std-button-padding: 8px 24px;
 }
 
 html {
@@ -26,6 +34,7 @@ html {
 html {
     position: relative;
     min-height: 100%;
+    overflow-x: hidden;
 }
 
 body {
@@ -34,11 +43,45 @@ body {
 }
 
 .app {
-    margin-inline: auto;
-    max-width: var(--global-max-width);
+
 }
 
 .content {
-    margin-top: 48px;
-    margin-inline: calc(24px + var(--global-margin)) !important;
+    max-width: calc(var(--global-max-width) - var(--global-margin));
+/*    margin-inline: auto;*/
+   /* padding-inline: calc(var(--section-padding) + 36px);*/
 }
+
+
+.text-color {
+    color: var(--color-neutral-1);
+}
+
+.primary-color {
+    color: var(--color-primary);
+}
+
+.light-color {
+    color: var(--color-text-light);
+}
+
+.card {
+    background-color: var(--card-bg-color);
+}
+
+
+.no-inline-p {
+    padding-inline: 0;
+}
+
+
+.content-section {
+    padding: 16px 48px;
+}
+
+@media screen and (min-width: 1700px) {
+    .content-section {
+        padding: 0px;
+    }
+}
+

@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/navbar.css" rel="stylesheet" />
+    <link href="~/css/bootstrap-overrides.css" rel="stylesheet" />
+    <link href="~/css/home.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/MedicalCenterRegistration.styles.css" asp-append-version="true" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
@@ -16,16 +18,22 @@
 
 </head>
 <body>
-    <div class="app">
         <header class="navbar__header">
             <nav class="navbar-lg navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 mt-1">
-                <div class="container-fluid">
+                <div class="navbar-inner">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i style="color: #ff5f72; font-size: 32px;" class="bi bi-heart-pulse"></i>
-                                <span style="font-size: 36px;color: #ff5f72; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem;"><span>MEDI</span><span style="color: #235ecd">NOW</span></span>
+                            <i class="bi bi-heart-pulse navbar-logo-icon"></i>
+                                <span class="navbar-logo"><span>MEDI</span><span class="second-part">NOW</span></span>
                             </a>
+                        </div>
+                        <span class="navbar__gradient-line"></span>
+                        <div class="container d-flex justify-content-center w-auto px-4">
+                        <span class="primary-color" style="font-size: 18px; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem; white-space: nowrap;">
+                                <span>CENTRUM MEDYCZNE</span>
+                                <span>W POZNANIU</span>
+                            </span>
                         </div>
                         <span class="navbar__gradient-line"></span>
                         <partial name="_LoginPartial" />
@@ -41,19 +49,22 @@
                             <li class="nav-item">
                                 @* TODO links *@
                                 <div class="d-flex">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Register Your Visit</a>
                                     <i class="bi bi-calendar-check navbar__calendar-icon"></i>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Umów Wizytę</a>
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">My Visits</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Moje Wizyty</a>
                             </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Kontakt</a>
+                        </li>
                         </ul>
                     </div>
                 </div>
             </nav>
         </header>
-        <div class="content container-fluid">
+        <div class="content container-fluid no-inline-p">
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
@@ -61,10 +72,9 @@
 
         <footer class="border-top footer text-muted">
             <div class="container">
-                &copy; 2025 - MedicalCenterRegistration - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                &copy; 2025 - Centrum Medyczne Medinow w Poznaniu
             </div>
         </footer>
-    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

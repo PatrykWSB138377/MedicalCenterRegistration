@@ -5,6 +5,22 @@
       "PackagePath": "staticwebassets\\MedicalCenterRegistration.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\angry-phone-call.jpg",
+      "PackagePath": "staticwebassets\\assets\\angry-phone-call.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\happy-staff.jpg",
+      "PackagePath": "staticwebassets\\assets\\happy-staff.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\professionals-staff.jpg",
+      "PackagePath": "staticwebassets\\assets\\professionals-staff.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\bootstrap-overrides.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap-overrides.css"
+    },
+    {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\navbar.css",
       "PackagePath": "staticwebassets\\css\\navbar.css"
     },
