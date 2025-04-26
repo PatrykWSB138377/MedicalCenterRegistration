@@ -1,0 +1,17 @@
+﻿.home__benefits-section {
+    padding: 32px 24px;
+    gap: 26px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+.home__benefit-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.home__benefit-icon {
+    font-size: 48px;
+}
