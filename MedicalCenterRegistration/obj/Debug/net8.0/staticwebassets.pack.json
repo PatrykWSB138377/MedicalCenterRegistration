@@ -9,16 +9,52 @@
       "PackagePath": "staticwebassets\\assets\\angry-phone-call.jpg"
     },
     {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\doctors.jpg",
+      "PackagePath": "staticwebassets\\assets\\doctors.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\documents-signing.jpg",
+      "PackagePath": "staticwebassets\\assets\\documents-signing.jpg"
+    },
+    {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\happy-staff.jpg",
       "PackagePath": "staticwebassets\\assets\\happy-staff.jpg"
     },
     {
-      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\professionals-staff.jpg",
-      "PackagePath": "staticwebassets\\assets\\professionals-staff.jpg"
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\login-page.jpg",
+      "PackagePath": "staticwebassets\\assets\\login-page.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\professional-staff-2.jpg",
+      "PackagePath": "staticwebassets\\assets\\professional-staff-2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\professional-staff.jpg",
+      "PackagePath": "staticwebassets\\assets\\professional-staff.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\register-page.jpg",
+      "PackagePath": "staticwebassets\\assets\\register-page.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\rennovation.jpg",
+      "PackagePath": "staticwebassets\\assets\\rennovation.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\unhappy-phone-call.jpg",
+      "PackagePath": "staticwebassets\\assets\\unhappy-phone-call.jpg"
     },
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\bootstrap-overrides.css",
       "PackagePath": "staticwebassets\\css\\bootstrap-overrides.css"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\home.css",
+      "PackagePath": "staticwebassets\\css\\home.css"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\identity.css",
+      "PackagePath": "staticwebassets\\css\\identity.css"
     },
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\navbar.css",
