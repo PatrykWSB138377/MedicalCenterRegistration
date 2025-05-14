@@ -40,6 +40,7 @@ html {
 body {
     margin-bottom: 60px;
     font-family: 'Roboto', sans-serif;
+    width: 100%;
 }
 
 .app {
@@ -49,7 +50,7 @@ body {
 .content {
     max-width: calc(var(--global-max-width) - var(--global-margin));
 /*    margin-inline: auto;*/
-   /* padding-inline: calc(var(--section-padding) + 36px);*/
+/*    padding-inline: calc(var(--section-padding) + 36px);*/
 }
 
 
@@ -59,6 +60,11 @@ body {
 
 .primary-color {
     color: var(--color-primary);
+}
+
+.secondary-color {
+    color: var(--color-secondary);
+
 }
 
 .light-color {
@@ -76,10 +82,14 @@ body {
 
 
 .content-section {
-    padding: 16px 48px;
+    padding: 16px;
 }
-
-@media screen and (min-width: 1700px) {
+@media (min-width: 1200px) {
+    .content-section {
+        padding: 16px 48px;
+    }
+}
+@media screen and (min-width: 1667px) {
     .content-section {
         padding: 0px;
     }
