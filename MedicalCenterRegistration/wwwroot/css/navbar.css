@@ -31,80 +31,9 @@
     max-width: var(--global-max-width);
     padding-inline: var(--section-padding);
 }
-
-/* BOOTSTRAP OVERRIDES */
-.navbar.border-bottom {
-    border-bottom: 1px solid var(--color-secondary) !important;
-}
-
-.navbar__sections {
-    margin-top: 12px;
-}
-
-
-    .navbar__sections .nav-item {
-        margin-right: 24px !important;
-        padding-bottom: 5px;
-        padding: 0.5rem;
-        border-bottom: 1px solid transparent;
-        transition-property: border-bottom;
-        transition-duration: var(--std-transition-duration);
-        transition-timing-function: var(--std-transition-timing-fn);
-    }
-
-.navbar__calendar-icon {
-    color: var(--color-primary);
-    font-size: 17px;
-    position: relative;
-    top: 1px;
-    transition-property: color;
-    transition-duration: var(--std-transition-duration);
-    transition-timing-function: var(--std-transition-timing-fn);
-}
-
-.navbar__sections .nav-link {
-    font-size: 18px;
-    padding: 0px;
-}
-
-
-
-
-.navbar__sections .nav-item:hover .navbar__calendar-icon {
-    color: var(--color-primary);
-}
-
-
-.navbar__sections .nav-item:hover {
-    border-bottom: 1px solid var(--color-primary) !important;
-}
-
-.navbar-nav.auth {
-    margin-left: 16px;
-    gap: 12px;
-}
-
-    .navbar-nav.auth .nav-item {
-        height: fit-content !important;
-    }
-
-     /*  nav auth buttons   */
-    .navbar-nav.auth .nav-link {
-        font-size: 16px;
-        color: var(--color-text-light) !important;
-        background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-        border-radius: var(--std-button-radius);
-        padding: var(--std-button-padding);
-        transition: opacity 0.2s;
-    }
-
-        .navbar-nav.auth .nav-link:hover {
-            opacity: 0.85;
-        }
-
-
 @media screen and (min-width: 1700px) {
     .navbar-inner {
         padding-inline: 0px !important;
     }
 }
+
