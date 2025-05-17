@@ -3,13 +3,13 @@
 
 namespace MedicalCenterRegistration.Models
 {
-    public class DoctorSpecializationAssignment
+    public class DoctorSpecialization
     {
         public int Id { get; set; }
-        public required int DoctorId { get; set; }
-        public required Doctor Doctor { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
 
-        public required int SpecializationId { get; set; }
-        public required Specialization Specialization { get; set; }
+        public int SpecializationId { get; set; }
+        public virtual Specialization Specialization { get; set; }
     }
 }

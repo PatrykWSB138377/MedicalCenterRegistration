@@ -8,15 +8,15 @@ namespace MedicalCenterRegistration.Models
         public int Id { get; set; }
 
 
-        public required int DoctorId { get; set; }
-        public required Doctor Doctor { get; set; }
+        public int DoctorId { get; set; }
+        public virtual Doctor Doctor { get; set; }
 
-        public required int PatientId { get; set; }
-        public required Patient Patient { get; set; }
+        public int PatientId { get; set; }
+        public virtual Patient Patient { get; set; }
 
 
-        public required int VisitScheduleId { get; set; }
-        public required VisitSchedule VisitSchedule { get; set; }
+        public int VisitScheduleId { get; set; }
+        public virtual VisitSchedule VisitSchedule { get; set; }
 
         //public required Status Status { get; set; }
 
