@@ -25,6 +25,31 @@ namespace MedicalCenterRegistration.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+
+        // GET: ChooseVisitType
+        public async Task<IActionResult> ChooseVisitType()
+        {
+            return View();
+        }
+
+        // POST: Visits
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChooseVisitType(string visitType)
+        {
+            if (string.IsNullOrEmpty(visitType))
+            {
+                ModelState.AddModelError("", "Please select a visit type.");
+                return View();
+            }
+
+            TempData["VisitType"] = visitType;
+
+            return RedirectToAction("Create");
+        }
+
+
+
         // GET: Visits/Details/5
         public async Task<IActionResult> Details(int? id)
         {

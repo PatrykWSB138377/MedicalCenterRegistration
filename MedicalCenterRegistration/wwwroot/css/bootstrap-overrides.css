@@ -205,3 +205,23 @@
         font-size: 36px;
     }
 }
+
+
+/* LSIT GROUP OVERRIDES */
+
+.list-group-item.active {
+    background-color: var(--color-primary-dark) !important;
+    border: 1px solid var(--color-primary-dark) !important;
+}
+
+.list-group-item:hover {
+   cursor: pointer;
+}
+
+.list-group-item.active .text-muted {
+    color: white !important;
+}
+
+.list-group-item.active .badge {
+   border: 1px solid black !important;
+}
