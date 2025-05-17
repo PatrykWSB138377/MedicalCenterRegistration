@@ -1,6 +1,7 @@
 ﻿
 :root {
-    --carousel-height: 500px;
+    --carousel-height: 550px;
+    --carousel-height-mobile: 350px;
     --carousel-width: 100%;
     --card-border-radius: 8px;
 }
@@ -15,17 +16,31 @@
 }
 
 .card-body {
-    padding: 26px;
+    padding: 24px;
     color: white;
+}
+
+@media (min-width: 992px) {
+    .card-body {
+        padding: 48px;
+    }
 }
 
 
 /* CAROUSEL OVERRDIES */
 
 .carousel-section {
-    height: var(--carousel-height);
+    height: var(--carousel-height-mobile);
     width: var(--carousel-width);
 }
+
+@media (min-width: 768px) {
+    .carousel-section {
+        height: var(--carousel-height);
+        width: var(--carousel-width);
+    }
+}
+
 
 .carousel-inner {
     border-radius: var(--card-border-radius) !important;
@@ -33,14 +48,26 @@
 
 
 .carousel-item {
-    height: var(--carousel-height) !important;
-    max-width: var(--carousel-width) !important;
+    height: var(--carousel-height-mobile);
+    width: var(--carousel-width);
+}
+@media (min-width: 768px) {
+    .carousel-item {
+        height: var(--carousel-height) !important;
+        max-width: var(--carousel-width) !important;
+    }
 }
 
 .carousel-image {
     max-width: var(--carousel-width);
-    height: var(--carousel-height);
+    height: var(--carousel-height-mobile);
     object-fit: cover;
+}
+@media (min-width: 768px) {
+    .carousel-image {
+        height: var(--carousel-height) !important;
+        max-width: var(--carousel-width) !important;
+    }
 }
 
 .carousel-caption {
@@ -79,11 +106,11 @@
     border-radius: var(--std-button-radius) !important;
 }
 
-.btn.btn-primary {
-    color: white;
-    background-color: var(--color-primary) !important;
-    border-color: var(--color-primary) !important;
-}
+    .btn.btn-primary {
+        color: white;
+        background-color: var(--color-primary) !important;
+        border-color: var(--color-primary) !important;
+    }
 
     .btn.btn-primary-dark {
         color: white;
@@ -92,6 +119,89 @@
     }
 
 
-.btn-cta:hover  {
+.btn-cta:hover {
     padding-inline: 46px !important;
+}
+
+/* NAVBAR OVERRIDES */
+
+.navbar.border-bottom {
+    border-bottom: 1px solid var(--color-secondary) !important;
+}
+
+.navbar__sections {
+    margin-top: 12px;
+}
+
+
+    .navbar__sections .nav-item {
+        margin-right: 24px !important;
+        padding-bottom: 5px;
+        padding: 0.5rem;
+        border-bottom: 1px solid transparent;
+        transition-property: border-bottom;
+        transition-duration: var(--std-transition-duration);
+        transition-timing-function: var(--std-transition-timing-fn);
+    }
+
+.navbar__calendar-icon {
+    color: var(--color-primary);
+    font-size: 17px;
+    position: relative;
+    top: 1px;
+    transition-property: color;
+    transition-duration: var(--std-transition-duration);
+    transition-timing-function: var(--std-transition-timing-fn);
+}
+
+.navbar__sections .nav-link {
+    font-size: 18px;
+    padding: 0px;
+}
+
+
+
+
+.navbar__sections .nav-item:hover .navbar__calendar-icon {
+    color: var(--color-primary);
+}
+
+
+.navbar__sections .nav-item:hover {
+    border-bottom: 1px solid var(--color-primary) !important;
+}
+
+.navbar-nav.auth {
+    margin-left: 16px;
+    gap: 12px;
+}
+
+    .navbar-nav.auth .nav-item {
+        height: fit-content !important;
+    }
+
+    /*  nav auth buttons   */
+    .navbar-nav.auth .nav-link {
+        font-size: 16px;
+        color: var(--color-text-light) !important;
+        background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+        border-radius: var(--std-button-radius);
+        padding: var(--std-button-padding);
+        transition: opacity 0.2s;
+    }
+
+        .navbar-nav.auth .nav-link:hover {
+            opacity: 0.85;
+        }
+
+
+
+
+.navbar-logo, .navbar-brand i {
+    font-size: 28px;
+}
+@media screen and (min-width: 576px) {
+    .navbar-logo, .navbar-brand i {
+        font-size: 36px;
+    }
 }

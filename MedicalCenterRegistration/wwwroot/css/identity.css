@@ -4,11 +4,12 @@
 
 
 .identity-login, .identity-register {
-margin-top: 10em;
+    margin-top: 5em;
     background-color: var(--bs-light);
     padding: 32px 32px;
     border-radius: 16px;
     max-width: 600px;
+    margin-bottom: 5em;
 }
 
 

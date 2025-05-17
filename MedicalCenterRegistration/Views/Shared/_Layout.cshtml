@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
     <title>@ViewData["Title"] - MedicalCenterRegistration</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -19,63 +19,72 @@
 
 </head>
 <body>
-        <header class="navbar__header">
-            <nav class="navbar-lg navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 pt-1">
-                <div class="navbar-inner">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+    <header class="navbar__header">
+        <nav class="navbar-lg navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3 pt-1">
+            <div class="navbar-inner">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                             <i class="bi bi-heart-pulse navbar-logo-icon"></i>
-                                <span class="navbar-logo"><span>MEDI</span><span class="second-part">NOW</span></span>
-                            </a>
-                        </div>
+                            <span class="navbar-logo"><span>MEDI</span><span class="second-part">NOW</span></span>
+                        </a>
+                    </div>
+                    <div class="d-none d-lg-flex w-100 align-items-center px-2">
                         <span class="navbar__gradient-line"></span>
                         <div class="container d-flex justify-content-center w-auto px-4">
-                        <span class="primary-color" style="font-size: 18px; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem; white-space: nowrap;">
+                            <span class="primary-color" style="font-size: 18px; font-family: 'Roboto Condensed', sans-serif; letter-spacing: 0.1rem; white-space: nowrap;">
                                 <span>CENTRUM MEDYCZNE</span>
                                 <span>W POZNANIU</span>
                             </span>
                         </div>
                         <span class="navbar__gradient-line"></span>
-                        <partial name="_LoginPartial" />
                     </div>
+                    <partial name="_LoginPartial" />
+                </div>
 
 
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                        <ul class="navbar-nav navbar__sections flex-grow-1">
-                            <li class="nav-item">
-                                @* TODO links *@
-                                <div class="d-flex">
-                                    <i class="bi bi-calendar-check navbar__calendar-icon"></i>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Umów Wizytę</a>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Moje Wizyty</a>
-                            </li>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav navbar__sections flex-grow-1">
+                        <li class="nav-item">
+                            @* TODO links *@
+                            <div class="d-flex">
+                                <i class="bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0"></i>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Umów Wizytę</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Moje Wizyty</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Kontakt</a>
                         </li>
-                        </ul>
-                    </div>
+                        <li class="nav-item d-block d-sm-none">
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="nav-link text-dark text-nowrap border-0 bg-white">
+                                    Wyloguj <i style="position: relative; top: 1px;" class="bi bi-box-arrow-right ms-1"></i>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </header>
-        <div class="content container-fluid no-inline-p">
-            <main role="main" class="pb-3">
-                @RenderBody()
-            </main>
-        </div>
-
-        <footer class="border-top footer text-muted bg-white">
-            <div class="container">
-                &copy; 2025 - Centrum Medyczne Medinow w Poznaniu
             </div>
-        </footer>
+        </nav>
+    </header>
+    <div class="content container-fluid no-inline-p">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted bg-white">
+        <div class="container">
+            &copy; 2025 - Centrum Medyczne Medinow w Poznaniu
+        </div>
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
