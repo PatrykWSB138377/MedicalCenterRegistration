@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\assets\\doctors.jpg"
     },
     {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\doctors\\adam.jpg",
+      "PackagePath": "staticwebassets\\assets\\doctors\\adam.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\doctors\\iga.jpg",
+      "PackagePath": "staticwebassets\\assets\\doctors\\iga.jpg"
+    },
+    {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\documents-signing.jpg",
       "PackagePath": "staticwebassets\\assets\\documents-signing.jpg"
     },
@@ -49,6 +57,10 @@
       "PackagePath": "staticwebassets\\css\\bootstrap-overrides.css"
     },
     {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\calendar.css",
+      "PackagePath": "staticwebassets\\css\\calendar.css"
+    },
+    {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\home.css",
       "PackagePath": "staticwebassets\\css\\home.css"
     },
@@ -63,6 +75,10 @@
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\time-picker.css",
+      "PackagePath": "staticwebassets\\css\\time-picker.css"
     },
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\favicon.ico",

@@ -22,7 +22,7 @@ namespace MedicalCenterRegistration.Models
         public required string LastName { get; set; }
 
         public required string UserId { get; set; }
-        public required IdentityUser User { get; set; }
+        public IdentityUser? User { get; set; }
 
 
         public DateTime CreatedAt { get; set; }

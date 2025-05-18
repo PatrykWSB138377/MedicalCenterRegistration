@@ -18,6 +18,7 @@ namespace MedicalCenterRegistration.Models
         public int VisitScheduleId { get; set; }
         public virtual VisitSchedule VisitSchedule { get; set; }
 
+        public string VisitType { get; set; }
         //public required Status Status { get; set; }
 
         public DateTime CreatedAt { get; set; }

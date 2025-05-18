@@ -1,8 +1,11 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +48,7 @@ namespace MedicalCenterRegistration.Controllers
 
             TempData["VisitType"] = visitType;
 
-            return RedirectToAction("Create");
+            return RedirectToAction(nameof(Create));
         }
 
 
@@ -74,9 +77,17 @@ namespace MedicalCenterRegistration.Controllers
         // GET: Visits/Create
         public IActionResult Create()
         {
-            ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "LastName");
-            ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "LastName");
-            ViewData["VisitScheduleId"] = new SelectList(_context.Set<VisitSchedule>(), "Id", "Id");
+            if (TempData["VisitType"] == null)
+            {
+                return RedirectToAction(nameof(ChooseVisitType));
+            }
+
+            TempData.Keep("VisitType");
+            ViewData["PatientId"] = 1; //TODO: add actual patient id
+
+            //ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "LastName");
+            //ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "LastName");
+            //ViewData["VisitScheduleId"] = new SelectList(_context.Set<VisitSchedule>(), "Id", "Id");
             return View();
         }
 
@@ -85,18 +96,72 @@ namespace MedicalCenterRegistration.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DoctorId,PatientId,VisitScheduleId,CreatedAt")] Visit visit)
+        public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitViewModel visitData)
         {
-            if (ModelState.IsValid)
+            if (TempData["VisitType"] == null)
             {
-                _context.Add(visit);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ChooseVisitType));
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "LastName", visit.DoctorId);
-            ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "LastName", visit.PatientId);
-            ViewData["VisitScheduleId"] = new SelectList(_context.Set<VisitSchedule>(), "Id", "Id", visit.VisitScheduleId);
-            return View(visit);
+
+            Console.WriteLine("visitData");
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visitData));
+
+            foreach (var key in Request.Form.Keys)
+            {
+                Console.WriteLine($"{key}: {Request.Form[key]}");
+            }
+
+
+
+            DateOnly visitDate = DateOnly.ParseExact(visitData.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            TimeOnly visitTimeStart = TimeOnly.ParseExact(visitData.Time, "HH:mm", CultureInfo.InvariantCulture);
+            TimeOnly visitTimeEnd = visitTimeStart.AddMinutes(30);
+            var visitSchedule = new VisitSchedule
+            {
+                VisitDate = visitDate,
+                VisitTimeStart = visitTimeStart,
+                VisitTimeEnd = visitTimeEnd
+            };
+
+
+            var isScheduleValid = Validator.TryValidateObject(visitSchedule, new ValidationContext(visitSchedule), null, true);
+
+            if (!isScheduleValid)
+            {
+                ModelState.AddModelError("", "Invalid schedule data.");
+                //return View(visitSchedule); should be like that?
+                return View();
+            }
+
+            // create schhedule
+            _context.VisitSchedule.Add(visitSchedule);
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(TempData));
+            var visit = new Visit
+            {
+                DoctorId = visitData.DoctorId,
+                Doctor = await _context.Doctor.FindAsync(visitData.DoctorId),
+                PatientId = visitData.PatientId,
+                Patient = await _context.Patient.FindAsync(visitData.PatientId),
+                VisitScheduleId = visitSchedule.Id,
+                VisitType = TempData["VisitType"]?.ToString(),
+                CreatedAt = DateTime.Now,
+            };
+
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visit));
+            Console.WriteLine("Creating visit...");
+
+            var isVisitValid = Validator.TryValidateObject(visit, new ValidationContext(visit), null, true);
+            if (isVisitValid)
+            {
+                Console.WriteLine("Visit is valid.");
+            }
+
+
+            _context.Visit.Add(visit);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Visits/Edit/5

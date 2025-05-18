@@ -56,14 +56,26 @@ namespace MedicalCenterRegistration.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,LastName,UserId,CreatedAt")] Doctor doctor)
+        public async Task<IActionResult> Create([Bind("Id,Name,LastName,UserId")] Doctor doctor)
         {
+            doctor.User = await _context.Users.FindAsync(doctor.UserId);
+            doctor.CreatedAt = DateTime.Now;
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(doctor));
+
+            foreach (var error in ModelState)
+            {
+                foreach (var subError in error.Value.Errors)
+                {
+                    Console.WriteLine($"Validation error for '{error.Key}': {subError.ErrorMessage}");
+                }
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            Console.WriteLine("NOT VALID");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", doctor.UserId);
             return View(doctor);
         }
