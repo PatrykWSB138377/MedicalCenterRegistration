@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ZD+qh09ihXZnABpBRKuBKthpx9nXEaU9O8/1/vyro18=",
+  "Hash": "XqGxgToT7kwZd0pP/gKKv7RI+pdmxY+MoG/wHPloQ9M=",
   "Source": "MedicalCenterRegistration",
   "BasePath": "_content/MedicalCenterRegistration",
   "Mode": "Default",
@@ -1554,6 +1554,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\time-picker.css"
+    },
+    {
+      "Identity": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\css\\visits.css",
+      "SourceId": "MedicalCenterRegistration",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\",
+      "BasePath": "_content/MedicalCenterRegistration",
+      "RelativePath": "css/visits.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\visits.css"
     },
     {
       "Identity": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\favicon.ico",
