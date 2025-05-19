@@ -3,9 +3,11 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Security.Claims;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +17,16 @@ namespace MedicalCenterRegistration.Controllers
     public class VisitsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly PatientService _patientService;
 
-        public VisitsController(ApplicationDbContext context)
+        public VisitsController(ApplicationDbContext context, PatientService patientService)
         {
             _context = context;
+            _patientService = patientService;
         }
 
         // GET: Visits
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Visit.Include(v => v.Doctor).Include(v => v.Patient).Include(v => v.VisitSchedule);
@@ -30,16 +35,25 @@ namespace MedicalCenterRegistration.Controllers
 
 
         // GET: ChooseVisitType
+        [Authorize]
         public async Task<IActionResult> ChooseVisitType()
         {
+            var hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
+            if (!hasPatientInfo)
+            {
+                return RedirectToAction("Create", "Patients");
+            }
+
             return View();
         }
 
         // POST: Visits
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChooseVisitType(string visitType)
         {
+
             if (string.IsNullOrEmpty(visitType))
             {
                 ModelState.AddModelError("", "Please select a visit type.");
@@ -75,7 +89,8 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Visits/Create
-        public IActionResult Create()
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
             if (TempData["VisitType"] == null)
             {
@@ -83,35 +98,54 @@ namespace MedicalCenterRegistration.Controllers
             }
 
             TempData.Keep("VisitType");
-            ViewData["PatientId"] = 1; //TODO: add actual patient id
 
-            //ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "LastName");
-            //ViewData["PatientId"] = new SelectList(_context.Patient, "Id", "LastName");
-            //ViewData["VisitScheduleId"] = new SelectList(_context.Set<VisitSchedule>(), "Id", "Id");
-            return View();
+            var patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (patient == null)
+            {
+                ModelState.AddModelError("", "Patient not found.");
+                return RedirectToAction("Create", "Patients");
+            }
+
+            var doctors = await _context.Doctor.Include(d => d.Image).ToListAsync();
+            var doctorIds = doctors.Select(d => d.Id).ToList();
+
+            var visits = await _context.Visit
+              .Where(v => doctorIds.Contains(v.DoctorId))
+              .Include(v => v.VisitSchedule)
+              .ToListAsync();
+
+            var doctorScheduledVisits = visits
+                .GroupBy(v => v.DoctorId)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(v => v.VisitSchedule).ToList()
+                );
+
+            var viewModel = new CreateVisitCreationViewModel
+            {
+                Doctors = doctors,
+                Patient = patient,
+                DoctorScheduledVisits = doctorScheduledVisits
+            };
+
+            return View(viewModel);
         }
 
         // POST: Visits/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitViewModel visitData)
+        public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitPayloadViewModel visitData)
         {
+            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visitData, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
+
             if (TempData["VisitType"] == null)
             {
                 return RedirectToAction(nameof(ChooseVisitType));
             }
-
-            Console.WriteLine("visitData");
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visitData));
-
-            foreach (var key in Request.Form.Keys)
-            {
-                Console.WriteLine($"{key}: {Request.Form[key]}");
-            }
-
-
 
             DateOnly visitDate = DateOnly.ParseExact(visitData.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             TimeOnly visitTimeStart = TimeOnly.ParseExact(visitData.Time, "HH:mm", CultureInfo.InvariantCulture);
@@ -129,7 +163,6 @@ namespace MedicalCenterRegistration.Controllers
             if (!isScheduleValid)
             {
                 ModelState.AddModelError("", "Invalid schedule data.");
-                //return View(visitSchedule); should be like that?
                 return View();
             }
 
@@ -137,25 +170,31 @@ namespace MedicalCenterRegistration.Controllers
             _context.VisitSchedule.Add(visitSchedule);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(TempData));
+            var patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            if (patient == null)
+            {
+                ModelState.AddModelError("", "Patient not found.");
+                return View();
+            }
+
             var visit = new Visit
             {
                 DoctorId = visitData.DoctorId,
                 Doctor = await _context.Doctor.FindAsync(visitData.DoctorId),
-                PatientId = visitData.PatientId,
-                Patient = await _context.Patient.FindAsync(visitData.PatientId),
+                PatientId = patient.Id,
+                Patient = patient,
                 VisitScheduleId = visitSchedule.Id,
                 VisitType = TempData["VisitType"]?.ToString(),
                 CreatedAt = DateTime.Now,
             };
 
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visit));
-            Console.WriteLine("Creating visit...");
 
             var isVisitValid = Validator.TryValidateObject(visit, new ValidationContext(visit), null, true);
-            if (isVisitValid)
+            if (!isVisitValid)
             {
-                Console.WriteLine("Visit is valid.");
+                ModelState.AddModelError("", "Invalid visit data.");
+                return View();
             }
 
 

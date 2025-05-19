@@ -30,7 +30,7 @@ namespace MedicalCenterRegistration.Data
                 .HasOne(v => v.Patient)
                 .WithMany()
                 .HasForeignKey(v => v.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.Doctor)
@@ -44,6 +44,7 @@ namespace MedicalCenterRegistration.Data
                 .HasForeignKey<Visit>(v => v.VisitScheduleId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
+        public DbSet<MedicalCenterRegistration.Models.Image> Image { get; set; } = default!;
 
     }
 }

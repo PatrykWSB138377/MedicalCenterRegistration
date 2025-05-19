@@ -2,7 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using MedicalCenterRegistration.Data;
+using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +16,12 @@ namespace MedicalCenterRegistration.Controllers
     public class DoctorsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public DoctorsController(ApplicationDbContext context)
+        public DoctorsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Doctors
@@ -26,6 +32,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,9 +52,10 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
             return View();
         }
 
@@ -55,29 +63,91 @@ namespace MedicalCenterRegistration.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,LastName,UserId")] Doctor doctor)
+        public async Task<IActionResult> Create(
+            [Bind("Email,Password,Name,LastName,Description,DateOfBirth,Sex,ImageFile")] CreateDoctorPayloadViewModel doctorData)
         {
-            doctor.User = await _context.Users.FindAsync(doctor.UserId);
-            doctor.CreatedAt = DateTime.Now;
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(doctor));
-
-            foreach (var error in ModelState)
+            if (!ModelState.IsValid)
             {
-                foreach (var subError in error.Value.Errors)
+                ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
+                return View(doctorData);
+            }
+
+            if (doctorData.ImageFile != null)
+            {
+                var fileName = Path.GetFileName(doctorData.ImageFile.FileName);
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    Console.WriteLine($"Validation error for '{error.Key}': {subError.ErrorMessage}");
+                    await doctorData.ImageFile.CopyToAsync(stream);
                 }
             }
-            if (ModelState.IsValid)
+
+            // create Image
+            var image = new Image
+            {
+                ContentType = doctorData.ImageFile.ContentType,
+                Base64Data = Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", doctorData.ImageFile.FileName))),
+            };
+
+            _context.Image.Add(image);
+
+            var user = new IdentityUser
+            {
+                UserName = doctorData.Email,
+                Email = doctorData.Email,
+                EmailConfirmed = true
+            };
+
+
+            var createUserResult = await _userManager.CreateAsync(user, doctorData.Password);
+
+            if (!createUserResult.Succeeded)
+            {
+                foreach (var error in createUserResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                    Console.WriteLine($"Identity error: {error.Description}");
+                }
+
+                Console.WriteLine("NOT SUCCEEDED");
+
+                ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
+                return View(doctorData);
+            }
+
+
+            await _userManager.AddToRoleAsync(user, "Doctor");
+
+            var doctor = new Doctor
+            {
+                Name = doctorData.Name,
+                LastName = doctorData.LastName,
+                DateOfBirth = doctorData.DateOfBirth,
+                Description = doctorData.Description,
+                Sex = doctorData.Sex,
+                CreatedAt = DateTime.Now,
+                UserId = user.Id,
+                ImageId = image.Id,
+                Image = image,
+            };
+
+            Console.WriteLine("CREATING DOCTOR");
+
+            try
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            Console.WriteLine("NOT VALID");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", doctor.UserId);
-            return View(doctor);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                ModelState.AddModelError(string.Empty, "Failed to create doctor.");
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Doctors/Edit/5

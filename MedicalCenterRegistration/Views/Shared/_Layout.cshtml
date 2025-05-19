@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -62,10 +70,19 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="ChooseVisitType">Umów Wizytę</a>
                             </div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="Index">Moje Wizyty</a>
-                        </li>
-                 @*         <li class="nav-item">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="Index">Moje Wizyty</a>
+                            </li>
+                        }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-action="Create" asp-controller="Doctors" asp-action="Index">Dodaj lekarza</a>
+                            </li>
+                        }
+                        @*         <li class="nav-item">
                              <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Kontakt</a>
                          </li> *@
                         <li class="nav-item d-block d-sm-none">

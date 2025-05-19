@@ -2,24 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using MedicalCenterRegistration.Data;
+using MedicalCenterRegistration.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
-static async Task SeedRolesAsync(IServiceProvider serviceProvider)
-{
-    var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-    string[] roles = { "Admin", "Receptionist", "Patient", "Doctor" };
-
-    foreach (var role in roles)
-    {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
-}
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,13 +21,19 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => { options.SignIn.Re
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<PatientService>();
+
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+//    .AddEntityFrameworkStores<ApplicationDbContext>()
+//    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await SeedRolesAsync(services);
+    await RolesSeeder.SeedRolesAsync(services);
+    await IdentitySeeder.SeedAdminAsync(services);
 }
 
 // Configure the HTTP request pipeline.

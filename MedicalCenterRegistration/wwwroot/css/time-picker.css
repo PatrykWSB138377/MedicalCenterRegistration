@@ -27,9 +27,14 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    .time-picker__time-slot.selected {
+    .time-picker__time-slot.selected  {
         background-color: var(--color-primary-dark);
         color: white;
         border-color: var(--color-primary);
     }
 
+
+    .time-picker__time-slot.disabled {
+        pointer-events: none;
+        opacity: 0.3;
+    }

@@ -1,52 +1,60 @@
-﻿@model MedicalCenterRegistration.Models.ViewModels.CreateVisitViewModel
+﻿@model MedicalCenterRegistration.Models.ViewModels.CreateVisitCreationViewModel
+@using MedicalCenterRegistration.Helpers
+
+@{
+    var doctors = Model.Doctors;
+
+    var startTime = new TimeSpan(8, 0, 0); 
+    var endTime = new TimeSpan(16, 0, 0); 
+    var timeSlots = new List<string>();
+    var interval = TimeSpan.FromMinutes(30);
+
+    for (var time = startTime; time <= endTime; time += interval)
+    {
+        timeSlots.Add(time.ToString(@"h\:mm")); 
+    }
+
+    var timeSlotsLength = timeSlots.Count;
+}
 
 
 <form asp-action="Create" class="p-2 p-sm-5">
     <h1>Wybierz lekarza oraz termin:</h1>
 
-    <input hidden name="PatientId" value="@ViewData["PatientId"]"/>
+
     <div class="row">
         <div class="col-xl-6 list-group">
-            <label style="gap: 12px;" id="DoctorId1Label" class="list-group-item list-group-item-action d-flex">
-                <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
-                    <img style="object-fit: cover;" class="w-100 h-100" src="~/assets/doctors/adam.jpg" />
-                </div>
-                <div>
-                    <input hidden type="radio" name="DoctorId" value="1" required />
-                    <div class="d-flex flex-column flex-sm-row justify-content-between w-100 mb-1 align-items-start align-items-sm-center">
-                        <div class="d-flex align-items: center">
-                            <h5 class="m-0 me-2">Adam Jankowski</h5>
-                            <span style="top: 1px;" class="position-relative text-muted">32 lata</span>
-                        </div>
+            @if (doctors != null)
+            {
+                @foreach (var doctor in doctors)
+                {
+                    {
+                        var age = DateTime.Now.Year - doctor.DateOfBirth.Year;
+                        if (DateTime.Now.DayOfYear < doctor.DateOfBirth.DayOfYear)
+                        {
+                            age--;
+                        }
+                        <label style="gap: 12px;" id="DoctorId@(doctor.Id)Label" class="list-group-item list-group-item-action d-flex">
+                            <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                                <img style="object-fit: cover;" class="w-100 h-100" src="data:@doctor.Image.ContentType;base64,@doctor.Image.Base64Data" alt="Zdjęcie lekarza"/>
+                            </div>
+                            <div class="w-100">
+                                <input hidden type="radio" name="DoctorId" value="@doctor.Id" required />
+                                <div class="d-flex flex-column flex-sm-row justify-content-between w-100 mb-1 align-items-start align-items-sm-center">
+                                    <div class="d-flex align-items: center">
+                                        <h5 class="m-0 me-2">@doctor.Name @doctor.LastName</h5>
+                                        <span style="top: 1px;" class="position-relative text-muted">@age @TextHelper.Pluralize(age, "rok", "lata", "lat")</span>
+                                    </div>
 
-                        <span class="badge rounded-pill bg-success mt-1 mt-sm-0">Darmowa wizyta</span>
-                    </div>
-                    <p class="mb-1">
-                        doświadczony lekarz specjalizujący się w kompleksowej opiece medycznej.
-                        Specjalista w zakresie diagnostyki i leczenia schorzeń układu oddechowego.
-                    </p>
-                </div>
-            </label>
-            <label style="gap: 12px;" id="DoctorId2Label" class="list-group-item list-group-item-action d-flex">
-                <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
-                    <img style="object-fit: cover;" class="w-100 h-100" src="~/assets/doctors/iga.jpg" />
-                </div>
-                <div>
-                    <input hidden type="radio" name="DoctorId" value="2" required />
-                    <div class="d-flex flex-column flex-sm-row justify-content-between w-100 mb-1 align-items-start align-items-sm-center">
-                        <div class="d-flex align-items: center">
-                            <h5 class="m-0 me-2">Iga Kraśko</h5>
-                            <span style="top: 1px;" class="position-relative text-muted">32 lata</span>
-                        </div>
-
-                        <span class="badge rounded-pill bg-success mt-1 mt-sm-0">Darmowa wizyta</span>
-                    </div>
-                    <p class="mb-1">
-                        doświadczony lekarz specjalizujący się w kompleksowej opiece medycznej.
-                        Specjalista w zakresie diagnostyki i leczenia schorzeń układu oddechowego.
-                    </p>
-                </div>
-            </label>
+                                    <span class="badge rounded-pill bg-success mt-1 mt-sm-0">Darmowa wizyta</span>
+                                </div>
+                                <p class="mb-1">@doctor.Description</p>
+                            </div>
+                        </label>
+                    
+                    }
+                }
+            }
         </div>
         <div id="calendar" class="col-xl-6 mt-4 mt-xl-0"></div>
         <input hidden id="calendar-input" name="Date" />
@@ -56,84 +64,30 @@
         <h2>Godzina:</h2>
         <div class="time-picker disabled">
             <div class="row">
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot selected">06:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">06:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">07:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">07:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">08:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">08:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">09:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">09:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">10:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">10:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">11:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">11:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">12:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">12:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">13:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">13:30</div>
-                </div>
+                @foreach (var time in timeSlots)
+                {
+                    {
+                     var value = DateTime.Parse(time).ToString("HH:mm");
 
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">14:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">14:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">15:00</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <div class="time-picker__time-slot">15:30</div>
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    <label class="time-picker__time-slot">
-                        <input hidden type="radio" name="Time" value="16:00" />
-                        16:00
-                    </label>
-                </div>
+                    <div class="col-4 col-md-3 col-lg-2">
+                        <label class="time-picker__time-slot">
+                                <input hidden type="radio" name="Time" value="@value" />
+                            @time
+                        </label>
+                    </div>
+                    }
+                }
             </div>
         </div>
 
     </div>
 
     <div class="d-flex justify-content-center mt-5">
-        <button id="confirmVisitBtn" style="padding: 8px 64px !important;"  type="submit" class="btn btn-primary">Potwierdź wizytę</button>
+        <button id="confirmVisitBtn" style="padding: 8px 64px !important;" type="submit" class="btn btn-primary disabled">Potwierdź wizytę</button>
     </div>
 </form>
 
-@* 
+@*
   @section Scripts {
       @{
           await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -141,15 +95,99 @@
   } *@
 
 <script>
-
+    @* MAKE AJAX CALLS INSTEAD OF KEEPING ALL LOGIC HERE *@
     document.addEventListener('DOMContentLoaded', function () {
+        const doctorScheduledVisits = @Html.Raw(Json.Serialize(Model.DoctorScheduledVisits));
+
+        let chosenDoctorId = null;
+
+        const timeSlotsLength = @timeSlotsLength
+
         var calendarEl = document.getElementById('calendar');
         var calendarInput = document.getElementById('calendar-input');
         var selectedDate = null;
+        var selectedDateStr = null;
 
         calendarEl.classList.add('calendar__disabled')
 
         var timePicker = document.querySelector('.time-picker');
+
+
+        // should be called everytime something changes
+        const calculateAndHandleDisabledElements = () => {
+            // undisable calendar options
+            const disabledDateEls = calendarEl.querySelectorAll('.disabled');
+            disabledDateEls.forEach(disabledDateEl => {
+                disabledDateEl.classList.remove('disabled');
+            });
+
+            // undisable time slots
+                const timeSlotInputs = document.querySelectorAll('input[name="Time"]');
+            timeSlotInputs.forEach(input => {
+                input.parentElement.classList.remove('disabled');
+                input.disabled = false;
+            });
+
+            const doctorVisits = doctorScheduledVisits[chosenDoctorId] || []
+
+            if (!doctorVisits.length) {
+                return
+            }
+
+            const visitsByDate = new Map();
+
+            // disable fully scheduled days
+            for (const visit of doctorVisits) {
+                const date = visit.visitDate;
+                if (!visitsByDate.has(date)) {
+                    visitsByDate.set(date, []);
+                }
+                visitsByDate.get(date).push(visit);
+            }
+
+
+            for (const [date, timeSlots] of visitsByDate) {
+                if (timeSlots.length === timeSlotsLength) {
+                    disabledDateEl = calendarEl.querySelector('[data-date="' + date + '"]');
+
+                    if (!disabledDateEl) {
+                        continue
+                    }
+
+                    disabledDateEl.classList.add('disabled');
+
+                    if (disabledDateEl.classList.contains('calendar__selected')) {
+                        disabledDateEl.classList.remove('calendar__selected');
+                        selectedDate = null;
+                    }
+                }
+            }
+
+
+            if (!selectedDateStr) {
+                return
+            }
+
+            // disable all taken time slots
+            const visitsInThatDate = doctorVisits.filter(schedule => schedule.visitDate === selectedDateStr);
+
+            if (visitsInThatDate.length > 0) {
+                visitsInThatDate.forEach(visit => {
+                    const slicedTime = visit.visitTimeStart.slice(0, 5)
+                    const timeSlotInput = document.querySelector(`input[name="Time"][value="${slicedTime}"`)
+                        if (timeSlotInput) {
+                            const timeSlotLabel = timeSlotInput.parentElement;
+                            timeSlotLabel.classList.add('disabled');
+                            timeSlotInput.disabled = true;
+
+                        if (timeSlotLabel.classList.contains('selected')) {
+                            timeSlotLabel.classList.remove('selected')
+                        }
+                    }
+                });
+            }
+
+        }
 
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -162,15 +200,42 @@
                 today: 'Dzisiaj'
             },
             dateClick: function (info) {
+                const clickedDateEl = calendarEl.querySelector('[data-date="' + info.dateStr + '"]');
+
+                if (clickedDateEl.classList.contains('disabled')) {
+                    return
+                }
+
                 if (selectedDate) {
                     selectedDate.classList.remove('calendar__selected');
                 }
 
-                selectedDate = calendarEl.querySelector('[data-date="' + info.dateStr + '"]');
+                selectedDateStr = info.dateStr;
+
+
+               calculateAndHandleDisabledElements()
+
+
+                    selectedDate = clickedDateEl
                 if (selectedDate) {
                     selectedDate.classList.add('calendar__selected');
                     timePicker.classList.remove('disabled');
                     calendarInput.value = info.dateStr;
+                }
+            },
+            datesSet: function () {
+
+                calculateAndHandleDisabledElements()
+
+                if (selectedDateStr) {
+                    const oldSelected = calendarEl.querySelector('.calendar__selected');
+                    if (oldSelected) oldSelected.classList.remove('calendar__selected');
+
+                    const newCell = calendarEl.querySelector('[data-date="' + selectedDateStr + '"]');
+                    if (newCell) {
+                        newCell.classList.add('calendar__selected');
+                        selectedDate = newCell;
+                    }
                 }
             }
         });
@@ -182,9 +247,13 @@
             option.addEventListener('change', function () {
 
                 calendarEl.classList.remove('calendar__disabled')
+                chosenDoctorId = this.value;
+
                 const selectedValue = this.value;
                 const optionLabel = document.getElementById(`${this.name}${this.value}Label`)
                 optionLabel.classList.add('active');
+
+                    calculateAndHandleDisabledElements()
 
                 const allLabels = document.querySelectorAll('.list-group-item');
                 allLabels.forEach(label => {
@@ -201,13 +270,11 @@
             option.addEventListener('click', function () {
                 timeOptions.forEach(opt => opt.classList.remove('selected'));
                 this.classList.add('selected');
+                document.querySelector('#confirmVisitBtn').classList.remove('disabled');
             });
         });
 
     });
-
-
-
 </script>
 
 
