@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Umawianie wizyty";
+}
+
+<form asp-controller="Visits" asp-action="ChooseVisitType" class="p-5">
+<h1>Wybierz typ wizyty:</h1>
+@* TODO: make list scrollable *@
+    <div class="list-group my-4">
+        <label id="ControlVisitLabel" class="list-group-item list-group-item-action">
+            <input hidden type="radio" name="VisitType" value="ControlVisit" required />
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Wizyta kontrolna</h5>
+            </div>
+            <p class="mb-1">Przedstawisz lekarzowi twój stan zdrowia, a on dokona odpowiednich, podstawowych badań.</p>
+            <span class="badge rounded-pill bg-success">Darmowa wizyta</span>
+        </label>
+
+        <label id="SpecialistVisitLabel" class="list-group-item list-group-item-action">
+            <input hidden type="radio" name="VisitType" value="SpecialistVisit" required />
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Wizyta u specjalisty</h5>
+            </div>
+            <p class="mb-1">Skonsultujesz się ze specjalistą w wybranej dziedzinie.</p>
+            <span class="badge rounded-pill bg-danger">Może wymagać opłaty</span>
+        </label>
+
+        <!-- Add more options similarly -->
+    </div>
+    <button id="chooseVisitTypeBtn" disabled type="submit" class="btn btn-primary">Potwierdź wybór</button>
+</form>
+
+
+<script>
+    const options = document.querySelectorAll('input[name="VisitType"]');
+    options.forEach(option => {
+        option.addEventListener('change', function() {
+            const submitButton = document.getElementById('chooseVisitTypeBtn');
+            console.log(submitButton);
+            submitButton.disabled = false; 
+
+            const selectedValue = this.value;
+            const optionLabel = document.getElementById(`${this.value}Label`)
+            optionLabel.classList.add('active');
+
+            const allLabels = document.querySelectorAll('.list-group-item');
+            allLabels.forEach(label => {
+                if (label !== optionLabel) {
+                    label.classList.remove('active');
+                }
+            });
+        });
+    });
+</script>

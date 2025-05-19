@@ -1,0 +1,38 @@
+﻿#calendar {
+    position: relative;
+    top: 0px;
+}
+
+@media screen and (min-width: 1200px) {
+    #calendar {
+        top: -64px;
+    }
+}
+
+.calendar__disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.calendar__selected {
+    background-color: var(--color-primary-dark) !important;
+}
+
+    .calendar__selected .fc-daygrid-day-number {
+        color: white;
+    }
+
+
+.fc-daygrid-day.disabled {
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.fc-daygrid-day:hover {
+    cursor: pointer;
+}
+
+
+.fc-daygrid-day-number, .fc-col-header-cell-cushion {
+    text-decoration: none;
+}

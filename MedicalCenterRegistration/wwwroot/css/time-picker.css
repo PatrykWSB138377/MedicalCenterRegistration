@@ -1,0 +1,40 @@
+﻿
+.time-picker {
+/*    max-width: 600px;*/
+    margin: 0 auto;
+}
+
+    .time-picker.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+.time-picker__time-slot {
+    display: block;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px;
+    text-align: center;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+
+    .time-picker__time-slot:hover {
+        background-color: #e9ecef;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .time-picker__time-slot.selected  {
+        background-color: var(--color-primary-dark);
+        color: white;
+        border-color: var(--color-primary);
+    }
+
+
+    .time-picker__time-slot.disabled {
+        pointer-events: none;
+        opacity: 0.3;
+    }
