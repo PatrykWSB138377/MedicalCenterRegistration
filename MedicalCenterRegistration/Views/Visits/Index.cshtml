@@ -1,53 +1,217 @@
 ﻿@model IEnumerable<MedicalCenterRegistration.Models.Visit>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Moje wizyty";
+
+    var doctor1Name = "Adam Przybyszewicz";
+    var doctor1Age = 34;
+    var doctor1Image = Url.Content("~/assets/doctors/adam.jpg");
+
+    var visit1Status = "W toku";
+    var visit1Date = "26.04.2025 r.";
+    var visit1Time = "14:00";
+    var visit1Type = "Wizyta kontrolna";
+
+    var doctor2Name = "Iga Niemczyk";
+    var doctor2Age = 36;
+    var doctor2Image = Url.Content("~/assets/doctors/iga.jpg");
+
+    var visit2Status = "Anulowana";
+    var visit2Date = "22.05.2025 r.";
+    var visit2Time = "14:00";
+    var visit2Type = "Wizyta kontrolna";
 }
 
-<h1>Index</h1>
+<div class="p-1 p-sm-4">
+    <h1>Moje wizyty</h1>
+    <h4 class="text-muted">Twoje zaplanowane wizyty w naszej placówce.</h4>
+    <hr />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Doctor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Patient)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VisitSchedule)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Doctor.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Patient.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VisitSchedule.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    @* ===================== VISIT 1 ===================== *@
+    <div class="my-visits__card d-none d-xl-flex flex-xl-row flex-column">
+        <div class="my-visits__visit-info-col col-12 col-xl-6 d-flex align-items-center justify-content-between">
+            <div class="row w-100">
+                <div class="col-3">
+                    <h4>Status:</h4>
+                    <h5><span class="badge rounded-pill bg-success mt-1 mt-sm-0 px-4">@visit1Status</span></h5>
+                </div>
+                <div class="col-6">
+                    <h4>Data wizyty:</h4>
+                    <h5>@visit1Date</h5>
+                    <h5 class="text-muted">godz. @visit1Time</h5>
+                </div>
+                <div class="col-3">
+                    <h4>Typ wizyty:</h4>
+                    <h5>@visit1Type</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex col-auto align-items-center mt-4 mt-xl-0 ps-4">
+            <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                <img style="object-fit: cover;" class="w-100 h-100" src="@doctor1Image" alt="Zdjęcie lekarza" />
+            </div>
+        </div>
+
+        <div class="d-flex col-auto mt-4 mt-xl-0 ps-4">
+            <div>
+                <h4>Przypisany lekarz:</h4>
+                <div class="d-flex align-items-start align-items-sm-center">
+                    <h5 class="me-2">@doctor1Name</h5>
+                    <span style="top: -2px;" class="position-relative text-muted">@doctor1Age lata</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col d-flex justify-content-xl-end mt-4 mt-xl-0">
+            <div class="d-flex flex-column">
+                <button class="btn btn-primary text-nowrap mb-2">
+                    Edytuj <i class="bi bi-pencil-square ms-1"></i>
+                </button>
+                <button class="btn btn-danger text-nowrap">
+                    Anuluj <i class="bi bi-x-octagon ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-visits__card d-xl-none">
+        <div class="my-visits__visit-info-col">
+            <div class="d-flex w-100 flex-sm-row flex-column justify-content-between">
+                <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                    <h4 class="me-2">Status:</h4>
+                    <h5><span class="badge rounded-pill bg-success mt-1 mt-sm-0 px-4">@visit1Status</span></h5>
+                </div>
+                <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                    <h4 class="me-2">Data wizyty:</h4>
+                    <h5 class="me-sm-0 me-2">@visit1Date</h5>
+                    <h5 class="text-muted">godz. @visit1Time</h5>
+                </div>
+                <div class="d-flex flex-sm-column align-items-end">
+                    <h4 class="me-2">Typ wizyty:</h4>
+                    <h5>@visit1Type</h5>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="d-flex flex-column flex-sm-row justify-content-between d-xl-none mt-5">
+            <div class="d-flex d-xl-none">
+                <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                    <img style="object-fit: cover;" class="w-100 h-100" src="@doctor1Image" alt="Zdjęcie lekarza" />
+                </div>
+                <div class="ms-3">
+                    <h4>Przypisany lekarz:</h4>
+                    <div class="d-flex align-items-start align-items-sm-center">
+                        <h5 class="me-2">@doctor1Name</h5>
+                        <span style="top: -2px;" class="position-relative text-muted">@doctor1Age lata</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-xl-none mt-4 mt-sm-0">
+                <div class="d-flex flex-column">
+                    <button class="btn btn-primary text-nowrap mb-2">
+                        Edytuj <i class="bi bi-pencil-square ms-1"></i>
+                    </button>
+                    <button class="btn btn-danger text-nowrap">
+                        Anuluj <i class="bi bi-x-octagon ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* ===================== VISIT 2 ===================== *@
+    <div class="my-visits__card d-none d-xl-flex flex-xl-row flex-column mt-3">
+        <div class="my-visits__visit-info-col col-12 col-xl-6 d-flex align-items-center justify-content-between">
+            <div class="row w-100">
+                <div class="col-3">
+                    <h4>Status:</h4>
+                    <h5><span class="badge rounded-pill bg-danger mt-1 mt-sm-0 px-4">@visit2Status</span></h5>
+                </div>
+                <div class="col-6">
+                    <h4>Data wizyty:</h4>
+                    <h5>@visit2Date</h5>
+                    <h5 class="text-muted">godz. @visit2Time</h5>
+                </div>
+                <div class="col-3">
+                    <h4>Typ wizyty:</h4>
+                    <h5>@visit2Type</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex col-auto align-items-center mt-4 mt-xl-0 ps-4">
+            <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                <img style="object-fit: cover;" class="w-100 h-100" src="@doctor2Image" alt="Zdjęcie lekarza" />
+            </div>
+        </div>
+
+        <div class="d-flex col-auto mt-4 mt-xl-0 ps-4">
+            <div>
+                <h4>Przypisany lekarz:</h4>
+                <div class="d-flex align-items-start align-items-sm-center">
+                    <h5 class="me-2">@doctor2Name</h5>
+                    <span style="top: -2px;" class="position-relative text-muted">@doctor2Age lata</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col d-flex justify-content-xl-end mt-4 mt-xl-0">
+            <div class="d-flex flex-column">
+                <button class="btn btn-primary text-nowrap mb-2">
+                    Edytuj <i class="bi bi-pencil-square ms-1"></i>
+                </button>
+                <button class="btn btn-danger text-nowrap disabled">
+                    Anuluj <i class="bi bi-x-octagon ms-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-visits__card d-xl-none mt-5">
+        <div class="my-visits__visit-info-col">
+            <div class="d-flex w-100 flex-sm-row flex-column justify-content-between">
+                <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                    <h4 class="me-2">Status:</h4>
+                    <h5><span class="badge rounded-pill bg-danger mt-1 mt-sm-0 px-4">@visit2Status</span></h5>
+                </div>
+                <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                    <h4 class="me-2">Data wizyty:</h4>
+                    <h5 class="me-sm-0 me-2">@visit2Date</h5>
+                    <h5 class="text-muted">godz. @visit2Time</h5>
+                </div>
+                <div class="d-flex flex-sm-column align-items-end">
+                    <h4 class="me-2">Typ wizyty:</h4>
+                    <h5>@visit2Type</h5>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="d-flex flex-column flex-sm-row justify-content-between d-xl-none mt-5">
+            <div class="d-flex d-xl-none">
+                <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                    <img style="object-fit: cover;" class="w-100 h-100" src="@doctor2Image" alt="Zdjęcie lekarza" />
+                </div>
+                <div class="ms-3">
+                    <h4>Przypisany lekarz:</h4>
+                    <div class="d-flex align-items-start align-items-sm-center">
+                        <h5 class="me-2">@doctor2Name</h5>
+                        <span style="top: -2px;" class="position-relative text-muted">@doctor2Age lata</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-xl-none mt-4 mt-sm-0">
+                <div class="d-flex flex-column">
+                    <button class="btn btn-primary text-nowrap mb-2">
+                        Edytuj <i class="bi bi-pencil-square ms-1"></i>
+                    </button>
+                    <button class="btn btn-danger text-nowrap disabled">
+                        Anuluj <i class="bi bi-x-octagon ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
