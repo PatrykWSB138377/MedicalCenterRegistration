@@ -5,10 +5,6 @@
       "PackagePath": "staticwebassets\\MedicalCenterRegistration.bundle.scp.css"
     },
     {
-      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\angry-phone-call.jpg",
-      "PackagePath": "staticwebassets\\assets\\angry-phone-call.jpg"
-    },
-    {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\assets\\doctors.jpg",
       "PackagePath": "staticwebassets\\assets\\doctors.jpg"
     },
@@ -95,18 +91,6 @@
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\images\\2.jpg",
       "PackagePath": "staticwebassets\\images\\2.jpg"
-    },
-    {
-      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\images\\_1150408.JPG",
-      "PackagePath": "staticwebassets\\images\\_1150408.JPG"
-    },
-    {
-      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\images\\_1150414.JPG",
-      "PackagePath": "staticwebassets\\images\\_1150414.JPG"
-    },
-    {
-      "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\images\\_1160191 (1).JPG",
-      "PackagePath": "staticwebassets\\images\\_1160191 (1).JPG"
     },
     {
       "Id": "C:\\Users\\Patryk\\Desktop\\MedicalCenterRegistration\\MedicalCenterRegistration\\wwwroot\\js\\site.js",
