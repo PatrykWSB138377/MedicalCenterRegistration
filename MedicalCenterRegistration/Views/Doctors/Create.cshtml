@@ -4,71 +4,73 @@
     ViewData["Title"] = "Create Doctor";
 }
 
-<h1>Karta lekarza</h1>
-<h4 class="text-muted">Wypełnij kartę lekarza aby dodać nowego specjalistę do naszej placówki.</h4>
-<hr />
-<form asp-action="Create" class="w-100" method="post" enctype="multipart/form-data">
-    <div class="row gx-5 w-100">
-        <div class="col-4">
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+<div class="p-1 p-sm-4">
+    <h1>Karta lekarza</h1>
+    <h4 class="text-muted">Wypełnij kartę lekarza aby dodać nowego specjalistę do naszej placówki.</h4>
+    <hr />
+    <form asp-action="Create" class="w-100" method="post" enctype="multipart/form-data">
+        <div class="row gx-5 w-100">
+            <div class="col-4">
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="6"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" class="form-control" type="date" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Sex" class="form-label"></label>
+                    @Html.DropDownListFor(m => m.Sex, ViewData["SexOptions"] as List<SelectListItem>, "-- Wybierz płeć --", new { @class = "form-control" })
+                    <span asp-validation-for="Sex" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
+            <div class="col-4">
+                <div class="mb-3">
+                    <label class="form-label">Zdjęcie profilowe</label>
+                    <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                    <div class="form-text">Dodaj zdjęcie profilowe lekarza. Zalecane wymiary: 400x400px.</div>
+                </div>
 
-            <div class="mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="LastName" class="form-label"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Description" class="form-label"></label>
-                <textarea asp-for="Description" class="form-control" rows="6" ></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="DateOfBirth" class="form-label"></label>
-                <input asp-for="DateOfBirth" class="form-control" type="date" />
-                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Sex" class="form-label"></label>
-                @Html.DropDownListFor(m => m.Sex, ViewData["SexOptions"] as List<SelectListItem>, "-- Wybierz płeć --", new { @class = "form-control" })
-                <span asp-validation-for="Sex" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="col-4">
-            <div class="mb-3">
-                <label class="form-label">Zdjęcie profilowe</label>
-                <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
-                <div class="form-text">Dodaj zdjęcie profilowe lekarza. Zalecane wymiary: 400x400px.</div>
-            </div>
-
-            <div class="mb-3">
-                <div id="imagePreview" class="mt-2" style="display: none;">
-                    <img id="previewImg" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                <div class="mb-3">
+                    <div id="imagePreview" class="mt-2" style="display: none;">
+                        <img id="previewImg" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Zapisz</button>
-</form>
+        <button type="submit" class="btn btn-primary mt-3">Zapisz</button>
+    </form>
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

@@ -41,7 +41,7 @@ namespace MedicalCenterRegistration.Controllers
             var hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
             if (!hasPatientInfo)
             {
-                return RedirectToAction("Create", "Patients");
+                return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseVisitType)) });
             }
 
             return View();
