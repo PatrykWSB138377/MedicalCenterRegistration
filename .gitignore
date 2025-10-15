@@ -1,1 +1,33 @@
-.vs
+# Visual Studio user-specific files
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+
+# Logs and temp files
+*.log
+*.tlog
+*.tmp
+
+# Build artifacts
+project.lock.json
+project.fragment.lock.json
+
+# Other
+*.dbmdl
+*.bak
