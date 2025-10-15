@@ -140,6 +140,8 @@ namespace MedicalCenterRegistration.Controllers
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("DOCTOR CREATED");
+
             }
             catch (Exception ex)
             {

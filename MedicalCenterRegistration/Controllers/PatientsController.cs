@@ -83,7 +83,7 @@ namespace MedicalCenterRegistration.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
-            return View(patient);
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: Patients/Edit/5
