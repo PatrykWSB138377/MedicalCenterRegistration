@@ -17,251 +17,251 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = MedicalCenterRegistration
 build_property.RootNamespace = MedicalCenterRegistration
-build_property.ProjectDir = C:\Users\Patryk\Desktop\MedicalCenterRegistration\MedicalCenterRegistration\
+build_property.ProjectDir = D:\programowanie\przychodnia\MedicalCenterRegistration\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Patryk\Desktop\MedicalCenterRegistration\MedicalCenterRegistration
+build_property.MSBuildProjectDirectory = D:\programowanie\przychodnia\MedicalCenterRegistration
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/ConfirmEmail.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/ConfirmEmail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxDb25maXJtRW1haWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Login.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/ChangePassword.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/ChangePassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcQ2hhbmdlUGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/Email.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/Email.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRW1haWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/PersonalData.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/PersonalData.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcUGVyc29uYWxEYXRhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/TwoFactorAuthentication.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/TwoFactorAuthentication.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcVHdvRmFjdG9yQXV0aGVudGljYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_Layout.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX01hbmFnZU5hdi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/Register.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/RegisterConfirmation.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/RegisterConfirmation.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3RlckNvbmZpcm1hdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/Account/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/_ViewImports.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Areas/Identity/Pages/_ViewStart.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/DoctorSpecializations/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/DoctorSpecializations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yU3BlY2lhbGl6YXRpb25zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/DoctorSpecializations/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/DoctorSpecializations/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yU3BlY2lhbGl6YXRpb25zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/DoctorSpecializations/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/DoctorSpecializations/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yU3BlY2lhbGl6YXRpb25zXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/DoctorSpecializations/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/DoctorSpecializations/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yU3BlY2lhbGl6YXRpb25zXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/DoctorSpecializations/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/DoctorSpecializations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yU3BlY2lhbGl6YXRpb25zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Doctors/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Doctors/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Doctors/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Doctors/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yc1xEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Doctors/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Doctors/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yc1xEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Doctors/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Doctors/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yc1xFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Doctors/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Doctors/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9jdG9yc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Home/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Home/Privacy.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Images/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Images/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW1hZ2VzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Images/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Images/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW1hZ2VzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Images/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Images/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW1hZ2VzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Images/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Images/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW1hZ2VzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Images/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Images/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW1hZ2VzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Patients/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Patients/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Patients/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Patients/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudHNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Patients/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Patients/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudHNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Patients/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Patients/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudHNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Patients/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Patients/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF0aWVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Shared/Error.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Shared/_LoginPartial.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Specializations/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Specializations/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BlY2lhbGl6YXRpb25zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Specializations/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Specializations/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BlY2lhbGl6YXRpb25zXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Specializations/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Specializations/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BlY2lhbGl6YXRpb25zXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Specializations/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Specializations/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BlY2lhbGl6YXRpb25zXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Specializations/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Specializations/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3BlY2lhbGl6YXRpb25zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/VisitSchedules/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/VisitSchedules/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRTY2hlZHVsZXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/VisitSchedules/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/VisitSchedules/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRTY2hlZHVsZXNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/VisitSchedules/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/VisitSchedules/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRTY2hlZHVsZXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/VisitSchedules/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/VisitSchedules/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRTY2hlZHVsZXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/VisitSchedules/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/VisitSchedules/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRTY2hlZHVsZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/ChooseVisitType.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/ChooseVisitType.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXENob29zZVZpc2l0VHlwZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/Create.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/Delete.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/Details.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/Edit.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Visits/Index.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Visits/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmlzaXRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/_ViewImports.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/_ViewStart.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Patryk/Desktop/MedicalCenterRegistration/MedicalCenterRegistration/Views/Shared/_Layout.cshtml]
+[D:/programowanie/przychodnia/MedicalCenterRegistration/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-ngoyqa4d4d
