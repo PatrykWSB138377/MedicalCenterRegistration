@@ -155,12 +155,15 @@ namespace MedicalCenterRegistration.Controllers
                 return RedirectToAction("Create", "Patients");
             }
 
-            var doctorIds = await _context.DoctorSpecialization
+            var doctorsForSpecialization = await _context.DoctorSpecialization
                 .Where(ds => ds.SpecializationId == int.Parse(specializationId.ToString()))
-                .Select(ds => ds.DoctorId)
+                .Include(ds => ds.Doctor).ThenInclude(d => d.Image)
+                .Select(ds => ds.Doctor)
                 .ToListAsync();
 
-            var doctorsForSpecialization = await _context.Doctor.Where(d => doctorIds.Contains(d.Id)).Include(d => d.Image).ToListAsync();
+            var doctorIds = doctorsForSpecialization
+                .Select(d => d.Id)
+                .ToList();
 
             var visits = await _context.Visit
               .Where(v => doctorIds.Contains(v.DoctorId))
