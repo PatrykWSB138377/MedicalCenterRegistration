@@ -1,3 +1,38 @@
-.vs
-bin/
-obj/
+# Visual Studio user-specific files
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+MedicalCenterRegistration/[Bb]in/
+MedicalCenterRegistration/[Oo]bj/
+
+# User-specific files
+MedicalCenterRegistration/*.user
+MedicalCenterRegistration/*.suo
+MedicalCenterRegistration/*.userosscache
+MedicalCenterRegistration/*.sln.docstates
+
+# Visual Studio Code settings
+MedicalCenterRegistration/.vscode/
+
+# NuGet packages
+MedicalCenterRegistration/*.nupkg
+MedicalCenterRegistration/packages/
+MedicalCenterRegistration/*.snupkg
+
+# Logs and temp files
+MedicalCenterRegistration/*.log
+MedicalCenterRegistration/*.tlog
+MedicalCenterRegistration/*.tmp
+
+# Build artifacts
+MedicalCenterRegistration/project.lock.json
+MedicalCenterRegistration/project.fragment.lock.json
+
+# Other
+MedicalCenterRegistration/*.dbmdl
+MedicalCenterRegistration/*.bak
+
+# Ignore static assets (e.g., uploads, generated content)
+MedicalCenterRegistration/wwwroot/images
