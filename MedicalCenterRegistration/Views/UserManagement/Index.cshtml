@@ -1,0 +1,39 @@
+﻿@model List<MedicalCenterRegistration.Models.ViewModels.UserListItemViewModel>
+@using System.Linq
+
+@{
+    ViewData["Title"] = "Lista użytkowników";
+}
+
+<h1>Lista użytkowników</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-success">Dodaj nowego użytkownika</a>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Rola</th>
+                <th>Data utworzenia</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>@(user.CreatedAt != DateTime.MinValue ? user.CreatedAt : "-")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Brak użytkowników do wyświetlenia.</p>
+}

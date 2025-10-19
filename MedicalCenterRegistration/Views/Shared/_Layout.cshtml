@@ -9,6 +9,7 @@
     ? UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result)?.Result
     : new List<string>();
     var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
+    var isReceptionist = User.IsInRole("Receptionist");     
 }
 
 <!DOCTYPE html>
@@ -91,6 +92,12 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-action="Create" asp-controller="Doctors" asp-action="Index">Dodaj lekarza</a>
+                            </li>
+                        }
+                        @if(isAdmin || isReceptionist)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserManagement" asp-action="Index">Zarządzaj użytkownikami</a>
                             </li>
                         }
                         @*         <li class="nav-item">

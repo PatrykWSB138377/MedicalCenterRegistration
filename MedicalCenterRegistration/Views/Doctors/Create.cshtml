@@ -57,6 +57,7 @@
             <div class="mb-3">
                 <label class="form-label">Zdjęcie profilowe</label>
                 <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
                 <div class="form-text">Dodaj zdjęcie profilowe lekarza. Zalecane wymiary: 400x400px.</div>
             </div>
 
