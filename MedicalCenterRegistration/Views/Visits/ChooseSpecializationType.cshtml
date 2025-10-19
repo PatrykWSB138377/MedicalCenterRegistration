@@ -1,0 +1,50 @@
+﻿@using MedicalCenterRegistration.Helpers;
+@model MedicalCenterRegistration.Models.ViewModels.Visits.ChooseDoctorSpecializationViewModel
+
+@{
+    var specializations = Model.Specializations;
+    ViewData["Title"] = "Umawianie wizyty";
+}
+
+
+<form asp-controller="Visits" asp-action="ChooseSpecializationType" class="p-5">
+<h1>Wybierz rodzaj wizyty:</h1>
+    <div style="max-height: 500px;" class="list-group my-4 overflow-auto">
+        @foreach (var specialization in specializations)
+            {
+            <label class="list-group-item list-group-item-action">
+                <input hidden type="radio" name="specializationId" value="@specialization.SpecializationId" required />
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@specialization.SpecializationName</h5>
+                </div>
+                <p class="mb-1 small text-muted">@specialization.DoctorCount @TextHelper.Pluralize(specialization.DoctorCount, "Lekarz dostępny", "Lekarzy dostępnych", "Lekarzy dostępnych")</p>
+            </label>
+        }
+ 
+
+    </div>
+    <button id="chooseSpecializationTypeBtn" disabled type="submit" class="btn btn-primary">Potwierdź wybór</button>
+</form>
+
+
+<script>
+    const options = document.querySelectorAll('input[name="specializationId"]');
+    options.forEach(option => {
+        option.addEventListener('change', function() {
+            const submitButton = document.getElementById('chooseSpecializationTypeBtn');
+            console.log(submitButton);
+            submitButton.disabled = false; 
+
+            const selectedValue = this.value;
+            const optionLabel = this.closest('label')
+            optionLabel.classList.add('active');
+
+            const allLabels = document.querySelectorAll('.list-group-item');
+            allLabels.forEach(label => {
+                if (label !== optionLabel) {
+                    label.classList.remove('active');
+                }
+            });
+        });
+    });
+</script>

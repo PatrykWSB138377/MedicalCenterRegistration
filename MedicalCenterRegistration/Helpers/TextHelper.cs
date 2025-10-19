@@ -5,7 +5,7 @@ namespace MedicalCenterRegistration.Helpers
 {
     public static class TextHelper
     {
-        public static string Pluralize(int value, string singular, string few, string many)
+        public static string Pluralize(int value, string singular, string few, string? many)
         {
             int absVal = Math.Abs(value);
             int lastDigit = absVal % 10;
@@ -17,7 +17,7 @@ namespace MedicalCenterRegistration.Helpers
             if (lastDigit >= 2 && lastDigit <= 4 && (lastTwoDigits < 12 || lastTwoDigits > 14))
                 return few;
 
-            return many;
+            return many ?? few;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Patient.Include(p => p.User);
@@ -46,42 +47,50 @@ namespace MedicalCenterRegistration.Controllers
             return View(patient);
         }
 
-        // GET: Patients/Create
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> Create(string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
 
-            var existingPatientData = await _context.Patient.FirstOrDefaultAsync(p => p.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var existingPatient = await _context.Patient
+                .FirstOrDefaultAsync(p => p.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            if (existingPatientData != null)
+            if (existingPatient != null)
             {
-                return RedirectToAction(nameof(Edit), new { id = existingPatientData.Id });
+                return RedirectToAction(nameof(Edit), new { id = existingPatient.Id });
             }
 
-
-            return View(existingPatientData);
+            return View();
         }
 
         // POST: Patients/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Name,LastName,DateOfBirth,Sex,PhoneNumber,PeselNumber,Street,HouseNumber,Province,District,PostalCode,City")] Patient patient)
+            [Bind("Name,LastName,DateOfBirth,Sex,PhoneNumber,PeselNumber,Street,HouseNumber,Province,District,PostalCode,City")] Patient patient,
+            [FromForm] string? returnUrl)
         {
-            patient.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            patient.User = await _context.Users.FindAsync(patient.UserId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null) return Unauthorized();
+
+            patient.UserId = userId;
+            patient.User = await _context.Users.FindAsync(userId);
             patient.CreatedAt = DateTime.Now;
 
-
+            ModelState.Remove("returnUrl"); // don't validate returnUrl
             if (ModelState.IsValid)
             {
                 _context.Add(patient);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
+
+                return RedirectToAction(nameof(Edit), new { id = patient.Id });
             }
+
+            ViewData["ReturnUrl"] = returnUrl;
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
             return RedirectToAction("Index", "Home");
         }

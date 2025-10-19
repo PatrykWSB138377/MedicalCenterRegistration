@@ -69,29 +69,38 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @* TODO: could make it into a component *@
                     <ul class="navbar-nav navbar__sections flex-grow-1">
+                        @if (!isAdmin)
+                        {
+
                         <li class="nav-item">
-                            @* TODO links *@
                             <div class="d-flex">
                                 <i class="bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0"></i>
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="ChooseVisitType">Umów Wizytę</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="ChooseSpecializationType">Umów Wizytę</a>
                             </div>
                         </li>
-                        @if (SignInManager.IsSignedIn(User))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="Index">Moje Wizyty</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Patients" asp-action="Create">Karta pacjenta</a>
-                            </li>
-                        }
-                       
-                         
-                        @if (isAdmin)
+
+                    
+                            @if (SignInManager.IsSignedIn(User))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Visits" asp-action="Index">Moje Wizyty</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Patients" asp-action="Create">Karta pacjenta</a>
+                                </li>
+                            }
+                        } else
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-action="Create" asp-controller="Doctors" asp-action="Index">Dodaj lekarza</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-action="Create" asp-controller="Specializations" asp-action="Index">Dodaj specjalizację</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-action="Create" asp-controller="DoctorSpecializations" asp-action="Index">Przypisz specjalizację</a>
                             </li>
                         }
                         @if(isAdmin || isReceptionist)
