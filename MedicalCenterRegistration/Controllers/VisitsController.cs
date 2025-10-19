@@ -7,6 +7,7 @@ using System.Security.Claims;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels;
+using MedicalCenterRegistration.Models.ViewModels.Visits;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -38,7 +39,7 @@ namespace MedicalCenterRegistration.Controllers
                     .Include(v => v.Doctor)
                     .Include(v => v.Patient)
                     .Include(v => v.VisitSchedule)
-                    .Where(v => v.Patient.UserId == loggedInUserId) 
+                    .Where(v => v.Patient.UserId == loggedInUserId)
                     .ToListAsync();
 
                 return View(visits);
@@ -57,33 +58,50 @@ namespace MedicalCenterRegistration.Controllers
 
 
 
-        // GET: ChooseVisitType
+        // GET: ChooseSpecializationType
         [Authorize]
-        public async Task<IActionResult> ChooseVisitType()
+        public async Task<IActionResult> ChooseSpecializationType()
         {
+
+
             var hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
             if (!hasPatientInfo)
             {
-                return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseVisitType)) });
+                return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseSpecializationType)) });
             }
 
-            return View();
+            var specializations = await _context.DoctorSpecialization
+                .GroupBy(ds => new { ds.Specialization.Id, ds.Specialization.Name })
+                .Select(g => new SpecializationWithDoctorCount
+                {
+                    SpecializationId = g.Key.Id,
+                    SpecializationName = g.Key.Name,
+                    DoctorCount = g.Count()
+                })
+                .ToListAsync();
+
+
+            var viewModel = new ChooseDoctorSpecializationViewModel
+            {
+                Specializations = specializations
+            };
+
+            return View(viewModel);
         }
 
         // POST: Visits
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChooseVisitType(string visitType)
+        public async Task<IActionResult> ChooseSpecializationType(string specializationId)
         {
-
-            if (string.IsNullOrEmpty(visitType))
+            if (string.IsNullOrEmpty(specializationId))
             {
                 ModelState.AddModelError("", "Please select a visit type.");
                 return View();
             }
 
-            TempData["VisitType"] = visitType;
+            TempData["SpecializationId"] = specializationId;
 
             return RedirectToAction(nameof(Create));
         }
@@ -122,12 +140,12 @@ namespace MedicalCenterRegistration.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            if (TempData["VisitType"] == null)
-            {
-                return RedirectToAction(nameof(ChooseVisitType));
-            }
 
-            TempData.Keep("VisitType");
+            var specializationId = TempData.Peek("SpecializationId");
+            if (specializationId == null)
+            {
+                return RedirectToAction(nameof(ChooseSpecializationType));
+            }
 
             var patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -137,8 +155,12 @@ namespace MedicalCenterRegistration.Controllers
                 return RedirectToAction("Create", "Patients");
             }
 
-            var doctors = await _context.Doctor.Include(d => d.Image).ToListAsync();
-            var doctorIds = doctors.Select(d => d.Id).ToList();
+            var doctorIds = await _context.DoctorSpecialization
+                .Where(ds => ds.SpecializationId == int.Parse(specializationId.ToString()))
+                .Select(ds => ds.DoctorId)
+                .ToListAsync();
+
+            var doctorsForSpecialization = await _context.Doctor.Where(d => doctorIds.Contains(d.Id)).Include(d => d.Image).ToListAsync();
 
             var visits = await _context.Visit
               .Where(v => doctorIds.Contains(v.DoctorId))
@@ -154,7 +176,7 @@ namespace MedicalCenterRegistration.Controllers
 
             var viewModel = new CreateVisitCreationViewModel
             {
-                Doctors = doctors,
+                Doctors = doctorsForSpecialization,
                 Patient = patient,
                 DoctorScheduledVisits = doctorScheduledVisits
             };
@@ -171,11 +193,6 @@ namespace MedicalCenterRegistration.Controllers
         public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitPayloadViewModel visitData)
         {
             Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visitData, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
-
-            if (TempData["VisitType"] == null)
-            {
-                return RedirectToAction(nameof(ChooseVisitType));
-            }
 
             DateOnly visitDate = DateOnly.ParseExact(visitData.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             TimeOnly visitTimeStart = TimeOnly.ParseExact(visitData.Time, "HH:mm", CultureInfo.InvariantCulture);
@@ -215,7 +232,7 @@ namespace MedicalCenterRegistration.Controllers
                 PatientId = patient.Id,
                 Patient = patient,
                 VisitScheduleId = visitSchedule.Id,
-                VisitType = TempData["VisitType"]?.ToString(),
+                VisitType = "Wizyta kontrolna", /* TODO decide if we need this field at all */
                 CreatedAt = DateTime.Now,
             };
 
