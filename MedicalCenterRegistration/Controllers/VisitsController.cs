@@ -29,9 +29,32 @@ namespace MedicalCenterRegistration.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Visit.Include(v => v.Doctor).Include(v => v.Patient).Include(v => v.VisitSchedule);
-            return View(await applicationDbContext.ToListAsync());
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (User.IsInRole("Patient"))
+            {
+                // Jeśli użytkownik ma rolę "Patient", wyświetl tylko wizyty powiązane z jego ID
+                var visits = await _context.Visit
+                    .Include(v => v.Doctor)
+                    .Include(v => v.Patient)
+                    .Include(v => v.VisitSchedule)
+                    .Where(v => v.Patient.UserId == loggedInUserId) 
+                    .ToListAsync();
+
+                return View(visits);
+            }
+            else
+            {
+                // W przeciwnym razie wyświetl wszystkie wizyty
+                var applicationDbContext = _context.Visit
+                    .Include(v => v.Doctor)
+                    .Include(v => v.Patient)
+                    .Include(v => v.VisitSchedule);
+
+                return View(await applicationDbContext.ToListAsync());
+            }
         }
+
 
 
         // GET: ChooseVisitType
@@ -83,6 +106,13 @@ namespace MedicalCenterRegistration.Controllers
             if (visit == null)
             {
                 return NotFound();
+            }
+
+            // Sprawdzenie, czy zalogowany użytkownik ma dostęp do wizyty
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (visit.Patient.UserId != loggedInUserId)
+            {
+                return Forbid(); // Brak dostępu
             }
 
             return View(visit);
@@ -204,6 +234,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Visits/Edit/5
+        [Authorize(Roles = "Receptionist, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)

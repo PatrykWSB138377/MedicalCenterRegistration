@@ -4,6 +4,11 @@
 
 @{
     var isAdmin = User.IsInRole("Admin");
+    // dodane do testowania roli
+    var userRoles = SignInManager.IsSignedIn(User)
+    ? UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result)?.Result
+    : new List<string>();
+    var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
 }
 
 <!DOCTYPE html>
@@ -112,6 +117,11 @@
     <footer class="border-top footer text-muted bg-white">
         <div class="container">
             &copy; 2025 - Centrum Medyczne Medinow w Poznaniu
+            @*do testow roli, potem do usuniecia*@
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <span class="text-muted me-3">Rola: <strong>@userRole</strong></span>
+            }
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
