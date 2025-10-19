@@ -4,6 +4,12 @@
 
 @{
     var isAdmin = User.IsInRole("Admin");
+    // dodane do testowania roli
+    var userRoles = SignInManager.IsSignedIn(User)
+    ? UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result)?.Result
+    : new List<string>();
+    var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
+    var isReceptionist = User.IsInRole("Receptionist");     
 }
 
 <!DOCTYPE html>
@@ -88,6 +94,12 @@
                                 <a class="nav-link text-dark" asp-action="Create" asp-controller="Doctors" asp-action="Index">Dodaj lekarza</a>
                             </li>
                         }
+                        @if(isAdmin || isReceptionist)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="UserManagement" asp-action="Index">Zarządzaj użytkownikami</a>
+                            </li>
+                        }
                         @*         <li class="nav-item">
                              <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Kontakt</a>
                          </li> *@
@@ -112,6 +124,11 @@
     <footer class="border-top footer text-muted bg-white">
         <div class="container">
             &copy; 2025 - Centrum Medyczne Medinow w Poznaniu
+            @*do testow roli, potem do usuniecia*@
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <span class="text-muted me-3">Rola: <strong>@userRole</strong></span>
+            }
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

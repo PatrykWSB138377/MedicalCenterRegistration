@@ -1,0 +1,39 @@
+﻿@model MedicalCenterRegistration.Models.ViewModels.CreateUserViewModel
+
+@{
+    ViewData["Title"] = "Nowy użytkownik";
+    var roles = ViewData["Roles"] as List<string>;
+}
+
+<h1>Dodaj użytkownika</h1>
+<hr />
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password" class="form-label"></label>
+        <input asp-for="Password" class="form-control" type="password" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Role" class="form-label"></label>
+        <select asp-for="Role" class="form-control" asp-items="@(new SelectList(roles))">
+            <option value="">-- Wybierz rolę --</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+
+
+    <button type="submit" class="btn btn-primary">Utwórz użytkownika</button>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

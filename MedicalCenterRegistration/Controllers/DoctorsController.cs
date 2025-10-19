@@ -68,6 +68,11 @@ namespace MedicalCenterRegistration.Controllers
         public async Task<IActionResult> Create(
             [Bind("Email,Password,Name,LastName,Description,DateOfBirth,Sex,ImageFile")] CreateDoctorPayloadViewModel doctorData)
         {
+            // 🔹 Sprawdź, czy nie przesłano pliku
+            if (doctorData.ImageFile == null)
+            {
+                ModelState.AddModelError(nameof(doctorData.ImageFile), "Zdjęcie jest wymagane.");
+            }
             if (!ModelState.IsValid)
             {
                 ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
@@ -140,6 +145,8 @@ namespace MedicalCenterRegistration.Controllers
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
+                Console.WriteLine("DOCTOR CREATED");
+
             }
             catch (Exception ex)
             {
