@@ -1,6 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Enums;
+
 namespace MedicalCenterRegistration.Models
 {
     public class Visit
@@ -19,7 +21,8 @@ namespace MedicalCenterRegistration.Models
         public virtual VisitSchedule VisitSchedule { get; set; }
 
         public string VisitType { get; set; }
-        //public required Status Status { get; set; }
+
+        public required Status Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

@@ -36,7 +36,7 @@ namespace MedicalCenterRegistration.Controllers
             {
                 // Jeśli użytkownik ma rolę "Patient", wyświetl tylko wizyty powiązane z jego ID
                 var visits = await _context.Visit
-                    .Include(v => v.Doctor)
+                    .Include(v => v.Doctor).ThenInclude(d => d.Image)
                     .Include(v => v.Patient)
                     .Include(v => v.VisitSchedule)
                     .Where(v => v.Patient.UserId == loggedInUserId)
@@ -236,6 +236,7 @@ namespace MedicalCenterRegistration.Controllers
                 Patient = patient,
                 VisitScheduleId = visitSchedule.Id,
                 VisitType = "Wizyta kontrolna", /* TODO decide if we need this field at all */
+                Status = Enums.Status.Pending,
                 CreatedAt = DateTime.Now,
             };
 
