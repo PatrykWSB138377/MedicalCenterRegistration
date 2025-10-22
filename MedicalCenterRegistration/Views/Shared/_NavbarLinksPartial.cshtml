@@ -1,0 +1,133 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MedicalCenterRegistration.Enums
+@using MedicalCenterRegistration.Consts
+
+@inject SignInManager<IdentityUser> SignInManager
+@{
+    bool isAdmin = User.IsInRole("Admin");
+    bool isReceptionist = User.IsInRole("Receptionist");
+
+    // define actions available for each role
+    var actionByRole = new Dictionary<string, List<NavbarAction>>
+    {
+        {
+            Roles.Admin,
+            new List<NavbarAction>
+            {
+                NavbarAction.AddDoctor,
+                NavbarAction.AddSpecialization,
+                NavbarAction.AssignSpecialization,
+                NavbarAction.UserManagement
+            }
+        },
+        {
+            Roles.Receptionist,
+            new List<NavbarAction>
+            {
+                NavbarAction.UserManagement
+            }
+        },
+        {
+            Roles.Patient,
+            new List<NavbarAction>
+            {
+                NavbarAction.CreateVisit,
+                NavbarAction.MyVisits,
+                NavbarAction.PatientCard
+            }
+        },
+        {
+            Roles.Doctor,
+            new List<NavbarAction>
+            {
+                // todo
+            }
+        }
+    };
+
+    var anonymousActions = new List<NavbarAction>
+    {
+        NavbarAction.CreateVisit,
+    };
+
+
+    // define HTML snippets for each action
+    var actionHTML = new Dictionary<NavbarAction, string>
+    {
+        {
+            NavbarAction.CreateVisit,
+            @"<div class=""d-flex"">
+                <i class=""bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0""></i>
+                <a class=""nav-link text-dark"" asp-area="""" asp-controller=""Visits"" asp-action=""ChooseSpecializationType"">
+                    Umów Wizytę
+                </a>
+            </div>"
+        },
+        {
+            NavbarAction.MyVisits,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""Visits"" asp-action=""Index"">Moje Wizyty</a>"
+        },
+        {
+            NavbarAction.PatientCard,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""Patients"" asp-action=""Create"">Karta pacjenta</a>"
+        },
+        {
+            NavbarAction.AddDoctor,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""Doctors"" asp-action=""Index"">Dodaj lekarza</a>"
+        },
+        {
+            NavbarAction.AddSpecialization,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""Specializations"" asp-action=""Index"">Dodaj specjalizację</a>"
+        },
+        {
+            NavbarAction.AssignSpecialization,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""DoctorSpecializations"" asp-action=""Index"">Przypisz specjalizację</a>"
+        },
+        {
+            NavbarAction.UserManagement,
+            @"<a class=""nav-link text-dark"" asp-area="""" asp-controller=""UserManagement"" asp-action=""Index"">Zarządzaj użytkownikami</a>"
+        }
+    };
+
+
+}
+<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav navbar__sections flex-grow-1">
+
+
+        @* if user not logged in - use anonymous actions *@
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            foreach(var action in anonymousActions)
+            {
+                <li class="nav-item">
+                    @Html.Raw(actionHTML[action])
+                </li>
+            }
+        @* else use action corresponding to role *@
+        } else
+        {
+            @foreach (var role in actionByRole.Keys)
+            {
+                if (User.IsInRole(role))
+                {
+                    foreach (var action in actionByRole[role])
+                    {
+                        <li class="nav-item">
+                            @Html.Raw(actionHTML[action])
+                        </li>
+                    }
+                }
+            }
+        }
+
+
+        <li class="nav-item d-block d-sm-none">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link text-dark text-nowrap border-0 bg-white">
+                    Wyloguj <i style="position: relative; top: 1px;" class="bi bi-box-arrow-right ms-1"></i>
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>

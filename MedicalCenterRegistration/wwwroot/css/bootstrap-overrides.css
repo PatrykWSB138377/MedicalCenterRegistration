@@ -71,7 +71,7 @@
 }
 
 .carousel-caption {
-    background-color: rgba(56, 131, 219, 0.8) !important;
+    background-color: rgba(56, 131, 219, 0.95) !important;
     border-radius: var(--card-border-radius) !important;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .carousel-caption {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     padding-inline: 16px;
 }
 
