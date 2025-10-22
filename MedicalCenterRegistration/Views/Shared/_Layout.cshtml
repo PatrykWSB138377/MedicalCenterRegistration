@@ -3,13 +3,11 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-    var isAdmin = User.IsInRole("Admin");
     // dodane do testowania roli
     var userRoles = SignInManager.IsSignedIn(User)
     ? UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result)?.Result
     : new List<string>();
     var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
-    var isReceptionist = User.IsInRole("Receptionist");     
 }
 
 <!DOCTYPE html>
