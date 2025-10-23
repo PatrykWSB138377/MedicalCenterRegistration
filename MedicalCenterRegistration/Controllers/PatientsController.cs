@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Security.Claims;
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
@@ -47,6 +48,7 @@ namespace MedicalCenterRegistration.Controllers
             return View(patient);
         }
 
+        [Authorize(Roles = Roles.Patient)]
         public async Task<IActionResult> Create(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -65,7 +67,7 @@ namespace MedicalCenterRegistration.Controllers
 
         // POST: Patients/Create
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = Roles.Patient)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind("Name,LastName,DateOfBirth,Sex,PhoneNumber,PeselNumber,Street,HouseNumber,Province,District,PostalCode,City")] Patient patient,

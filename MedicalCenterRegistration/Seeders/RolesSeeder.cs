@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Consts;
 using Microsoft.AspNetCore.Identity;
 
 namespace MedicalCenterRegistration.Seeders
@@ -11,7 +12,7 @@ namespace MedicalCenterRegistration.Seeders
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string[] roles = { "Admin", "Receptionist", "Patient", "Doctor" };
+            string[] roles = { Roles.Admin, Roles.Receptionist, Roles.Patient, Roles.Doctor };
 
             foreach (var role in roles)
             {

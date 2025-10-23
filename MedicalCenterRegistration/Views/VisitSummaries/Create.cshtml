@@ -1,0 +1,99 @@
+﻿@model MedicalCenterRegistration.Models.VisitSummary
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="p-1 p-sm-4">
+    <div class="mb-2">
+    <a class="btn btn-outline-primary btn-xs" asp-controller="Visits" asp-action="DoctorVisits">
+        <i class="bi bi-arrow-left-circle me-1"></i>
+        Wróć do listy wizyt
+    </a>
+    </div>
+
+    <h1>Dodaj podsumowanie wizyty</h1>
+    <h4 class="text-muted">Podsumuj wnioski z wizyty aby przekazać pacjentowi istotne informacje.</h4>
+    <hr />
+
+
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label class="form-label">Dodaj załączniki</label>
+                    <input multiple type="file" name="Files" id="fileInput" class="form-control" accept="image/*, .pdf" />
+                    <span asp-validation-for="Files" class="text-danger"></span>
+                    <div class="form-text">Możliwe jest dodawanie obrazów, oraz plików .pdf</div>
+                </div>
+                <div id="fileListContainer" ** class="mt-3 mb-3">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Dodaj podsumowanie" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+
+        <div>
+    </form>
+
+
+
+</div>
+
+<script>
+    // javascript to display added file's names
+    document.addEventListener('DOMContentLoaded', function () {
+        const fileInput = document.getElementById('fileInput');
+        const fileListContainer = document.getElementById('fileListContainer');
+
+        fileInput.addEventListener('change', function (event) {
+            fileListContainer.innerHTML = '';
+
+            const files = event.target.files;
+
+            if (files.length > 0) {
+                const ul = document.createElement('ul');
+
+                ul.classList.add('list-group');
+                ul.classList.add('pe-none')
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+
+                    const li = document.createElement('li');
+                    const classes = ['list-group-item', 'badge', 'badge-pill', 'badge-secondary']
+
+                    classes.forEach(cls => {
+                        li.classList.add(cls);
+                    });
+
+                    li.textContent = file.name;
+
+                    ul.appendChild(li);
+                }
+
+                fileListContainer.innerHTML = '<span>Wybrane pliki:</span>';
+                fileListContainer.appendChild(ul);
+
+            }
+        });
+    })
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

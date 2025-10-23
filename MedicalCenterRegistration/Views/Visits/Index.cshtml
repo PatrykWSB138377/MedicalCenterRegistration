@@ -1,49 +1,129 @@
-﻿@model IEnumerable<MedicalCenterRegistration.Models.Visit>
+﻿@using MedicalCenterRegistration.Helpers
+@using MedicalCenterRegistration.Enums
+@model IEnumerable<MedicalCenterRegistration.Models.Visit>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Moje wizyty";
 }
 
-<h1>Moje wizyty</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Data wizyty</th>
-            <th>Typ wizyty</th>
-            <th>Imię pacjenta</th>
-            <th>Nazwisko pacjenta</th>
-            <th>Imię lekarza</th>
-            <th>Nazwisko lekarza</th>
-            <th>Akcje</th>
-        </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model) {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VisitSchedule.VisitDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VisitType)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Patient.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Patient.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.LastName)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                        
-                    </td>
-                </tr>
-            }   
-</table>
+<div class="p-1 p-sm-4">
+    <h1>Moje wizyty</h1>
+    <h4 class="text-muted">Twoje zaplanowane wizyty w naszej placówce.</h4>
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            Nie masz zaplanowanych wizyt.
+        </div>
+    }
+    else
+    {
+
+        @foreach (var item in Model)
+        {
+            var doctorAge = DateTime.Now.Year - item.Doctor.DateOfBirth.Year;
+
+            if (DateTime.Now.DayOfYear < item.Doctor.DateOfBirth.DayOfYear)
+            {
+                doctorAge--;
+            }
+
+
+
+            // Desktop view
+            <div class="my-visits__card d-none d-xl-flex flex-xl-row flex-column">
+                <div class="my-visits__visit-info-col col-12 col-xl-6 d-flex align-items-center justify-content-between">
+                    <div class="row w-100">
+                        <div class="col-3">
+                            <h5 class="fw-bold">Status:</h5>
+                            <h6>@await Html.PartialAsync("Components/_StatusBadge", item.Status)</h6>
+                        </div>
+                        <div class="col-6">
+                            <h5 class="fw-bold">Data wizyty:</h5>
+                            <h6>@item.VisitSchedule.VisitDate</h6>
+                            <h6 class="text-muted">godz. @item.VisitSchedule.VisitTimeStart - @item.VisitSchedule.VisitTimeEnd</h6>
+                        </div>
+                        <div class="col-3">
+                            <h5 class="fw-bold">Typ wizyty:</h5>
+                            <h6>@item.VisitType</h6>
+                        </div>
+                    </div>
+                </div>
+
+                @if (@item.Doctor.Image != null)
+                {
+                    <div class="d-flex col-auto align-items-center mt-4 mt-xl-0 ps-4">
+                        <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                            <img style="object-fit: cover;" class="w-100 h-100" src="data:@item.Doctor.Image.ContentType;base64,@item.Doctor.Image.Base64Data" alt="Zdjęcie lekarza" />
+                        </div>
+                    </div>
+                }
+
+                <div class="d-flex col-auto mt-4 mt-xl-0 ps-4">
+                    <div>
+                        <h5 class="fw-bold">Przypisany lekarz:</h5>
+                        <div class="d-flex align-items-start align-items-sm-center">
+                            <h6 class="me-2">@item.Doctor.Name @item.Doctor.LastName</h6>
+                            <span style="top: -3px;" class="position-relative text-muted">@doctorAge @TextHelper.Pluralize(doctorAge, "rok", "lata", "lat")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col d-flex justify-content-xl-end mt-4 mt-xl-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
+                            Szczegóły
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+            // Mobile view
+            <div class="my-visits__card d-xl-none">
+                <div class="my-visits__visit-info-col">
+                    <div class="d-flex w-100 flex-sm-row flex-column justify-content-between">
+                        <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                            <h4 class="me-2">Status:</h4>
+                            <h5>@await Html.PartialAsync("Components/_StatusBadge", item.Status)</h5>
+                        </div>
+                        <div class="d-flex flex-sm-column align-items-sm-start align-items-end">
+                            <h4 class="me-2">Data wizyty:</h4>
+                            <h5 class="me-sm-0 me-2">@item.VisitSchedule.VisitDate</h5>
+                            <h5 class="text-muted">godz. @item.VisitSchedule.VisitTimeStart - @item.VisitSchedule.VisitTimeEnd</h5>
+                        </div>
+                        <div class="d-flex flex-sm-column align-items-end">
+                            <h4 class="me-2">Typ wizyty:</h4>
+                            <h5>@item.VisitType</h5>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="d-flex flex-column flex-sm-row justify-content-between d-xl-none mt-5">
+                    <div class="d-flex d-xl-none">
+                        <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
+                            <img style="object-fit: cover;" class="w-100 h-100" src="data:@item.Doctor.Image.ContentType;base64,@item.Doctor.Image.Base64Data" alt="Zdjęcie lekarza" />
+                        </div>
+                        <div class="ms-3">
+                            <h4>Przypisany lekarz:</h4>
+                            <div class="d-flex align-items-start align-items-sm-center">
+                                <h5 class="me-2">@item.Doctor.Name @item.Doctor.LastName</h5>
+                                <span style="top: -2px;" class="position-relative text-muted">@doctorAge @TextHelper.Pluralize(doctorAge, "rok", "lata", "lat")</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-xl-none mt-4 mt-sm-0">
+                        <div class="d-flex flex-column justify-content-center">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
+                                Szczegóły
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

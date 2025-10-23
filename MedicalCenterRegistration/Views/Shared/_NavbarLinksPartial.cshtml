@@ -1,0 +1,146 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using MedicalCenterRegistration.Enums
+@using MedicalCenterRegistration.Consts
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject IUrlHelper Url
+
+@{
+    bool isAdmin = User.IsInRole(Roles.Admin);
+    bool isReceptionist = User.IsInRole(Roles.Receptionist);
+
+    // define actions available for each role
+    var actionByRole = new Dictionary<string, List<NavbarAction>>
+    {
+        {
+            Roles.Admin,
+            new List<NavbarAction>
+            {
+                NavbarAction.AddDoctor,
+                NavbarAction.AddSpecialization,
+                NavbarAction.AssignSpecialization,
+                NavbarAction.UserManagement
+            }
+        },
+        {
+            Roles.Receptionist,
+            new List<NavbarAction>
+            {
+                NavbarAction.UserManagement
+            }
+        },
+        {
+            Roles.Patient,
+            new List<NavbarAction>
+            {
+                NavbarAction.CreateVisit,
+                NavbarAction.MyVisits,
+                NavbarAction.PatientCard
+            }
+        },
+        {
+            Roles.Doctor,
+            new List<NavbarAction>
+            {
+               NavbarAction.DoctorVisits,
+            }
+        }
+    };
+
+    var anonymousActions = new List<NavbarAction>
+    {
+        NavbarAction.CreateVisit,
+    };
+
+    // define metadata for each action instead of raw asp-* HTML
+    var actionMetadata = new Dictionary<NavbarAction, (string Controller, string Action, string HtmlTemplate)>
+    {
+        {
+            NavbarAction.CreateVisit,
+            ("Visits", "ChooseSpecializationType",
+             @"<div class=""d-flex"">
+                 <i class=""bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0""></i>
+                 <a class=""nav-link text-dark"" href=""{0}"">Umów Wizytę</a>
+               </div>")
+        },
+        {
+            NavbarAction.MyVisits,
+            ("Visits", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Moje Wizyty</a>")
+        },
+        {
+            NavbarAction.PatientCard,
+            ("Patients", "Create",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Karta pacjenta</a>")
+        },
+        {
+            NavbarAction.AddDoctor,
+            ("Doctors", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Dodaj lekarza</a>")
+        },
+        {
+            NavbarAction.AddSpecialization,
+            ("Specializations", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Dodaj specjalizację</a>")
+        },
+        {
+            NavbarAction.AssignSpecialization,
+            ("DoctorSpecializations", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Przypisz specjalizację</a>")
+        },
+        {
+            NavbarAction.UserManagement,
+            ("UserManagement", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Zarządzaj użytkownikami</a>")
+        },
+        {
+            NavbarAction.DoctorVisits,
+            ("Visits", "DoctorVisits",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Moje Wizyty</a>")
+        }
+    };
+}
+
+<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav navbar__sections flex-grow-1">
+
+        @* if user not logged in - use anonymous actions *@
+        @if (!SignInManager.IsSignedIn(User))
+        {
+            foreach (var action in anonymousActions)
+            {
+                var meta = actionMetadata[action];
+                var url = Url.Action(meta.Action, meta.Controller);
+                <li class="nav-item">
+                    @Html.Raw(string.Format(meta.HtmlTemplate, url))
+                </li>
+            }
+        }
+        else
+        {
+            @foreach (var role in actionByRole.Keys)
+            {
+                if (User.IsInRole(role))
+                {
+                    foreach (var action in actionByRole[role])
+                    {
+                        var meta = actionMetadata[action];
+                        var url = Url.Action(meta.Action, meta.Controller);
+
+                        <li class="nav-item">
+                            @Html.Raw(string.Format(meta.HtmlTemplate, url))
+                        </li>
+                    }
+                }
+            }
+        }
+
+        <li class="nav-item d-block d-sm-none">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link text-dark text-nowrap border-0 bg-white">
+                    Wyloguj <i style="position: relative; top: 1px;" class="bi bi-box-arrow-right ms-1"></i>
+                </button>
+            </form>
+        </li>
+    </ul>
+</div>

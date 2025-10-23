@@ -4,6 +4,7 @@ using MedicalCenterRegistration.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MedicalCenterRegistration.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022121517_AddVisitStatus")]
+    partial class AddVisitStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,9 +229,6 @@ namespace MedicalCenterRegistration.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("VisitScheduleId")
                         .HasColumnType("int");
 
@@ -242,7 +242,8 @@ namespace MedicalCenterRegistration.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.HasIndex("VisitScheduleId");
+                    b.HasIndex("VisitScheduleId")
+                        .IsUnique();
 
                     b.ToTable("Visit");
                 });
@@ -267,36 +268,6 @@ namespace MedicalCenterRegistration.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("VisitSchedule");
-                });
-
-            modelBuilder.Entity("MedicalCenterRegistration.Models.VisitSummary", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("VisitId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VisitId")
-                        .IsUnique();
-
-                    b.ToTable("VisitSummary");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -501,36 +472,6 @@ namespace MedicalCenterRegistration.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("UserFile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("OwnerUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("VisitSummaryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VisitSummaryId");
-
-                    b.ToTable("UserFile");
-                });
-
             modelBuilder.Entity("MedicalCenterRegistration.Models.Doctor", b =>
                 {
                     b.HasOne("MedicalCenterRegistration.Models.Image", "Image")
@@ -595,8 +536,8 @@ namespace MedicalCenterRegistration.Migrations
                         .IsRequired();
 
                     b.HasOne("MedicalCenterRegistration.Models.VisitSchedule", "VisitSchedule")
-                        .WithMany("Visits")
-                        .HasForeignKey("VisitScheduleId")
+                        .WithOne()
+                        .HasForeignKey("MedicalCenterRegistration.Models.Visit", "VisitScheduleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -605,17 +546,6 @@ namespace MedicalCenterRegistration.Migrations
                     b.Navigation("Patient");
 
                     b.Navigation("VisitSchedule");
-                });
-
-            modelBuilder.Entity("MedicalCenterRegistration.Models.VisitSummary", b =>
-                {
-                    b.HasOne("MedicalCenterRegistration.Models.Visit", "Visit")
-                        .WithOne("VisitSummary")
-                        .HasForeignKey("MedicalCenterRegistration.Models.VisitSummary", "VisitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -667,28 +597,6 @@ namespace MedicalCenterRegistration.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("UserFile", b =>
-                {
-                    b.HasOne("MedicalCenterRegistration.Models.VisitSummary", null)
-                        .WithMany("Files")
-                        .HasForeignKey("VisitSummaryId");
-                });
-
-            modelBuilder.Entity("MedicalCenterRegistration.Models.Visit", b =>
-                {
-                    b.Navigation("VisitSummary");
-                });
-
-            modelBuilder.Entity("MedicalCenterRegistration.Models.VisitSchedule", b =>
-                {
-                    b.Navigation("Visits");
-                });
-
-            modelBuilder.Entity("MedicalCenterRegistration.Models.VisitSummary", b =>
-                {
-                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

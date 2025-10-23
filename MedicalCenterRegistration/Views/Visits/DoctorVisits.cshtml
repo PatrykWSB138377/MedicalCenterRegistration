@@ -1,0 +1,74 @@
+﻿@model IEnumerable<MedicalCenterRegistration.Models.Visit>
+@using MedicalCenterRegistration.Enums
+
+@{
+    ViewData["Title"] = "Moje wizyty";
+}
+
+<div class="p-1 p-sm-4">
+    <h1>Moje wizyty</h1>
+    <h4 class="text-muted">Przypisane wizyty pacjentów.</h4>
+    <hr />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info" role="alert">
+            Nie masz zaplanowanych wizyt.
+        </div>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Data wizyty</th>
+                    <th>Godziny wizyty</th>
+                    <th>Typ wizyty</th>
+                    <th>Imię pacjenta</th>
+                    <th>Nazwisko pacjenta</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    var statusColor = item.Status == Status.Pending ? "bg-success" : "bg-black";
+
+                    <tr class="align-middle">
+                        <td>
+                            @await Html.PartialAsync("Components/_StatusBadge", item.Status)
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VisitSchedule.VisitDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VisitSchedule.VisitTimeStart) - @Html.DisplayFor(modelItem => item.VisitSchedule.VisitTimeEnd)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VisitType)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Patient.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Patient.LastName)
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-primary btn-xs" asp-controller="Visits" asp-action="Details" asp-route-id="@item.Id">Szczegóły wizyty</a>
+                            @switch (item.Status)
+                            {
+                                case Status.Pending:
+                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaries" asp-action="Create" asp-route-visitId="@item.Id">Podsumuj wizytę</a>
+                                    break;
+                                case Status.Finished:
+                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaries" asp-action="Edit" asp-route-visitId="@item.Id">Edytuj podsumowanie</a>
+                                    break;
+                            }
+                        </td>
+                    </tr>
+                }
+        </table>
+    }
+</div>
