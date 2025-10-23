@@ -72,13 +72,10 @@
                 </div>
 
                 <div class="col d-flex justify-content-xl-end mt-4 mt-xl-0">
-                    <div class="d-flex flex-column">
-                        <button class="btn btn-primary text-nowrap mb-2">
-                            Edytuj <i class="bi bi-pencil-square ms-1"></i>
-                        </button>
-                        <button class="btn btn-danger text-nowrap">
-                            Anuluj <i class="bi bi-x-octagon ms-1"></i>
-                        </button>
+                    <div class="d-flex flex-column justify-content-center">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
+                            Szczegóły
+                        </a>
                     </div>
                 </div>
             </div>
@@ -119,13 +116,10 @@
                     </div>
 
                     <div class="d-xl-none mt-4 mt-sm-0">
-                        <div class="d-flex flex-column">
-                            <button class="btn btn-primary text-nowrap mb-2">
-                                Edytuj <i class="bi bi-pencil-square ms-1"></i>
-                            </button>
-                            <button class="btn btn-danger text-nowrap">
-                                Anuluj <i class="bi bi-x-octagon ms-1"></i>
-                            </button>
+                        <div class="d-flex flex-column justify-content-center">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
+                                Szczegóły
+                            </a>
                         </div>
                     </div>
                 </div>
