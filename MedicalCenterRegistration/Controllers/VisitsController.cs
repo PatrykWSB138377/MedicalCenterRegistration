@@ -41,10 +41,12 @@ namespace MedicalCenterRegistration.Controllers
                     .Include(v => v.Patient)
                     .Include(v => v.VisitSchedule)
                     .Where(v => v.Patient.UserId == loggedInUserId)
+                    .OrderByDescending(v => v.Id) // newest visits first
                     .ToListAsync();
 
                 return View(visits);
             }
+            // TODO: this should be a separate view and action for receptionist/admin
             else
             {
                 // W przeciwnym razie wyświetl wszystkie wizyty
@@ -66,6 +68,7 @@ namespace MedicalCenterRegistration.Controllers
                 .Include(v => v.Patient)
                 .Include(v => v.VisitSchedule)
                 .Where(v => v.Doctor.UserId == userId)
+                .OrderByDescending(v => v.Id) // newest visits first
                 .ToListAsync();
 
             return View(visits);
@@ -135,6 +138,7 @@ namespace MedicalCenterRegistration.Controllers
                 .Include(v => v.Doctor).ThenInclude(d => d.Image)
                 .Include(v => v.Patient)
                 .Include(v => v.VisitSchedule)
+                .Include(v => v.VisitSummary)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (visit == null)
@@ -180,10 +184,10 @@ namespace MedicalCenterRegistration.Controllers
                 PatientFullName = "{0} {1}".FormatWith(visit.Patient.Name, visit.Patient.LastName),
                 VisitDate = visit.VisitSchedule.VisitDate,
                 FormattedVisitTime = "{0} - {1}".FormatWith(visit.VisitSchedule.VisitTimeStart.ToString("HH:mm"), visit.VisitSchedule.VisitTimeEnd.ToString("HH:mm")),
-                Description = "lalalalalal", // TODO: load description
-                Files = new List<UserFile>(), // TODO: load files
+                Description = visit.VisitSummary?.Description ?? "",
+                Files = visit.VisitSummary?.Files ?? new List<UserFile>(),
                 CreatedAt = visit.CreatedAt,
-                UpdatedAt = null, // TODO: set update time
+                UpdatedAt = visit.UpdatedAt,
                 GoBackUrl = goBackUrl,
             };
 
@@ -219,16 +223,32 @@ namespace MedicalCenterRegistration.Controllers
                 .Select(d => d.Id)
                 .ToList();
 
-            var visits = await _context.Visit
-              .Where(v => doctorIds.Contains(v.DoctorId))
-              .Include(v => v.VisitSchedule)
-              .ToListAsync();
+            var doctorSchedules = await _context.Visit
+                .Where(v => doctorIds.Contains(v.DoctorId))
+                .Select(v => new
+                {
+                    v.DoctorId,
+                    Schedule = new
+                    {
+                        v.VisitSchedule.Id,
+                        v.VisitSchedule.VisitDate,
+                        v.VisitSchedule.VisitTimeStart,
+                        v.VisitSchedule.VisitTimeEnd
+                    }
+                })
+                .ToListAsync();
 
-            var doctorScheduledVisits = visits
+            var doctorScheduledVisits = doctorSchedules
                 .GroupBy(v => v.DoctorId)
                 .ToDictionary(
                     g => g.Key,
-                    g => g.Select(v => v.VisitSchedule).ToList()
+                    g => g.Select(v => new VisitSchedule
+                    {
+                        Id = v.Schedule.Id,
+                        VisitDate = v.Schedule.VisitDate,
+                        VisitTimeStart = v.Schedule.VisitTimeStart,
+                        VisitTimeEnd = v.Schedule.VisitTimeEnd
+                    }).ToList()
                 );
 
             var viewModel = new CreateVisitCreationViewModel

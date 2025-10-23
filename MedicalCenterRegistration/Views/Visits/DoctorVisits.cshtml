@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<MedicalCenterRegistration.Models.Visit>
 @using MedicalCenterRegistration.Enums
 
+@{
+    ViewData["Title"] = "Moje wizyty";
+}
+
 <div class="p-1 p-sm-4">
     <h1>Moje wizyty</h1>
     <h4 class="text-muted">Przypisane wizyty pacjentów.</h4>
@@ -19,6 +23,7 @@
                 <tr>
                     <th>Status</th>
                     <th>Data wizyty</th>
+                    <th>Godziny wizyty</th>
                     <th>Typ wizyty</th>
                     <th>Imię pacjenta</th>
                     <th>Nazwisko pacjenta</th>
@@ -37,6 +42,9 @@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.VisitSchedule.VisitDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VisitSchedule.VisitTimeStart) - @Html.DisplayFor(modelItem => item.VisitSchedule.VisitTimeEnd)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.VisitType)

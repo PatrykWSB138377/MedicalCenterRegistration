@@ -5,7 +5,6 @@ using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
@@ -50,6 +49,7 @@ namespace MedicalCenterRegistration.Controllers
         [HttpGet("Create")]
         public async Task<IActionResult> Create(int? visitId)
         {
+            // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             if (visitId == null)
             {
                 return NotFound();
@@ -67,7 +67,6 @@ namespace MedicalCenterRegistration.Controllers
                 return NotFound();
             }
 
-            ViewData["VisitId"] = visitId;
             return View();
         }
 
@@ -76,6 +75,7 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? visitId, [Bind("Description,Files")] VisitSummary visitSummary)
         {
+            // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
                               .Where(v => v.Id == visitId && v.Status == Status.Pending) // if the visit is not pending it will not allow to create summary
                               .FirstOrDefaultAsync();
@@ -87,8 +87,6 @@ namespace MedicalCenterRegistration.Controllers
             {
                 return BadRequest("Nie znaleziono wizyty.");
             }
-
-
 
             visit.Status = Status.Finished;
             visit.VisitSummary = visitSummary;
@@ -102,7 +100,7 @@ namespace MedicalCenterRegistration.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("DoctorVisits", "Visits", null);
             }
-            ViewData["VisitId"] = visitId;
+
             return View(visitSummary);
         }
 
@@ -110,28 +108,32 @@ namespace MedicalCenterRegistration.Controllers
         [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int? visitId)
         {
-            Console.WriteLine("ENTERED *****************************************");
             if (visitId == null)
             {
                 return NotFound();
             }
 
 
-            var visitSummary = await _context.VisitSummary.FindAsync(visitId);
+            var visitSummary = await _context.VisitSummary.FirstOrDefaultAsync(vs => vs.VisitId == visitId);
             if (visitSummary == null)
             {
                 return NotFound();
             }
-            ViewData["VisitId"] = new SelectList(_context.Visit, "Id", "Id", visitSummary.VisitId);
+
             return View(visitSummary);
         }
 
         // POST: VisitSummaries/Edit/5
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,VisitId,Description,CreatedAt,UpdatedAt")] VisitSummary visitSummary)
+        public async Task<IActionResult> Edit(int visitId, [Bind("Id,Description,Files")] VisitSummary visitSummary)
         {
-            if (id != visitSummary.Id)
+            var visit = await _context.Visit
+                              .Include(v => v.VisitSummary)
+                              .Where(v => v.Id == visitId && v.Status == Status.Finished)
+                              .FirstOrDefaultAsync();
+
+            if (visit?.VisitSummary?.Id != visitSummary.Id)
             {
                 return NotFound();
             }
@@ -140,7 +142,14 @@ namespace MedicalCenterRegistration.Controllers
             {
                 try
                 {
-                    _context.Update(visitSummary);
+                    visit.VisitSummary.Description = visitSummary.Description;
+                    visit.VisitSummary.UpdatedAt = DateTime.UtcNow;
+
+                    if (visitSummary.Files != null)
+                    {
+                        visit.VisitSummary.Files = visitSummary.Files;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -154,9 +163,9 @@ namespace MedicalCenterRegistration.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("DoctorVisits", "Visits");
             }
-            ViewData["VisitId"] = new SelectList(_context.Visit, "Id", "Id", visitSummary.VisitId);
+
             return View(visitSummary);
         }
 
