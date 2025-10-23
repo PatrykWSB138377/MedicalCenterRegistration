@@ -62,7 +62,7 @@ namespace MedicalCenterRegistration.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var visits = await _context.Visit
-                .Include(v => v.Doctor).ThenInclude(d => d.Image)
+                .Include(v => v.Doctor)
                 .Include(v => v.Patient)
                 .Include(v => v.VisitSchedule)
                 .Where(v => v.Doctor.UserId == userId)

@@ -14,7 +14,6 @@
     }
     else
     {
-
         <table class="table">
             <thead>
                 <tr>
@@ -53,10 +52,10 @@
                             @switch (item.Status)
                             {
                                 case Status.Pending:
-                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaryController" asp-action="Create" asp-route-id="@item.Id">Podsumuj wizytę</a>
+                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaries" asp-action="Create" asp-route-visitId="@item.Id">Podsumuj wizytę</a>
                                     break;
                                 case Status.Finished:
-                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaryController" asp-action="Edit" asp-route-id="@item.Id">Edytuj podsumowanie</a>
+                                    <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaries" asp-action="Edit" asp-route-visitId="@item.Id">Edytuj podsumowanie</a>
                                     break;
                             }
                         </td>

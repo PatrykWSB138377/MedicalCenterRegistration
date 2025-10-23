@@ -2,21 +2,21 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace MedicalCenterRegistration.Models
 {
     public class VisitSummary
     {
         public int Id { get; set; }
-
         public int VisitId { get; set; }
-        public Visit? Visit { get; set; }
+        [ValidateNever]
+        public virtual Visit Visit { get; set; }
 
-
-        [Required]
+        [Required(ErrorMessage = "Podsumowanie wizyty jest wymagane")]
         [Display(Name = "Podsumowanie wizyty i zalecenia")]
         [StringLength(2000)]
-        public string Description { get; set; } = string.Empty; // Notes from doctor
+        public string Description { get; set; } = string.Empty; // notes from doctor
 
         [Display(Name = "Załączniki")]
         public List<UserFile> Files { get; set; } = new();

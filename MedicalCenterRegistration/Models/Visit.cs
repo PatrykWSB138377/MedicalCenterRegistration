@@ -19,6 +19,7 @@ namespace MedicalCenterRegistration.Models
 
         public int VisitScheduleId { get; set; }
         public virtual VisitSchedule VisitSchedule { get; set; }
+        public virtual VisitSummary? VisitSummary { get; set; }
 
         public string VisitType { get; set; }
 
