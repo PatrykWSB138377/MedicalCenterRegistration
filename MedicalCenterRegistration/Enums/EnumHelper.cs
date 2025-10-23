@@ -9,6 +9,14 @@ namespace MedicalCenterRegistration.Enums
 {
     public class EnumHelper
     {
+        public static string GetDisplayName(Enum enumValue)
+        {
+            return enumValue.GetType()
+                            .GetMember(enumValue.ToString())[0]
+                            .GetCustomAttribute<DisplayAttribute>()?
+                            .Name ?? enumValue.ToString();
+        }
+
         public static List<SelectListItem> GetSelectList<TEnum>() where TEnum : Enum
         {
             return Enum.GetValues(typeof(TEnum))

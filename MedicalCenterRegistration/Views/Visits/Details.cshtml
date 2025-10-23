@@ -1,42 +1,104 @@
-﻿@model MedicalCenterRegistration.Models.Visit
+﻿@using MedicalCenterRegistration.Helpers
+@model MedicalCenterRegistration.Models.ViewModels.Visits.VisitDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
-<div>
-    <h4>Visit</h4>
+<div class="p-1 p-sm-4">
+    <div class="mb-2">
+        @* <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> | *@
+        <a class="btn btn-outline-primary btn-xs" href="@Model.GoBackUrl">
+            <i class="bi bi-arrow-left-circle me-1"></i>
+            Przejdź do listy wizyt
+        </a>
+    </div>
+
+    <h1>Szczegóły wizyty</h1>
+    <h4 class="text-muted">Tutaj znajdzisz wszystkie informacje związane z wizytą.</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Doctor)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Doctor.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Patient)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Patient.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VisitSchedule)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VisitSchedule.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedAt)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedAt)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+    <div>
+        <h5 class="fw-bold">Dane lekarza:</h5>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DoctorImage)
+            </dt>
+            <dd class="col-sm-10">
+                <img style="width: 100px; height: 100px; max-width: 100px;;" style="object-fit: cover;" class="w-100 h-100" src="data:@Model.DoctorImage.ContentType;base64,@Model.DoctorImage.Base64Data" alt="Zdjęcie lekarza" />
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DoctorFullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DoctorFullName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DoctorSpecializations)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DoctorSpecializations)
+            </dd>
+
+        </dl>
+        <hr/>
+        <h5 class="fw-bold">Dane pacjenta:</h5>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PatientFullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PatientFullName)
+            </dd>
+        </dl>
+        <hr />
+        <h5 class="fw-bold">Informacje o wizycie:</h5>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.VisitDate)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.VisitDate)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FormattedVisitTime)
+            </dt>
+            <dd class="col-sm-10 mb-5">
+                @Html.DisplayFor(model => model.FormattedVisitTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10 mb-5">
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control no-resize", @readonly = "readonly", rows = 5 })
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Files)
+            </dt>
+            <dd class="col-sm-10 mb-5">
+                @Html.DisplayFor(model => model.Files)
+            </dd>
+        </dl>
+        <hr/>
+        @{
+            // fallback to CreatedAt if UpdatedAt is null
+            var updatedAt = Model.UpdatedAt ?? Model.CreatedAt;
+        }
+        <dl class="row">
+            <dt class="col-sm-2 small">
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </dt>
+            <dd class="col-sm-10 small">
+                @Html.DisplayFor(model => model.CreatedAt)
+            </dd>
+            <dt class="col-sm-2 small">
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </dt>
+            <dd class="col-sm-10 small">
+                @Html.DisplayFor(model => updatedAt)
+            </dd>
+        </dl>
+    </div>
+ 
 </div>

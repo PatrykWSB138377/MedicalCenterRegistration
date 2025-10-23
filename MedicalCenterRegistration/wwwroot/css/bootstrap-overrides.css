@@ -118,6 +118,11 @@
         border-color: var(--color-primary-dark) !important;
     }
 
+.btn-xs {
+    padding: 6px 14px !important;
+    font-size: .875rem
+}
+
 
 .btn-cta:hover {
     padding-inline: 46px !important;

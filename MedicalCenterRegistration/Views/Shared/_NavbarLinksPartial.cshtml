@@ -42,7 +42,7 @@
             Roles.Doctor,
             new List<NavbarAction>
             {
-                // todo
+               NavbarAction.DoctorVisits,
             }
         }
     };
@@ -92,6 +92,11 @@
             NavbarAction.UserManagement,
             ("UserManagement", "Index",
              @"<a class=""nav-link text-dark"" href=""{0}"">Zarządzaj użytkownikami</a>")
+        },
+        {
+            NavbarAction.DoctorVisits,
+            ("Visits", "DoctorVisits",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Moje Wizyty</a>")
         }
     };
 }
@@ -102,7 +107,7 @@
         @* if user not logged in - use anonymous actions *@
         @if (!SignInManager.IsSignedIn(User))
         {
-            foreach(var action in anonymousActions)
+            foreach (var action in anonymousActions)
             {
                 var meta = actionMetadata[action];
                 var url = Url.Action(meta.Action, meta.Controller);
@@ -121,6 +126,7 @@
                     {
                         var meta = actionMetadata[action];
                         var url = Url.Action(meta.Action, meta.Controller);
+
                         <li class="nav-item">
                             @Html.Raw(string.Format(meta.HtmlTemplate, url))
                         </li>

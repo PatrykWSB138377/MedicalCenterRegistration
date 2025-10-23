@@ -4,9 +4,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Security.Claims;
+using Humanizer;
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
-using MedicalCenterRegistration.Models.ViewModels;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,20 @@ namespace MedicalCenterRegistration.Controllers
 
                 return View(await applicationDbContext.ToListAsync());
             }
+        }
+
+        [Authorize(Roles = Roles.Doctor)]
+        public async Task<IActionResult> DoctorVisits()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var visits = await _context.Visit
+                .Include(v => v.Doctor).ThenInclude(d => d.Image)
+                .Include(v => v.Patient)
+                .Include(v => v.VisitSchedule)
+                .Where(v => v.Doctor.UserId == userId)
+                .ToListAsync();
+
+            return View(visits);
         }
 
 
@@ -117,10 +132,11 @@ namespace MedicalCenterRegistration.Controllers
             }
 
             var visit = await _context.Visit
-                .Include(v => v.Doctor)
+                .Include(v => v.Doctor).ThenInclude(d => d.Image)
                 .Include(v => v.Patient)
                 .Include(v => v.VisitSchedule)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (visit == null)
             {
                 return NotFound();
@@ -128,12 +144,50 @@ namespace MedicalCenterRegistration.Controllers
 
             // Sprawdzenie, czy zalogowany użytkownik ma dostęp do wizyty
             var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (visit.Patient.UserId != loggedInUserId)
+            var isVisitDoctor = visit.Doctor.UserId == loggedInUserId;
+
+            if (visit.Patient.UserId != loggedInUserId && !isVisitDoctor)
             {
                 return Forbid(); // Brak dostępu
             }
 
-            return View(visit);
+
+            var doctorSpecializations = await _context.DoctorSpecialization
+                .Where(ds => ds.DoctorId == visit.DoctorId)
+                .Include(ds => ds.Specialization)
+                .ToListAsync();
+
+            string? goBackUrl = null;
+
+            if (User.IsInRole(Roles.Patient))
+            {
+                goBackUrl = Url.Action(nameof(Index), "Visits");
+            }
+            else if (User.IsInRole(Roles.Doctor))
+            {
+                goBackUrl = Url.Action("DoctorVisits", "Visits");
+            }
+            else
+            {
+                goBackUrl = Url.Action(nameof(Index), "Visits");
+            }
+
+            VisitDetailsViewModel viewModel = new VisitDetailsViewModel
+            {
+                DoctorFullName = "{0} {1}".FormatWith(visit.Doctor.Name, visit.Doctor.LastName),
+                DoctorImage = visit.Doctor.Image,
+                DoctorSpecializations = doctorSpecializations.Select(ds => ds.Specialization.Name).ToList(),
+                PatientFullName = "{0} {1}".FormatWith(visit.Patient.Name, visit.Patient.LastName),
+                VisitDate = visit.VisitSchedule.VisitDate,
+                FormattedVisitTime = "{0} - {1}".FormatWith(visit.VisitSchedule.VisitTimeStart.ToString("HH:mm"), visit.VisitSchedule.VisitTimeEnd.ToString("HH:mm")),
+                Description = "lalalalalal", // TODO: load description
+                Files = new List<UserFile>(), // TODO: load files
+                CreatedAt = visit.CreatedAt,
+                UpdatedAt = null, // TODO: set update time
+                GoBackUrl = goBackUrl,
+            };
+
+            return View(viewModel);
         }
 
         // GET: Visits/Create
