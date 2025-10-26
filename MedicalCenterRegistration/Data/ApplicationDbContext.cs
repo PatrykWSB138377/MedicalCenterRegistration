@@ -19,7 +19,7 @@ namespace MedicalCenterRegistration.Data
         public DbSet<MedicalCenterRegistration.Models.VisitSchedule> VisitSchedule { get; set; } = default!;
         public DbSet<MedicalCenterRegistration.Models.Specialization> Specialization { get; set; } = default!;
         public DbSet<MedicalCenterRegistration.Models.DoctorSpecialization> DoctorSpecialization { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.Image> Image { get; set; } = default!;
+        public DbSet<MedicalCenterRegistration.Models.PublicImage> PublicImage { get; set; } = default!;
         public DbSet<MedicalCenterRegistration.Models.VisitSummary> VisitSummary { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

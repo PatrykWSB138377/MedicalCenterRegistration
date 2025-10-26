@@ -5,6 +5,7 @@ using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,25 +80,32 @@ namespace MedicalCenterRegistration.Controllers
                 return View(doctorData);
             }
 
-            if (doctorData.ImageFile != null)
-            {
-                var fileName = Path.GetFileName(doctorData.ImageFile.FileName);
-                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", fileName);
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await doctorData.ImageFile.CopyToAsync(stream);
-                }
+            // save file to AppData/PublicImages
+            var imageFileNameWithExt = doctorData.ImageFile.FileName;
+            var fileNameWithoutExt = Path.GetFileNameWithoutExtension(imageFileNameWithExt);
+            var extension = Path.GetExtension(imageFileNameWithExt);
+            var encodedFileName = FileService.EncodeFileName(fileNameWithoutExt);
+            var parsedFileName = $"{encodedFileName}{extension}";
+
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages", parsedFileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await doctorData.ImageFile.CopyToAsync(stream);
             }
 
-            // create Image
-            var image = new Image
+
+            // create Image in db
+            var image = new PublicImage
             {
                 ContentType = doctorData.ImageFile.ContentType,
-                Base64Data = Convert.ToBase64String(System.IO.File.ReadAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", doctorData.ImageFile.FileName))),
+                FileName = parsedFileName
             };
 
-            _context.Image.Add(image);
+            _context.PublicImage.Add(image);
+
+
 
             var user = new IdentityUser
             {

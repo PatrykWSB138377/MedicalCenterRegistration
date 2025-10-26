@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MedicalCenterRegistration.Models
 {
-    public class Image
+    public class PublicImage
     {
         public int Id { get; set; }
 
@@ -14,6 +14,6 @@ namespace MedicalCenterRegistration.Models
         public string ContentType { get; set; }
 
         [Required]
-        public string Base64Data { get; set; }
+        public string FileName { get; set; }
     }
 }

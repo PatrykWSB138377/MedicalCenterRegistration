@@ -7,6 +7,12 @@
 }
 
 
+@if (!Model.Specializations.Any())
+{
+    <div class="alert alert-danger" role="alert">
+        Brak dostępnych lekarzy, skontaktuj się z przychodnią w celu rozwiązania problemu.
+    </div>
+} else {
 <form asp-controller="Visits" asp-action="ChooseSpecializationType" class="p-5">
 <h1>Wybierz rodzaj wizyty:</h1>
     <div style="max-height: 500px;" class="list-group my-4 overflow-auto">
@@ -25,7 +31,7 @@
     </div>
     <button id="chooseSpecializationTypeBtn" disabled type="submit" class="btn btn-primary">Potwierdź wybór</button>
 </form>
-
+}
 
 <script>
     const options = document.querySelectorAll('input[name="specializationId"]');

@@ -35,4 +35,8 @@ MedicalCenterRegistration/*.dbmdl
 MedicalCenterRegistration/*.bak
 
 # Ignore static assets (e.g., uploads, generated content)
-MedicalCenterRegistration/wwwroot/images
+MedicalCenterRegistration/wwwroot/images/*
+
+# Ignore static image assets, add empty folder by using .gitkeep
+MedicalCenterRegistration/AppData/PublicImages/*
+!MedicalCenterRegistration/AppData/PublicImages/.gitkeep

@@ -36,7 +36,7 @@
                         }
                         <label style="gap: 12px;" id="DoctorId@(doctor.Id)Label" class="list-group-item list-group-item-action d-flex">
                             <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
-                                <img style="object-fit: cover;" class="w-100 h-100" src="data:@doctor.Image.ContentType;base64,@doctor.Image.Base64Data" alt="Zdjęcie lekarza"/>
+                                <img style="object-fit: cover;" class="w-100 h-100" src="/public-images/@doctor.Image.FileName" alt="Zdjęcie lekarza"/>
                             </div>
                             <div class="w-100">
                                 <input hidden type="radio" name="DoctorId" value="@doctor.Id" required />
