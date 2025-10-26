@@ -26,7 +26,8 @@
             Roles.Receptionist,
             new List<NavbarAction>
             {
-                NavbarAction.UserManagement
+                NavbarAction.UserManagement,
+                NavbarAction.PatientCards
             }
         },
         {
@@ -97,6 +98,11 @@
             NavbarAction.DoctorVisits,
             ("Visits", "DoctorVisits",
              @"<a class=""nav-link text-dark"" href=""{0}"">Moje Wizyty</a>")
+        },
+        {
+            NavbarAction.PatientCards,
+            ("Patients", "Index",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Karty Pacjentów</a>")
         }
     };
 }
