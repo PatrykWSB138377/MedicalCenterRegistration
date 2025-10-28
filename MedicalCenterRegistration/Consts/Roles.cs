@@ -7,4 +7,8 @@ public static class Roles
     public const string Receptionist = "Receptionist";
     public const string Doctor = "Doctor";
     public const string Patient = "Patient";
+    public const string AdminAndReceptionist = Admin + "," + Receptionist;
+    public const string AdminAndDoctor = Admin + "," + Doctor;
+    public const string AdminAndReceptionistAndPatient = Admin + "," + Receptionist + "," + Patient;
+    public const string ReceptionistAndPatient = Receptionist + "," + Patient;          
 }

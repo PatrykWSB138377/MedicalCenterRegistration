@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.ViewModels;
@@ -12,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Roles.Admin)]
     public class DoctorSpecializationsController : Controller
     {
         private readonly ApplicationDbContext _context;

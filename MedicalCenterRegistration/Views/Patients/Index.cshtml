@@ -7,10 +7,9 @@
 <h1>Lista naszych pacjentów</h1>
 
 <div class="mb-3">
-    @if (User.IsInRole("Receptionist"))
-    {
-        <a asp-action="Assign" class="btn btn-primary">Przypisz kartę pacjenta</a>
-    }
+
+        <a asp-action="CreateForUser" class="btn btn-primary">Przypisz kartę pacjenta</a>
+    
 </div>
 
 <table class="table table-striped">

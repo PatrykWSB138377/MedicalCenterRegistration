@@ -10,6 +10,7 @@ using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
@@ -24,26 +25,11 @@ namespace MedicalCenterRegistration.Controllers
             _context = context;
             _userManager = userManager;         
         }
-        private async Task<List<dynamic>> GetAvailablePatientsAsync()
-        {
-            var usersWithPatients = _context.Patient.Select(p => p.UserId).ToList();
-            var result = new List<dynamic>();
-            var allUsers = await _userManager.Users.ToListAsync();
 
-            foreach (var user in allUsers)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                if (roles.Contains("Patient") && !usersWithPatients.Contains(user.Id))
-                {
-                    result.Add(new { user.Id, user.Email });
-                }
-            }
-            return result;
-        }
 
 
         // GET: Patients
-        [Authorize(Roles = "Admin, Receptionist")]
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Patient.Include(p => p.User);
@@ -51,7 +37,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Details/5
-        [Authorize(Roles = "Patient, Receptionist, Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,7 +60,7 @@ namespace MedicalCenterRegistration.Controllers
             return View(patient);
         }
 
-        [Authorize(Roles = "Patient, Receptionist")]
+        [Authorize(Roles = Roles.ReceptionistAndPatient)]
         public async Task<IActionResult> Create(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -124,7 +110,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Edit/5
-        [Authorize(Roles = "Patient, Receptionist, Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -148,7 +134,7 @@ namespace MedicalCenterRegistration.Controllers
 
         // POST: Patients/Edit/5
         [HttpPost]
-        [Authorize(Roles = "Patient, Receptionist, Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,DateOfBirth,Sex,PhoneNumber,PeselNumber,Street,HouseNumber,Province,District,PostalCode,City")] Patient patient)
         {
@@ -197,7 +183,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Delete/5
-        [Authorize(Roles = "Patient, Receptionist, Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -223,7 +209,7 @@ namespace MedicalCenterRegistration.Controllers
 
         // POST: Patients/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = "Patient, Receptionist, Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -249,125 +235,90 @@ namespace MedicalCenterRegistration.Controllers
             return _context.Patient.Any(e => e.Id == id);
         }
 
-        [Authorize(Roles = "Receptionist,Admin")]
-        public async Task<IActionResult> Assign(string? userId)
+        // GET: Patients/CreateForUser
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> CreateForUser()
         {
+            var usersInPatientRole = await _userManager.GetUsersInRoleAsync("Patient");
+            var existingPatientUserIds = await _context.Patient.Select(p => p.UserId).ToListAsync();
+
+            var availableUsers = usersInPatientRole
+                .Where(u => !existingPatientUserIds.Contains(u.Id))
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id,
+                    Text = $"{u.UserName}"
+                })
+                .ToList();
+
+            var viewModel = new PatientCardViewModel
+            {
+                AvailableUsers = availableUsers
+            };
+
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
-
-            var usersWithPatients = _context.Patient.Select(p => p.UserId).ToList();
-
-            var allUsers = await _context.Users.ToListAsync();
-            var userList = new List<dynamic>();
-
-            foreach (var user in allUsers)
-            {
-                var roles = await _userManager.GetRolesAsync(user);
-                if (roles.Contains("Patient") && !usersWithPatients.Contains(user.Id))
-                {
-                    userList.Add(new { user.Id, user.Email });
-                }
-            }
-
-            if (userId == null)
-            {
-                ViewData["Users"] = userList;
-                return View(new PatientCardViewModel());
-            }
-
-            var existingPatient = await _context.Patient
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.UserId == userId);
-
-            if (existingPatient == null)
-            {
-                var user = await _context.Users.FindAsync(userId);
-                var model = new PatientCardViewModel
-                {
-                    UserId = user.Id,
-                    Email = user.Email,
-                    ExistsAlready = false
-                };
-                return View(model);
-            }
-            else
-            {
-                var model = new PatientCardViewModel
-                {
-                    UserId = existingPatient.UserId,
-                    Email = existingPatient.User.Email,
-                    Name = existingPatient.Name,
-                    LastName = existingPatient.LastName,
-                    DateOfBirth = existingPatient.DateOfBirth,
-                    Sex = existingPatient.Sex,
-                    PhoneNumber = existingPatient.PhoneNumber,
-                    PeselNumber = existingPatient.PeselNumber,
-                    Street = existingPatient.Street,
-                    HouseNumber = existingPatient.HouseNumber,
-                    Province = existingPatient.Province,
-                    District = existingPatient.District,
-                    PostalCode = existingPatient.PostalCode,
-                    City = existingPatient.City,
-                    ExistsAlready = true
-                };
-                return View(model);
-            }
+            return View(viewModel);
         }
 
-
+        // POST: Patients/CreateForUser
         [HttpPost]
-        [Authorize(Roles = "Receptionist,Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Assign(PatientCardViewModel model)
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> CreateForUser(PatientCardViewModel vm)
         {
             if (!ModelState.IsValid)
             {
+                var usersInPatientRole = await _userManager.GetUsersInRoleAsync("Patient");
+                var existingPatientUserIds = await _context.Patient.Select(p => p.UserId).ToListAsync();
+
+                vm.AvailableUsers = usersInPatientRole
+                    .Where(u => !existingPatientUserIds.Contains(u.Id))
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id,
+                        Text = $"{u.UserName}"
+                    })
+                    .ToList();
+
                 ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
-                ViewData["Users"] = await GetAvailablePatientsAsync();
-                return View(model);
+                return View(vm);
             }
 
-            var existingPatient = await _context.Patient.FirstOrDefaultAsync(p => p.UserId == model.UserId);
-            if (existingPatient == null)
+            var user = await _userManager.FindByIdAsync(vm.SelectedUserId);
+            if (user == null)
             {
-                var patient = new Patient
-                {
-                    UserId = model.UserId,
-                    Name = model.Name,
-                    LastName = model.LastName,
-                    DateOfBirth = (DateTime)model.DateOfBirth,
-                    Sex = model.Sex,
-                    PhoneNumber = model.PhoneNumber,
-                    PeselNumber = model.PeselNumber,
-                    Street = model.Street,
-                    HouseNumber = model.HouseNumber,
-                    Province = model.Province,
-                    District = model.District,
-                    PostalCode = model.PostalCode,
-                    City = model.City,
-                    CreatedAt = DateTime.Now
-                };
-                _context.Patient.Add(patient);
-            }
-            else
-            {
-                existingPatient.Name = model.Name;
-                existingPatient.LastName = model.LastName;
-                existingPatient.DateOfBirth = (DateTime)model.DateOfBirth;
-                existingPatient.Sex = model.Sex;
-                existingPatient.PhoneNumber = model.PhoneNumber;
-                existingPatient.PeselNumber = model.PeselNumber;
-                existingPatient.Street = model.Street;
-                existingPatient.HouseNumber = model.HouseNumber;
-                existingPatient.Province = model.Province;
-                existingPatient.District = model.District;
-                existingPatient.PostalCode = model.PostalCode;
-                existingPatient.City = model.City;
-                _context.Patient.Update(existingPatient);
+                ModelState.AddModelError("SelectedUserId", "Wybrany użytkownik nie istnieje.");
+                return View(vm);
             }
 
+            var patient = new Patient
+            {
+                Name = vm.Name,
+                LastName = vm.LastName,
+                PhoneNumber = vm.PhoneNumber,
+                PeselNumber = vm.PeselNumber,
+                DateOfBirth = vm.DateOfBirth,
+                Sex = vm.Sex,
+                Street = vm.Street,
+                HouseNumber = vm.HouseNumber,
+                Province = vm.Province,
+                District = vm.District,
+                PostalCode = vm.PostalCode,
+                City = vm.City,
+                UserId = vm.SelectedUserId,
+                User = user,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Add(patient);
             await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
 
     }
 }
