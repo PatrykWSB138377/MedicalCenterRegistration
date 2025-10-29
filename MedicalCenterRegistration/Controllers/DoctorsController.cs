@@ -81,20 +81,9 @@ namespace MedicalCenterRegistration.Controllers
             }
 
 
-            // save file to AppData/PublicImages
-            var imageFileNameWithExt = doctorData.ImageFile.FileName;
-            var fileNameWithoutExt = Path.GetFileNameWithoutExtension(imageFileNameWithExt);
-            var extension = Path.GetExtension(imageFileNameWithExt);
-            var encodedFileName = FileService.EncodeFileName(fileNameWithoutExt);
-            var parsedFileName = $"{encodedFileName}{extension}";
-
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages", parsedFileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await doctorData.ImageFile.CopyToAsync(stream);
-            }
-
+            // save file
+            var publicImages = await FileService.UploadPublicImages(new List<IFormFile> { doctorData.ImageFile });
+            var parsedFileName = publicImages.First().FileName;
 
             // create Image in db
             var image = new PublicImage

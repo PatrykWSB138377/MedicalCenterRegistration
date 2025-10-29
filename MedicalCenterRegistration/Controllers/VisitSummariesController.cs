@@ -76,7 +76,7 @@ namespace MedicalCenterRegistration.Controllers
         // POST: VisitSummaries/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? visitId, [Bind("Description")] VisitSummary visitSummary, List<IFormFile> uploadedFiles)
+        public async Task<IActionResult> Create(int? visitId, [Bind("Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
             // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
@@ -92,13 +92,22 @@ namespace MedicalCenterRegistration.Controllers
             }
 
             visit.Status = Status.Finished;
-            visit.VisitSummary = visitSummary;
-            visitSummary.VisitId = visit.Id;
-            visitSummary.Visit = visit;
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+
+            visit.VisitSummary = new VisitSummary
+            {
+                Description = visitSummary.Description,
+                Files = uploadedFiles,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                Visit = visit,
+                VisitId = visit.Id
+            };
 
             if (ModelState.IsValid)
             {
-                _context.Add(visitSummary);
                 _context.Update(visit);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("DoctorVisits", "Visits", null);
@@ -138,6 +147,11 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int visitId, [Bind("Id,VisitId,Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
+            Console.WriteLine("********* EDIT **********");
+            Console.WriteLine("********* EDIT **********");
+            Console.WriteLine("********* EDIT **********");
+            Console.WriteLine("********* EDIT **********");
+
             var visit = await _context.Visit
                               .Include(v => v.VisitSummary)
                               .Where(v => v.Id == visitId && v.Status == Status.Finished)
@@ -152,32 +166,15 @@ namespace MedicalCenterRegistration.Controllers
             {
                 try
                 {
+
                     visit.VisitSummary.Description = visitSummary.Description;
                     visit.VisitSummary.UpdatedAt = DateTime.UtcNow;
 
+                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
 
-                    foreach (var file in visitSummary.UploadedFiles ?? Enumerable.Empty<IFormFile>())
-                    {
-                        // todo: move this to file service
-                        UserFile userFile = FileService.FormFileToUserFile(file, User.FindFirstValue(ClaimTypes.NameIdentifier));
-                        if (userFile != null)
-                        {
-                            visit.VisitSummary.Files.Add(userFile);
+                    visit.VisitSummary.Files.AddRange(uploadedFiles);
 
-                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), userFile.FilePath);
-
-                            var directory = Path.GetDirectoryName(filePath);
-                            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
-                            {
-                                Directory.CreateDirectory(directory);
-                            }
-
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-                        }
-                    }
 
                     await _context.SaveChangesAsync();
                 }
