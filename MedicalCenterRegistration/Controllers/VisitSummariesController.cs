@@ -1,9 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security.Claims;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels.VisitSummaries;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -73,7 +76,7 @@ namespace MedicalCenterRegistration.Controllers
         // POST: VisitSummaries/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? visitId, [Bind("Description,Files")] VisitSummary visitSummary)
+        public async Task<IActionResult> Create(int? visitId, [Bind("Description")] VisitSummary visitSummary, List<IFormFile> uploadedFiles)
         {
             // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
@@ -120,13 +123,20 @@ namespace MedicalCenterRegistration.Controllers
                 return NotFound();
             }
 
-            return View(visitSummary);
+            var viewModel = new CreateVisitSummaryViewModel
+            {
+                Id = visitSummary.Id,
+                VisitId = visitSummary.VisitId,
+                Description = visitSummary.Description,
+            };
+
+            return View(viewModel);
         }
 
         // POST: VisitSummaries/Edit/5
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int visitId, [Bind("Id,Description,Files")] VisitSummary visitSummary)
+        public async Task<IActionResult> Edit(int visitId, [Bind("Id,VisitId,Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
             var visit = await _context.Visit
                               .Include(v => v.VisitSummary)
@@ -145,9 +155,28 @@ namespace MedicalCenterRegistration.Controllers
                     visit.VisitSummary.Description = visitSummary.Description;
                     visit.VisitSummary.UpdatedAt = DateTime.UtcNow;
 
-                    if (visitSummary.Files != null)
+
+                    foreach (var file in visitSummary.UploadedFiles ?? Enumerable.Empty<IFormFile>())
                     {
-                        visit.VisitSummary.Files = visitSummary.Files;
+                        // todo: move this to file service
+                        UserFile userFile = FileService.FormFileToUserFile(file, User.FindFirstValue(ClaimTypes.NameIdentifier));
+                        if (userFile != null)
+                        {
+                            visit.VisitSummary.Files.Add(userFile);
+
+                            var filePath = Path.Combine(Directory.GetCurrentDirectory(), userFile.FilePath);
+
+                            var directory = Path.GetDirectoryName(filePath);
+                            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                            {
+                                Directory.CreateDirectory(directory);
+                            }
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+                        }
                     }
 
                     await _context.SaveChangesAsync();

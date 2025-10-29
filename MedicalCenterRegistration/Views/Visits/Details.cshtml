@@ -77,7 +77,23 @@
                 @Html.DisplayNameFor(model => model.Files)
             </dt>
             <dd class="col-sm-10 mb-5">
-                @Html.DisplayFor(model => model.Files)
+                @if (Model.Files != null && Model.Files.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var file in Model.Files)
+                        {
+                            <li class="list-group-item">
+                                <a href="@Url.Action("DownloadFile", "UserFiles", new { filePath = file.FilePath, fileName = file.FileName })" target="_blank">
+                                    @file.FileName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>Brak załączników</span>
+                }
             </dd>
         </dl>
         <hr/>

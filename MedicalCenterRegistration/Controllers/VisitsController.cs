@@ -138,7 +138,7 @@ namespace MedicalCenterRegistration.Controllers
                 .Include(v => v.Doctor).ThenInclude(d => d.Image)
                 .Include(v => v.Patient)
                 .Include(v => v.VisitSchedule)
-                .Include(v => v.VisitSummary)
+                .Include(v => v.VisitSummary).ThenInclude(vs => vs.Files)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (visit == null)
@@ -421,6 +421,7 @@ namespace MedicalCenterRegistration.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool VisitExists(int id)
         {

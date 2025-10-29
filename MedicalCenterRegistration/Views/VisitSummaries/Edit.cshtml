@@ -1,4 +1,4 @@
-﻿@model MedicalCenterRegistration.Models.VisitSummary
+﻿@model MedicalCenterRegistration.Models.ViewModels.VisitSummaries.CreateVisitSummaryViewModel
 
 @{
     ViewData["Title"] = "Edytuj";
@@ -17,10 +17,10 @@
     <hr />
 
 
-    <form asp-action="Edit">
+    <form asp-action="Edit" asp-route-visitId="@Model.VisitId" method="post" enctype="multipart/form-data">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input  type="hidden" asp-for="Id" value="@Model.Id" />
         <div class="row mb-3">
             <div class="col-md-6">
                 <div class="form-group">
@@ -34,8 +34,8 @@
             <div class="col-md-4">
                 <div class="mb-3">
                     <label class="form-label">Dodaj załączniki</label>
-                    <input multiple type="file" name="Files" id="fileInput" class="form-control" accept="image/*, .pdf" />
-                    <span asp-validation-for="Files" class="text-danger"></span>
+                    <input multiple type="file" asp-for="UploadedFiles" id="fileInput" class="form-control" accept="image/*, .pdf" />
+                    <span asp-validation-for="UploadedFiles" class="text-danger"></span>
                     <div class="form-text">Możliwe jest dodawanie obrazów, oraz plików .pdf</div>
                 </div>
                 <div id="fileListContainer" ** class="mt-3 mb-3">
@@ -59,10 +59,8 @@
         const fileInput = document.getElementById('fileInput');
         const fileListContainer = document.getElementById('fileListContainer');
 
-        fileInput.addEventListener('change', function (event) {
+        const listUploadedFiles = (files) => {
             fileListContainer.innerHTML = '';
-
-            const files = event.target.files;
 
             if (files.length > 0) {
                 const ul = document.createElement('ul');
@@ -80,7 +78,7 @@
                         li.classList.add(cls);
                     });
 
-                    li.textContent = file.name;
+                    li.textContent = file.name.substr(0, 30).concat('...')
 
                     ul.appendChild(li);
                 }
@@ -89,6 +87,15 @@
                 fileListContainer.appendChild(ul);
 
             }
+
+        }
+
+        const initialFiles = fileInput.files;
+        listUploadedFiles(initialFiles);
+
+        fileInput.addEventListener('change', function (event) {
+            const files = event.target.files;
+            listUploadedFiles(files)
         });
     })
 </script>

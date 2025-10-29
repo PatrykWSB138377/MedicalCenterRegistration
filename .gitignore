@@ -40,3 +40,7 @@ MedicalCenterRegistration/wwwroot/images/*
 # Ignore static image assets, add empty folder by using .gitkeep
 MedicalCenterRegistration/AppData/PublicImages/*
 !MedicalCenterRegistration/AppData/PublicImages/.gitkeep
+
+# Ignore user files, add empty folder by using .gitkeep
+MedicalCenterRegistration/AppData/UserFiles/*
+!MedicalCenterRegistration/AppData/UserFiles/.gitkeep

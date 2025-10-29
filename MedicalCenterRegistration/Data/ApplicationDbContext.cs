@@ -49,6 +49,7 @@ namespace MedicalCenterRegistration.Data
                 .HasForeignKey<VisitSummary>(vs => vs.VisitId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
+        public DbSet<UserFile> UserFile { get; set; } = default!;
 
 
     }
