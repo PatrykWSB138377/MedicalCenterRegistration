@@ -16,6 +16,7 @@ namespace MedicalCenterRegistration.Models.ViewModels.VisitSummaries
         [Display(Name = "Załączniki")]
         [MaxFileCount(5, ErrorMessage = "Można dodać maksymalnie 5 plików.")]
         public List<IFormFile>? UploadedFiles { get; set; }
+        public List<UserFile>? CurrentUserFiles { get; set; }
 
         public int VisitId { get; set; }
         public int Id { get; set; }

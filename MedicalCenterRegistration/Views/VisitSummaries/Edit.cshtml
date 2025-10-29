@@ -1,7 +1,10 @@
-﻿@model MedicalCenterRegistration.Models.ViewModels.VisitSummaries.CreateVisitSummaryViewModel
+﻿@using MedicalCenterRegistration.Helpers
+@model MedicalCenterRegistration.Models.ViewModels.VisitSummaries.CreateVisitSummaryViewModel
 
 @{
     ViewData["Title"] = "Edytuj";
+    Console.WriteLine("********* FILES");
+    DebugLogger.LogList(Model.CurrentUserFiles);
 }
 
 <div class="p-1 p-sm-4">
@@ -39,7 +42,33 @@
                     <div class="form-text">Możliwe jest dodawanie obrazów, oraz plików .pdf</div>
                 </div>
                 <div id="fileListContainer" ** class="mt-3 mb-3">
+              
                 </div>
+
+                <div class="alert alert-warning">Edycja załączników spowoduje usunięcie poprzednio dodanych załączników.</div>
+
+                <div class="mb-3">
+                <span>Aktualnie dodane załączniki:</span>
+                @if (Model.CurrentUserFiles != null && Model.CurrentUserFiles.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var file in Model.CurrentUserFiles)
+                        {
+                            <li class="list-group-item">
+                                <a href="@Url.Action("DownloadFile", "UserFiles", new { filePath = file.FilePath, fileName = file.FileName })" target="_blank">
+                                    @file.FileName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>Brak załączników</span>
+                }
+                </div>
+
+
                 <div class="form-group">
                     <input type="submit" value="Dodaj podsumowanie" class="btn btn-primary" />
                 </div>

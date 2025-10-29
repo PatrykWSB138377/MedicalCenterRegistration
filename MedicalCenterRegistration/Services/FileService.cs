@@ -85,6 +85,11 @@ namespace MedicalCenterRegistration.Services
         {
             List<UserFile> userFiles = new List<UserFile>();
 
+            if (formFiles == null || formFiles.Count == 0)
+            {
+                return userFiles;
+            }
+
             await UploadFiles(formFiles, (formFile) =>
             {
                 UserFile userFile = FormFileToUserFile(formFile, userId);
@@ -99,6 +104,11 @@ namespace MedicalCenterRegistration.Services
         public async static Task<List<PublicImage>> UploadPublicImages(List<IFormFile> formFiles)
         {
             List<PublicImage> publicImages = new List<PublicImage>();
+
+            if (formFiles == null || formFiles.Count == 0)
+            {
+                return publicImages;
+            }
 
             await UploadFiles(formFiles, (formFile) =>
             {
@@ -115,5 +125,23 @@ namespace MedicalCenterRegistration.Services
             return publicImages;
         }
 
+        private async static Task DeleteFileAsync(string filePath)
+        {
+            var fullFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+
+            if (System.IO.File.Exists(fullFilePath))
+            {
+                System.IO.File.Delete(fullFilePath);
+            }
+        }
+
+        public async static Task DeleteUserFilesAsync(List<UserFile> userFiles)
+        {
+            foreach (var userFile in userFiles)
+            {
+                await DeleteFileAsync(userFile.FilePath);
+            }
+        }
     }
+
 }

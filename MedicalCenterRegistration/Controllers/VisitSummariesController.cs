@@ -126,7 +126,7 @@ namespace MedicalCenterRegistration.Controllers
             }
 
 
-            var visitSummary = await _context.VisitSummary.FirstOrDefaultAsync(vs => vs.VisitId == visitId);
+            var visitSummary = await _context.VisitSummary.Include(vs => vs.Files).FirstOrDefaultAsync(vs => vs.VisitId == visitId);
             if (visitSummary == null)
             {
                 return NotFound();
@@ -137,6 +137,7 @@ namespace MedicalCenterRegistration.Controllers
                 Id = visitSummary.Id,
                 VisitId = visitSummary.VisitId,
                 Description = visitSummary.Description,
+                CurrentUserFiles = visitSummary.Files
             };
 
             return View(viewModel);
@@ -147,13 +148,8 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int visitId, [Bind("Id,VisitId,Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
-            Console.WriteLine("********* EDIT **********");
-            Console.WriteLine("********* EDIT **********");
-            Console.WriteLine("********* EDIT **********");
-            Console.WriteLine("********* EDIT **********");
-
             var visit = await _context.Visit
-                              .Include(v => v.VisitSummary)
+                              .Include(v => v.VisitSummary).ThenInclude(vs => vs.Files)
                               .Where(v => v.Id == visitId && v.Status == Status.Finished)
                               .FirstOrDefaultAsync();
 
@@ -170,10 +166,22 @@ namespace MedicalCenterRegistration.Controllers
                     visit.VisitSummary.Description = visitSummary.Description;
                     visit.VisitSummary.UpdatedAt = DateTime.UtcNow;
 
-                    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
 
-                    visit.VisitSummary.Files.AddRange(uploadedFiles);
+                    if (visitSummary.UploadedFiles != null && visitSummary.UploadedFiles.Any())
+                    {
+                        // TODO: could make it so that deleting files is optional instead of replacing all files every time
+
+                        var visitFiles = visit.VisitSummary.Files;
+                        // delete old files as they will be replaced with new ones
+                        await FileService.DeleteUserFilesAsync(visitFiles);
+                        _context.UserFile.RemoveRange(visitFiles);
+
+                        // upload new files
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+
+                        visit.VisitSummary.Files.AddRange(uploadedFiles);
+                    }
 
 
                     await _context.SaveChangesAsync();
