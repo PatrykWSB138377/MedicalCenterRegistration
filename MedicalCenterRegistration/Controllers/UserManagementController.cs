@@ -1,4 +1,5 @@
-﻿using MedicalCenterRegistration.Data;
+﻿using MedicalCenterRegistration.Consts;
+using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedicalCenterRegistration.Controllers
 {
-    [Authorize(Roles = "Admin,Receptionist")]
+    [Authorize(Roles = Roles.AdminAndReceptionist)]
     public class UserManagementController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;

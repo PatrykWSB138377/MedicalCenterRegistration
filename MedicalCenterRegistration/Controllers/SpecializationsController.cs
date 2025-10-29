@@ -1,13 +1,16 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class SpecializationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -56,12 +59,23 @@ namespace MedicalCenterRegistration.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Sprawdź, czy już istnieje taka nazwa
+                bool exists = await _context.Specialization
+                    .AnyAsync(s => s.Name.ToLower() == specialization.Name.ToLower());
+
+                if (exists)
+                {
+                    ModelState.AddModelError("Name", "Specjalizacja o takiej nazwie już istnieje.");
+                    return View(specialization);
+                }
+
                 _context.Add(specialization);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(specialization);
         }
+
 
         // GET: Specializations/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -93,6 +107,17 @@ namespace MedicalCenterRegistration.Controllers
 
             if (ModelState.IsValid)
             {
+                // Sprawdź, czy istnieje inna specjalizacja o tej samej nazwie
+                bool duplicateExists = await _context.Specialization
+                    .AnyAsync(s => s.Name.ToLower() == specialization.Name.ToLower()
+                                && s.Id != specialization.Id);
+
+                if (duplicateExists)
+                {
+                    ModelState.AddModelError("Name", "Specjalizacja o takiej nazwie już istnieje.");
+                    return View(specialization);
+                }
+
                 try
                 {
                     _context.Update(specialization);
@@ -111,8 +136,10 @@ namespace MedicalCenterRegistration.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(specialization);
         }
+
 
         // GET: Specializations/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -2,15 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class DoctorSpecializationsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -76,39 +79,50 @@ namespace MedicalCenterRegistration.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-
         public async Task<IActionResult> Create(DoctorSpecializationCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var entity = new DoctorSpecialization
-                {
-                    DoctorId = model.DoctorId,
-                    SpecializationId = model.SpecializationId
-                };
+                // Sprawdzenie, czy taka para (DoctorId, SpecializationId) już istnieje
+                bool alreadyExists = await _context.DoctorSpecialization
+                    .AnyAsync(ds => ds.DoctorId == model.DoctorId && ds.SpecializationId == model.SpecializationId);
 
-                _context.Add(entity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (alreadyExists)
+                {
+                    ModelState.AddModelError("", "Ten lekarz już ma przypisaną tę specjalizację.");
+                }
+                else
+                {
+                    var entity = new DoctorSpecialization
+                    {
+                        DoctorId = model.DoctorId,
+                        SpecializationId = model.SpecializationId
+                    };
+
+                    _context.Add(entity);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
-            // Ponowne wypełnienie list po nieudanym zapisie
-            model.Doctor = _context.Doctor
+            //  Ponowne wypełnienie list po nieudanym zapisie
+            model.Doctor = await _context.Doctor
                 .Select(d => new SelectListItem
                 {
                     Value = d.Id.ToString(),
                     Text = $"{d.Name} {d.LastName}"
-                }).ToList();
+                }).ToListAsync();
 
-            model.Specialization = _context.Specialization
+            model.Specialization = await _context.Specialization
                 .Select(s => new SelectListItem
                 {
                     Value = s.Id.ToString(),
                     Text = s.Name
-                }).ToList();
+                }).ToListAsync();
 
             return View(model);
         }
+
 
 
         // GET: DoctorSpecializations/Edit/5
@@ -143,26 +157,42 @@ namespace MedicalCenterRegistration.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                // Sprawdź, czy istnieje inny wpis z tą samą kombinacją (DoctorId, SpecializationId)
+                bool duplicateExists = await _context.DoctorSpecialization
+                    .AnyAsync(ds => ds.DoctorId == doctorSpecialization.DoctorId
+                                 && ds.SpecializationId == doctorSpecialization.SpecializationId
+                                 && ds.Id != doctorSpecialization.Id);
+
+                if (duplicateExists)
                 {
-                    _context.Update(doctorSpecialization);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("", "Ten lekarz już ma przypisaną tę specjalizację.");
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!DoctorSpecializationExists(doctorSpecialization.Id))
+                    try
                     {
-                        return NotFound();
+                        _context.Update(doctorSpecialization);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!DoctorSpecializationExists(doctorSpecialization.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+
+            // Ponowne wypełnienie list (żeby formularz się poprawnie załadował)
             ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "LastName", doctorSpecialization.DoctorId);
-            ViewData["SpecializationId"] = new SelectList(_context.Specialization, "Id", "Id", doctorSpecialization.SpecializationId);
+            ViewData["SpecializationId"] = new SelectList(_context.Specialization, "Id", "Name", doctorSpecialization.SpecializationId);
+
             return View(doctorSpecialization);
         }
 

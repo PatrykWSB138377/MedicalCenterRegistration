@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
@@ -32,7 +33,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Details/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -52,7 +53,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Create
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         public IActionResult Create()
         {
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
@@ -63,7 +64,7 @@ namespace MedicalCenterRegistration.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind("Email,Password,Name,LastName,Description,DateOfBirth,Sex,ImageFile")] CreateDoctorPayloadViewModel doctorData)
@@ -158,6 +159,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Edit/5
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -177,6 +179,7 @@ namespace MedicalCenterRegistration.Controllers
         // POST: Doctors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = Roles.Admin)]    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,UserId,CreatedAt")] Doctor doctor)
@@ -211,6 +214,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors/Delete/5
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -230,6 +234,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // POST: Doctors/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

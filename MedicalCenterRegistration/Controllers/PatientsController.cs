@@ -6,8 +6,11 @@ using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
@@ -15,14 +18,18 @@ namespace MedicalCenterRegistration.Controllers
     public class PatientsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;    
 
-        public PatientsController(ApplicationDbContext context)
+        public PatientsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;         
         }
 
+
+
         // GET: Patients
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Patient.Include(p => p.User);
@@ -30,25 +37,30 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Details/5
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var patient = await _context.Patient
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (patient == null)
-            {
                 return NotFound();
+
+            if (User.IsInRole("Patient"))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (patient.UserId != userId)
+                    return Forbid(); 
             }
 
             return View(patient);
         }
 
-        [Authorize(Roles = Roles.Patient)]
+        [Authorize(Roles = Roles.ReceptionistAndPatient)]
         public async Task<IActionResult> Create(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -98,25 +110,22 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Edit/5
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var patient = await _context.Patient.FindAsync(id);
             if (patient == null)
-            {
                 return NotFound();
-            }
 
-
-            var properties = patient.GetType().GetProperties();
-            foreach (var prop in properties)
+            
+            if (User.IsInRole("Patient"))
             {
-                var value = prop.GetValue(patient);
-                ViewData[prop.Name] = value;
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (patient.UserId != userId)
+                    return Forbid();
             }
 
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
@@ -124,19 +133,28 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // POST: Patients/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,DateOfBirth,Sex,PhoneNumber,PeselNumber,Street,HouseNumber,Province,District,PostalCode,City")] Patient patient)
         {
             if (id != patient.Id)
-            {
                 return NotFound();
+
+            var existingPatient = await _context.Patient.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+            if (existingPatient == null)
+                return NotFound();
+
+            
+            if (User.IsInRole("Patient"))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (existingPatient.UserId != userId)
+                    return Forbid();
             }
 
-            patient.UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            patient.User = await _context.Users.FindAsync(patient.UserId);
+            patient.UserId = existingPatient.UserId;
+            patient.User = await _context.Users.FindAsync(existingPatient.UserId);
 
             if (ModelState.IsValid)
             {
@@ -148,15 +166,16 @@ namespace MedicalCenterRegistration.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!PatientExists(patient.Id))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
-                return RedirectToAction(nameof(Edit));
+
+                // Jeśli pacjent edytował swoje dane → wróć do szczegółów
+                if (User.IsInRole("Patient"))
+                    return RedirectToAction(nameof(Details), new { id = patient.Id });
+
+                return RedirectToAction(nameof(Index));
             }
 
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
@@ -164,19 +183,25 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Patients/Delete/5
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var patient = await _context.Patient
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (patient == null)
-            {
                 return NotFound();
+
+            
+            if (User.IsInRole("Patient"))
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (patient.UserId != userId)
+                    return Forbid();
             }
 
             return View(patient);
@@ -184,15 +209,23 @@ namespace MedicalCenterRegistration.Controllers
 
         // POST: Patients/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var patient = await _context.Patient.FindAsync(id);
-            if (patient != null)
+            if (patient == null)
+                return NotFound();
+
+            
+            if (User.IsInRole("Patient"))
             {
-                _context.Patient.Remove(patient);
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (patient.UserId != userId)
+                    return Forbid();
             }
 
+            _context.Patient.Remove(patient);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -201,5 +234,91 @@ namespace MedicalCenterRegistration.Controllers
         {
             return _context.Patient.Any(e => e.Id == id);
         }
+
+        // GET: Patients/CreateForUser
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> CreateForUser()
+        {
+            var usersInPatientRole = await _userManager.GetUsersInRoleAsync("Patient");
+            var existingPatientUserIds = await _context.Patient.Select(p => p.UserId).ToListAsync();
+
+            var availableUsers = usersInPatientRole
+                .Where(u => !existingPatientUserIds.Contains(u.Id))
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id,
+                    Text = $"{u.UserName}"
+                })
+                .ToList();
+
+            var viewModel = new PatientCardViewModel
+            {
+                AvailableUsers = availableUsers
+            };
+
+            ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
+            return View(viewModel);
+        }
+
+        // POST: Patients/CreateForUser
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> CreateForUser(PatientCardViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                var usersInPatientRole = await _userManager.GetUsersInRoleAsync("Patient");
+                var existingPatientUserIds = await _context.Patient.Select(p => p.UserId).ToListAsync();
+
+                vm.AvailableUsers = usersInPatientRole
+                    .Where(u => !existingPatientUserIds.Contains(u.Id))
+                    .Select(u => new SelectListItem
+                    {
+                        Value = u.Id,
+                        Text = $"{u.UserName}"
+                    })
+                    .ToList();
+
+                ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
+                return View(vm);
+            }
+
+            var user = await _userManager.FindByIdAsync(vm.SelectedUserId);
+            if (user == null)
+            {
+                ModelState.AddModelError("SelectedUserId", "Wybrany użytkownik nie istnieje.");
+                return View(vm);
+            }
+
+            var patient = new Patient
+            {
+                Name = vm.Name,
+                LastName = vm.LastName,
+                PhoneNumber = vm.PhoneNumber,
+                PeselNumber = vm.PeselNumber,
+                DateOfBirth = vm.DateOfBirth,
+                Sex = vm.Sex,
+                Street = vm.Street,
+                HouseNumber = vm.HouseNumber,
+                Province = vm.Province,
+                District = vm.District,
+                PostalCode = vm.PostalCode,
+                City = vm.City,
+                UserId = vm.SelectedUserId,
+                User = user,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Add(patient);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+
+
     }
 }
