@@ -10,7 +10,7 @@ namespace MedicalCenterRegistration.Models.ViewModels.Visits
         [Display(Name = "Imię i nazwisko lekarza")]
         public string DoctorFullName { get; set; }
         [Display(Name = "Zdjęcie lekarza")]
-        public Image DoctorImage { get; set; }
+        public PublicImage DoctorImage { get; set; }
         [Display(Name = "Specjalizacje lekarza")]
         public List<string> DoctorSpecializations { get; set; }
         [Display(Name = "Imię i nazwisko pacjenta")]

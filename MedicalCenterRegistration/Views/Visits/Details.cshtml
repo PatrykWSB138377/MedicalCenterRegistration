@@ -26,7 +26,7 @@
                 @Html.DisplayNameFor(model => model.DoctorImage)
             </dt>
             <dd class="col-sm-10">
-                <img style="width: 100px; height: 100px; max-width: 100px;;" style="object-fit: cover;" class="w-100 h-100" src="data:@Model.DoctorImage.ContentType;base64,@Model.DoctorImage.Base64Data" alt="Zdjęcie lekarza" />
+                <img style="width: 100px; height: 100px; max-width: 100px; object-fit: cover;" class="w-100 h-100" src="/public-images/@Model.DoctorImage?.FileName" alt="Zdjęcie lekarza" />
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.DoctorFullName)
@@ -77,7 +77,23 @@
                 @Html.DisplayNameFor(model => model.Files)
             </dt>
             <dd class="col-sm-10 mb-5">
-                @Html.DisplayFor(model => model.Files)
+                @if (Model.Files != null && Model.Files.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var file in Model.Files)
+                        {
+                            <li class="list-group-item">
+                                <a href="@Url.Action("DownloadFile", "UserFiles", new { filePath = file.FilePath, fileName = file.FileName })" target="_blank">
+                                    @file.FileName
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <span>Brak załączników</span>
+                }
             </dd>
         </dl>
         <hr/>

@@ -5,6 +5,7 @@ using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Seeders;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 
 
@@ -47,6 +48,16 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseStaticFiles();
+
+// images should be accessible from /public-images/{filename}
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages")),
+    RequestPath = "/public-images"
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

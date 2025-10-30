@@ -41,7 +41,7 @@ namespace MedicalCenterRegistration.Models
 
 
         public int ImageId { get; set; }
-        public virtual Image Image { get; set; }
+        public virtual PublicImage Image { get; set; }
 
         public required string UserId { get; set; }
         public IdentityUser? User { get; set; }

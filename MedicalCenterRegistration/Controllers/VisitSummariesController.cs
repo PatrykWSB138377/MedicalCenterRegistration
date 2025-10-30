@@ -1,9 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Security.Claims;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels.VisitSummaries;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -73,7 +76,7 @@ namespace MedicalCenterRegistration.Controllers
         // POST: VisitSummaries/Create
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? visitId, [Bind("Description,Files")] VisitSummary visitSummary)
+        public async Task<IActionResult> Create(int? visitId, [Bind("Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
             // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
@@ -89,13 +92,22 @@ namespace MedicalCenterRegistration.Controllers
             }
 
             visit.Status = Status.Finished;
-            visit.VisitSummary = visitSummary;
-            visitSummary.VisitId = visit.Id;
-            visitSummary.Visit = visit;
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+
+            visit.VisitSummary = new VisitSummary
+            {
+                Description = visitSummary.Description,
+                Files = uploadedFiles,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                Visit = visit,
+                VisitId = visit.Id
+            };
 
             if (ModelState.IsValid)
             {
-                _context.Add(visitSummary);
                 _context.Update(visit);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("DoctorVisits", "Visits", null);
@@ -114,22 +126,30 @@ namespace MedicalCenterRegistration.Controllers
             }
 
 
-            var visitSummary = await _context.VisitSummary.FirstOrDefaultAsync(vs => vs.VisitId == visitId);
+            var visitSummary = await _context.VisitSummary.Include(vs => vs.Files).FirstOrDefaultAsync(vs => vs.VisitId == visitId);
             if (visitSummary == null)
             {
                 return NotFound();
             }
 
-            return View(visitSummary);
+            var viewModel = new CreateVisitSummaryViewModel
+            {
+                Id = visitSummary.Id,
+                VisitId = visitSummary.VisitId,
+                Description = visitSummary.Description,
+                CurrentUserFiles = visitSummary.Files
+            };
+
+            return View(viewModel);
         }
 
         // POST: VisitSummaries/Edit/5
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int visitId, [Bind("Id,Description,Files")] VisitSummary visitSummary)
+        public async Task<IActionResult> Edit(int visitId, [Bind("Id,VisitId,Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
             var visit = await _context.Visit
-                              .Include(v => v.VisitSummary)
+                              .Include(v => v.VisitSummary).ThenInclude(vs => vs.Files)
                               .Where(v => v.Id == visitId && v.Status == Status.Finished)
                               .FirstOrDefaultAsync();
 
@@ -142,13 +162,27 @@ namespace MedicalCenterRegistration.Controllers
             {
                 try
                 {
+
                     visit.VisitSummary.Description = visitSummary.Description;
                     visit.VisitSummary.UpdatedAt = DateTime.UtcNow;
 
-                    if (visitSummary.Files != null)
+
+                    if (visitSummary.UploadedFiles != null && visitSummary.UploadedFiles.Any())
                     {
-                        visit.VisitSummary.Files = visitSummary.Files;
+                        // TODO: could make it so that deleting files is optional instead of replacing all files every time
+
+                        var visitFiles = visit.VisitSummary.Files;
+                        // delete old files as they will be replaced with new ones
+                        await FileService.DeleteUserFilesAsync(visitFiles);
+                        _context.UserFile.RemoveRange(visitFiles);
+
+                        // upload new files
+                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+
+                        visit.VisitSummary.Files.AddRange(uploadedFiles);
                     }
+
 
                     await _context.SaveChangesAsync();
                 }

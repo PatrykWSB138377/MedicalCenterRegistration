@@ -56,7 +56,7 @@
                 {
                     <div class="d-flex col-auto align-items-center mt-4 mt-xl-0 ps-4">
                         <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
-                            <img style="object-fit: cover;" class="w-100 h-100" src="data:@item.Doctor.Image.ContentType;base64,@item.Doctor.Image.Base64Data" alt="Zdjęcie lekarza" />
+                            <img style="object-fit: cover;" class="w-100 h-100" src="public-images/@item.Doctor?.Image?.FileName" alt="Zdjęcie lekarza" />
                         </div>
                     </div>
                 }
@@ -104,7 +104,7 @@
                 <div class="d-flex flex-column flex-sm-row justify-content-between d-xl-none mt-5">
                     <div class="d-flex d-xl-none">
                         <div style="height: 100px; width: 100px; min-width: 100px" class="rounded overflow-hidden">
-                            <img style="object-fit: cover;" class="w-100 h-100" src="data:@item.Doctor.Image.ContentType;base64,@item.Doctor.Image.Base64Data" alt="Zdjęcie lekarza" />
+                            <img style="object-fit: cover;" class="w-100 h-100" src="/public-images/@item.Doctor?.Image?.FileName" alt="Zdjęcie lekarza" />
                         </div>
                         <div class="ms-3">
                             <h4>Przypisany lekarz:</h4>
