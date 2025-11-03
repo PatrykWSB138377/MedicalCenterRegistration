@@ -1,0 +1,14 @@
+﻿@model MedicalCenterRegistration.Models.ViewModels.Patients.PatiensListViewModel
+
+
+<div class="p-1 p-sm-4">
+
+<h1>Wybierz pacjenta</h1>
+<h4 class="text-muted">Wybierz pacjenta, dla którego chcesz umówić wizytę.</h4>
+<hr/>
+
+@await Html.PartialAsync("Patients/_PatientsTable", Model)
+
+</div>
+
+

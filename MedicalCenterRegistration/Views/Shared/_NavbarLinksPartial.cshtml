@@ -27,6 +27,7 @@
             Roles.Receptionist,
             new List<NavbarAction>
             {
+                NavbarAction.RegisterPatientVisit,
                 NavbarAction.UserManagement,
                 NavbarAction.PatientCards
             }
@@ -104,6 +105,14 @@
             NavbarAction.PatientCards,
             ("Patients", "Index",
              @"<a class=""nav-link text-dark"" href=""{0}"">Karty Pacjentów</a>")
+        },
+         {
+            NavbarAction.RegisterPatientVisit,
+            ("Visits", "ChoosePatient",
+             @"<div class=""d-flex"">
+                 <i class=""bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0""></i>
+                 <a class=""nav-link text-dark"" href=""{0}"">Umów Wizytę</a>
+               </div>")
         }
     };
 }

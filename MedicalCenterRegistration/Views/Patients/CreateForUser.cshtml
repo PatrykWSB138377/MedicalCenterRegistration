@@ -1,8 +1,10 @@
-﻿@model MedicalCenterRegistration.Models.ViewModels.PatientCardViewModel
+﻿@model MedicalCenterRegistration.Models.ViewModels.Patients.PatientCardViewModel
 
 @{
     ViewData["Title"] = "Dodaj pacjenta dla użytkownika";
 }
+
+<div class="p-1 p-sm-4">
 
 <h2>Dodaj kartę pacjenta dla użytkownika</h2>
 
@@ -98,6 +100,7 @@
         <a asp-action="Index" class="btn btn-secondary ms-2">Anuluj</a>
     </div>
 </form>
+</div>
 
 @section Scripts {
     @{

@@ -8,6 +8,7 @@ using Humanizer;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Models.ViewModels.Patients;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,12 +29,12 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Visits
-        [Authorize]
+        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
         public async Task<IActionResult> Index()
         {
             var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (User.IsInRole("Patient"))
+            if (User.IsInRole(Roles.Patient))
             {
                 // Jeśli użytkownik ma rolę "Patient", wyświetl tylko wizyty powiązane z jego ID
                 var visits = await _context.Visit
@@ -53,7 +54,8 @@ namespace MedicalCenterRegistration.Controllers
                 var applicationDbContext = _context.Visit
                     .Include(v => v.Doctor)
                     .Include(v => v.Patient)
-                    .Include(v => v.VisitSchedule);
+                    .Include(v => v.VisitSchedule)
+                    .OrderByDescending(v => v.Id); // newest visits first
 
                 return View(await applicationDbContext.ToListAsync());
             }
@@ -76,17 +78,57 @@ namespace MedicalCenterRegistration.Controllers
 
 
 
-        // GET: ChooseSpecializationType
-        [Authorize]
-        public async Task<IActionResult> ChooseSpecializationType()
+        // GET: ChoosePatient
+        [HttpGet]
+        [Authorize(Roles = Roles.Receptionist)]
+        public async Task<IActionResult> ChoosePatient()
         {
 
 
-            var hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
-            if (!hasPatientInfo)
+
+            var patients = await _context.Patient.Include(p => p.User).ToListAsync();
+
+
+            PatiensListViewModel vm = new PatiensListViewModel
             {
-                return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseSpecializationType)) });
+                Patients = patients,
+                mode = PatientsTableMode.SelectForVisit
+            };
+
+            return View(vm);
+        }
+
+
+        // GET: ChooseSpecializationType
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> ChooseSpecializationType(int? patientId)
+        {
+
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            bool hasPatientInfo;
+
+            switch (userRole)
+            {
+                case Roles.Receptionist:
+                    hasPatientInfo = await _patientService.HasPatientEntryByIdAsync(patientId);
+                    if (!hasPatientInfo)
+                    {
+                        return RedirectToAction("CreateForUser", "Patients");
+                    }
+                    break;
+                case Roles.Patient:
+                    hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
+                    if (!hasPatientInfo)
+                    {
+                        return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseSpecializationType)) });
+                    }
+                    break;
+                default:
+                    return Forbid();
             }
+
+
 
             var specializations = await _context.DoctorSpecialization
                 .GroupBy(ds => new { ds.Specialization.Id, ds.Specialization.Name })
@@ -101,7 +143,8 @@ namespace MedicalCenterRegistration.Controllers
 
             var viewModel = new ChooseDoctorSpecializationViewModel
             {
-                Specializations = specializations
+                Specializations = specializations,
+                patientId = patientId
             };
 
             return View(viewModel);
@@ -111,15 +154,18 @@ namespace MedicalCenterRegistration.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChooseSpecializationType(string specializationId)
+        public async Task<IActionResult> SubmitSpecializationType(string specializationId, string? patientId)
         {
             if (string.IsNullOrEmpty(specializationId))
             {
                 ModelState.AddModelError("", "Please select a visit type.");
-                return View();
+                return View(nameof(ChooseSpecializationType));
             }
 
+            Console.WriteLine("********************* Submitting specializationId: " + specializationId + ", patientId: " + patientId);
+
             TempData["SpecializationId"] = specializationId;
+            TempData["PatientId"] = patientId;
 
             return RedirectToAction(nameof(Create));
         }
@@ -200,17 +246,41 @@ namespace MedicalCenterRegistration.Controllers
         {
 
             var specializationId = TempData.Peek("SpecializationId");
+            var patientId = TempData.Peek("PatientId")?.ToString();
+
             if (specializationId == null)
             {
                 return RedirectToAction(nameof(ChooseSpecializationType));
             }
 
-            var patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Patient patient = null;
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            if (patient == null)
+            switch (userRole)
             {
-                ModelState.AddModelError("", "Patient not found.");
-                return RedirectToAction("Create", "Patients");
+                case Roles.Receptionist:
+                    if (patientId == null)
+                    {
+                        return BadRequest("Patient ID is required.");
+                    }
+
+                    patient = await _patientService.GetPatientByIdAsync(int.Parse(patientId));
+                    if (patient == null)
+                    {
+                        ModelState.AddModelError("", "Patient not found.");
+                        return RedirectToAction("Create", "Patients");
+                    }
+                    break;
+                case Roles.Patient:
+                    patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                    if (patient == null)
+                    {
+                        ModelState.AddModelError("", "Patient not found.");
+                        return RedirectToAction("Create", "Patients");
+                    }
+                    break;
+                default:
+                    return Forbid();
             }
 
             var doctorsForSpecialization = await _context.DoctorSpecialization
@@ -269,8 +339,6 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitPayloadViewModel visitData)
         {
-            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(visitData, new System.Text.Json.JsonSerializerOptions { WriteIndented = true }));
-
             DateOnly visitDate = DateOnly.ParseExact(visitData.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             TimeOnly visitTimeStart = TimeOnly.ParseExact(visitData.Time, "HH:mm", CultureInfo.InvariantCulture);
             TimeOnly visitTimeEnd = visitTimeStart.AddMinutes(30);
@@ -294,7 +362,7 @@ namespace MedicalCenterRegistration.Controllers
             _context.VisitSchedule.Add(visitSchedule);
             await _context.SaveChangesAsync();
 
-            var patient = await _patientService.GetPatientByUserIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var patient = await _patientService.GetPatientByIdAsync(visitData.PatientId);
 
             if (patient == null)
             {

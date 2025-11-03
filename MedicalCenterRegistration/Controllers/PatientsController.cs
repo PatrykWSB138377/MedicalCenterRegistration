@@ -6,7 +6,7 @@ using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
-using MedicalCenterRegistration.Models.ViewModels;
+using MedicalCenterRegistration.Models.ViewModels.Patients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +18,12 @@ namespace MedicalCenterRegistration.Controllers
     public class PatientsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;    
+        private readonly UserManager<IdentityUser> _userManager;
 
         public PatientsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = userManager;         
+            _userManager = userManager;
         }
 
 
@@ -32,8 +32,15 @@ namespace MedicalCenterRegistration.Controllers
         [Authorize(Roles = Roles.AdminAndReceptionist)]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Patient.Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            var patients = await _context.Patient.Include(p => p.User).ToListAsync();
+
+            var vm = new PatiensListViewModel
+            {
+                Patients = patients,
+                mode = PatientsTableMode.Default
+            };
+
+            return View(vm);
         }
 
         // GET: Patients/Details/5
@@ -54,7 +61,7 @@ namespace MedicalCenterRegistration.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (patient.UserId != userId)
-                    return Forbid(); 
+                    return Forbid();
             }
 
             return View(patient);
@@ -120,7 +127,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -145,7 +152,7 @@ namespace MedicalCenterRegistration.Controllers
             if (existingPatient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -196,7 +203,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -217,7 +224,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

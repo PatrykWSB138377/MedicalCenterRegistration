@@ -21,7 +21,7 @@
 <form asp-action="Create" class="p-2 p-sm-5">
     <h1>Wybierz lekarza oraz termin:</h1>
 
-
+    <input hidden name="PatientId" value="@Model.Patient.Id" />
     <div class="row">
         <div class="col-xl-6 list-group">
             @if (doctors != null)
