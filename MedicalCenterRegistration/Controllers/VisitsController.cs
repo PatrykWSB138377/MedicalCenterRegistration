@@ -8,7 +8,6 @@ using Humanizer;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
-using MedicalCenterRegistration.Models.ViewModels.Patients;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -78,24 +77,12 @@ namespace MedicalCenterRegistration.Controllers
 
 
 
-        // GET: ChoosePatient
+        //GET: ChoosePatient
         [HttpGet]
         [Authorize(Roles = Roles.Receptionist)]
         public async Task<IActionResult> ChoosePatient()
         {
-
-
-
-            var patients = await _context.Patient.Include(p => p.User).ToListAsync();
-
-
-            PatiensListViewModel vm = new PatiensListViewModel
-            {
-                Patients = patients,
-                mode = PatientsTableMode.SelectForVisit
-            };
-
-            return View(vm);
+            return View();
         }
 
 
@@ -161,8 +148,6 @@ namespace MedicalCenterRegistration.Controllers
                 ModelState.AddModelError("", "Please select a visit type.");
                 return View(nameof(ChooseSpecializationType));
             }
-
-            Console.WriteLine("********************* Submitting specializationId: " + specializationId + ", patientId: " + patientId);
 
             TempData["SpecializationId"] = specializationId;
             TempData["PatientId"] = patientId;

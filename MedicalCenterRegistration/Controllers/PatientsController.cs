@@ -5,6 +5,8 @@ using System.Security.Claims;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
+using MedicalCenterRegistration.Helpers;
+
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels.Patients;
 using Microsoft.AspNetCore.Authorization;
@@ -30,18 +32,68 @@ namespace MedicalCenterRegistration.Controllers
 
         // GET: Patients
         [Authorize(Roles = Roles.AdminAndReceptionist)]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var patients = await _context.Patient.Include(p => p.User).ToListAsync();
-
-            var vm = new PatiensListViewModel
-            {
-                Patients = patients,
-                mode = PatientsTableMode.Default
-            };
-
-            return View(vm);
+            return View();
         }
+
+        // POST: GetPatients
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        [HttpPost]
+        public async Task<IActionResult> GetPatients()
+        {
+            var query = _context.Patient.Include(p => p.User).AsQueryable();
+
+            var request = DataTableHelper.GetRequest(Request);
+
+            var totalRecords = await query.CountAsync();
+
+            // filtering
+            if (!string.IsNullOrEmpty(request.SearchValue))
+            {
+                var searchValue = request.SearchValue.ToLower();
+                query = query.Where(p =>
+                    p.Name.ToLower().Contains(searchValue.ToLower()) ||
+                    p.LastName.ToLower().Contains(searchValue.ToLower()) ||
+                    p.User.Email.ToLower().Contains(searchValue.ToLower())
+                );
+            }
+
+            var filteredRecords = await query.CountAsync();
+
+            // sorting
+            query = query.ApplySorting(request);
+
+            // paging
+            var patients = await query
+                .Skip(request.Start)
+                .Take(request.Length)
+                .ToListAsync();
+
+
+            var patientsVm = new List<PatientInListViewModel>();
+            foreach (var patient in patients)
+            {
+                patientsVm.Add(new PatientInListViewModel
+                {
+                    Id = patient.Id,
+                    Name = patient.Name,
+                    LastName = patient.LastName,
+                    UserEmail = patient.User.Email,
+                    CreatedAt = patient.CreatedAt.ToString("yyyy-MM-dd"),
+                    mode = PatientsTableMode.Default
+                });
+            }
+
+
+            var response = DataTableHelper.CreateResponse(request, totalRecords, filteredRecords, patientsVm);
+
+
+
+            return Json(response);
+        }
+
 
         // GET: Patients/Details/5
         [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]

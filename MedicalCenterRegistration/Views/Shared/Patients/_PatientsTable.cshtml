@@ -1,47 +1,18 @@
-﻿@model MedicalCenterRegistration.Models.ViewModels.Patients.PatiensListViewModel
+﻿
 
-
-@{
-    IEnumerable<Patient> patients = Model.Patients;
-}
-
-@using MedicalCenterRegistration.Models.ViewModels.Patients
-
-
-
-<table class="table table-striped">
+<table id="table" class="table table-striped">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(model => model.Patients.First().Name)</th>
-            <th>@Html.DisplayNameFor(model => model.Patients.First().LastName)</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
             <th>Użytkownik</th>
             <th>Utworzony</th>
             <th>Akcje</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in patients)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                <td>@item.User?.Email</td>
-                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
-                <td>
-                    @if (Model.mode == PatientsTableMode.Default)
-                    {
-                        <a asp-controller="Patients" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Szczegóły</a>
-                        <a asp-controller="Patients" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-success">Edytuj</a>
-                        <a asp-controller ="Patients" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Usuń</a>
-                    }
-                    else if (Model.mode == PatientsTableMode.SelectForVisit)
-                    {
-                        <a asp-controller="Visits" asp-action="ChooseSpecializationType" asp-route-patientId="@item.Id" class="btn btn-sm btn-outline-success">
-                            Wybierz
-                        </a>
-                    }
-                </td>
-            </tr>
-        }
     </tbody>
 </table>
+
+
+<script src="~/js/datatable.js" asp-append-version="true"></script>

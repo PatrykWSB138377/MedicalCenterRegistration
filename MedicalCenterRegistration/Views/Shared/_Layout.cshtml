@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link href="~/css/navbar.css" rel="stylesheet" />
     <link href="~/css/bootstrap-overrides.css" rel="stylesheet" />
+    <link href="~/css/datatable-overrides.css" rel="stylesheet" />
     <link href="~/css/home.css" rel="stylesheet" />
     <link href="~/css/identity.css" rel="stylesheet" />
     <link href="~/css/time-picker.css" rel="stylesheet" />
@@ -29,13 +30,25 @@
     <link rel="stylesheet" href="~/MedicalCenterRegistration.styles.css" asp-append-version="true" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <!-- FullCalendar -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/bootstrap5.global.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales-all.global.min.js"></script>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.5/css/dataTables.bootstrap5.min.css" />
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.bootstrap5.min.js"></script>
 
 </head>
 <body>
@@ -89,9 +102,21 @@
             }
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        window.localeURL = '@Url.Content("~/datatable_pl.json")';
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
+
+ 
+

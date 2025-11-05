@@ -1,7 +1,4 @@
-﻿@model List<MedicalCenterRegistration.Models.ViewModels.UserListItemViewModel>
-@using System.Linq
-
-@{
+﻿@{
     ViewData["Title"] = "Lista użytkowników";
 }
 
@@ -12,30 +9,39 @@
         <a asp-action="Create" class="btn btn-success">Dodaj nowego użytkownika</a>
     </div>
 
-    @if (Model != null && Model.Any())
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Rola</th>
-                    <th>Data utworzenia</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>@user.Email</td>
-                        <td>@user.Role</td>
-                        <td>@(user.CreatedAt != DateTime.MinValue ? user.CreatedAt : "-")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>Brak użytkowników do wyświetlenia.</p>
-    }
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Rola</th>
+                <th>Data utworzenia</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </div>
+
+@section Scripts {
+
+    <script>
+        window.dataTableSSConfig = {
+            ajaxUrl: '@Url.Action("GetUsers", "UserManagement")',
+            columns: [
+                    { data: 'email' },
+                    {
+                      data: 'role',
+                          orderable: false,
+                          searchable: false
+                            },
+                                {
+                                  data: 'createdAt',
+                                  orderable: false,
+                                  searchable: false
+                                },
+                             ]
+                };
+    </script>
+
+    <script src="~/js/datatable.js" asp-append-version="true"></script>
+}

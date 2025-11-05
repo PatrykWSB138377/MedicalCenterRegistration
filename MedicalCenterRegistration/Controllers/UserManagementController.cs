@@ -1,10 +1,14 @@
-﻿using MedicalCenterRegistration.Consts;
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
-using MedicalCenterRegistration.Models;
+using MedicalCenterRegistration.Helpers;
 using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MedicalCenterRegistration.Controllers
 {
@@ -98,34 +102,75 @@ namespace MedicalCenterRegistration.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Admin widzi wszystkich
-            // Recepcjonista tylko pacjentów
-            var currentUser = await _userManager.GetUserAsync(User);
-            var roles = await _userManager.GetRolesAsync(currentUser);
+            return View();
+        }
 
-            var users = _userManager.Users.ToList();
-            var model = new List<UserListItemViewModel>();
+        // AJAX endpoint for DataTables to fetch user data
+        [HttpPost]
+        public async Task<IActionResult> GetUsers()
+        {
+            var request = DataTableHelper.GetRequest(Request);
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var currentUserRoles = await _userManager.GetRolesAsync(currentUser);
+            var isReceptionist = currentUserRoles.Contains(Roles.Receptionist);
+
+            var query = _userManager.Users.AsQueryable();
+
+            // recepcjonista widzi tylko pacjentów
+            if (isReceptionist)
+            {
+                var patientRoleId = await _context.Roles.Where(r => r.Name == Roles.Patient).Select(r => r.Id).FirstOrDefaultAsync();
+
+                if (patientRoleId != null)
+                {
+                    query = query.Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == patientRoleId));
+                }
+            }
+
+            var recordsTotal = await query.CountAsync();
+
+            //  search by email
+            if (!string.IsNullOrEmpty(request.SearchValue))
+            {
+                query = query.Where(u => u.Email.Contains(request.SearchValue));
+            }
+
+            var recordsFiltered = await query.CountAsync();
+
+            query = query.ApplySorting(request);
+
+            var users = query
+                .Skip(request.Start)
+                .Take(request.Length)
+                .ToList();
+
+            var vm = new List<UserListItemViewModel>();
+
 
             foreach (var user in users)
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
-                var mainRole = userRoles.FirstOrDefault() ?? "Brak roli";
+                var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
 
-                if (roles.Contains("Receptionist") && mainRole != "Patient")
-                    continue; // recepcjonista nie widzi innych użytkowników
-
-                
-
-                model.Add(new UserListItemViewModel
+                vm.Add(new UserListItemViewModel
                 {
                     Id = user.Id,
                     Email = user.Email,
-                    Role = mainRole,
-                    CreatedAt =  DateTime.MinValue
+                    Role = userRole,
+                    CreatedAt = DateTime.MinValue
                 });
             }
 
-            return View(model);
+            var response = DataTableHelper.CreateResponse(
+                request,
+                recordsTotal,
+                recordsFiltered,
+                vm
+            );
+
+            return Json(response);
         }
     }
+
 }

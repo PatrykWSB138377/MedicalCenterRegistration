@@ -9,10 +9,14 @@ namespace MedicalCenterRegistration.Models.ViewModels.Patients
         SelectForVisit
     }
 
-    public class PatiensListViewModel
+    public class PatientInListViewModel
     {
-        public List<Patient> Patients = new();
-        public string searchString = string.Empty;
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string LastName { get; set; }
+        public object UserEmail { get; set; }
+        public string CreatedAt { get; set; }
+
         public PatientsTableMode mode = PatientsTableMode.Default;
     }
 }

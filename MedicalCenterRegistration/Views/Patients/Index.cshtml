@@ -1,4 +1,4 @@
-﻿@model MedicalCenterRegistration.Models.ViewModels.Patients.PatiensListViewModel
+﻿@using MedicalCenterRegistration.Models.ViewModels.Patients
 
 @{
     ViewData["Title"] = "Lista pacjentów";
@@ -6,11 +6,34 @@
 
 <div class="p-1 p-sm-4">
     <h1>Lista naszych pacjentów</h1>
-
     <div class="mb-3">
         <a asp-action="CreateForUser" class="btn btn-primary">Przypisz kartę pacjenta</a>
     </div>
+    <hr />
 
-    @await Html.PartialAsync("Patients/_PatientsTable", Model)
-
+    @await Html.PartialAsync("Patients/_PatientsTable")
 </div>
+
+
+<script>
+    window.dataTableSSConfig = {
+        ajaxUrl: '@Url.Action("GetPatients", "Patients")',
+        columns: [
+            { data: 'name' },
+            { data: 'lastName' },
+            { data: 'userEmail', name: "user.email" },
+            { data: 'createdAt' },
+            {
+                data: 'id', // The data field must be the ID needed for the links
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    return `<a href="/Patients/Details/${data}" class="btn btn-sm btn-outline-primary">Szczegóły</a>
+                                    <a href="/Patients/Edit/${data}" class="btn btn-sm btn-outline-success">Edytuj</a>
+                                    <a href="/Patients/Delete/${data}" class="btn btn-sm btn-outline-danger">Usuń</a>`;
+                }
+            }
+
+        ]
+    };
+</script>
