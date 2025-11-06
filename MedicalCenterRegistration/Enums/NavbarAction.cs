@@ -5,6 +5,6 @@ namespace MedicalCenterRegistration.Enums
 {
     public enum NavbarAction
     {
-        CreateVisit, MyVisits, PatientCard, AddDoctor, AddSpecialization, AssignSpecialization, UserManagement, DoctorVisits, PatientCards
+        CreateVisit, MyVisits, PatientCard, AddDoctor, AddSpecialization, AssignSpecialization, UserManagement, DoctorVisits, PatientCards, RegisterPatientVisit
     }
 }

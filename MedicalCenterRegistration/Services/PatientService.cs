@@ -32,6 +32,16 @@ public class PatientService
         return await _context.Patient.AnyAsync(p => p.UserId == userId);
     }
 
+    public async Task<bool> HasPatientEntryByIdAsync(int? patientId)
+    {
+        if (patientId == null)
+            return false;
+
+        return await _context.Patient.AnyAsync(p => p.Id == patientId);
+    }
+
+    public async Task<Patient?> GetPatientByIdAsync(int? patientId) => await _context.Patient.FirstOrDefaultAsync(p => p.Id == patientId);
+
     public async Task<Patient?> GetPatientByUserIdAsync(string userId)
     {
         if (string.IsNullOrEmpty(userId))

@@ -10,5 +10,5 @@ public static class Roles
     public const string AdminAndReceptionist = Admin + "," + Receptionist;
     public const string AdminAndDoctor = Admin + "," + Doctor;
     public const string AdminAndReceptionistAndPatient = Admin + "," + Receptionist + "," + Patient;
-    public const string ReceptionistAndPatient = Receptionist + "," + Patient;          
+    public const string ReceptionistAndPatient = Receptionist + "," + Patient;
 }

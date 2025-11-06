@@ -1,41 +1,39 @@
-﻿@model IEnumerable<MedicalCenterRegistration.Models.Patient>
+﻿@using MedicalCenterRegistration.Models.ViewModels.Patients
 
 @{
     ViewData["Title"] = "Lista pacjentów";
 }
 
-<h1>Lista naszych pacjentów</h1>
-
-<div class="mb-3">
-
+<div class="p-1 p-sm-4">
+    <h1>Lista naszych pacjentów</h1>
+    <div class="mb-3">
         <a asp-action="CreateForUser" class="btn btn-primary">Przypisz kartę pacjenta</a>
-    
+    </div>
+    <hr />
+
+    @await Html.PartialAsync("Patients/_PatientsTable")
 </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Name)</th>
-            <th>@Html.DisplayNameFor(model => model.LastName)</th>
-            <th>Użytkownik</th>
-            <th>Utworzony</th>
-            <th>Akcje</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Name)</td>
-                <td>@Html.DisplayFor(modelItem => item.LastName)</td>
-                <td>@item.User?.Email</td>
-                <td>@item.CreatedAt.ToString("yyyy-MM-dd")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edytuj</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Szczegóły</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Usuń</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<script>
+    window.dataTableSSConfig = {
+        ajaxUrl: '@Url.Action("GetPatients", "Patients")',
+        columns: [
+            { data: 'name' },
+            { data: 'lastName' },
+            { data: 'userEmail', name: "user.email" },
+            { data: 'createdAt' },
+            {
+                data: 'id', // The data field must be the ID needed for the links
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    return `<a href="/Patients/Details/${data}" class="btn btn-sm btn-outline-primary">Szczegóły</a>
+                                    <a href="/Patients/Edit/${data}" class="btn btn-sm btn-outline-success">Edytuj</a>
+                                    <a href="/Patients/Delete/${data}" class="btn btn-sm btn-outline-danger">Usuń</a>`;
+                }
+            }
+
+        ]
+    };
+</script>

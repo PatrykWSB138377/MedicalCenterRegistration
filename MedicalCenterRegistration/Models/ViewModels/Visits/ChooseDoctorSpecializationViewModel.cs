@@ -13,5 +13,6 @@ namespace MedicalCenterRegistration.Models.ViewModels.Visits
     public class ChooseDoctorSpecializationViewModel
     {
         public List<SpecializationWithDoctorCount> Specializations { get; set; }
+        public int? patientId { get; set; }
     }
 }

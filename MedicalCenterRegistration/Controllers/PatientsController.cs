@@ -5,8 +5,10 @@ using System.Security.Claims;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
+using MedicalCenterRegistration.Helpers;
+
 using MedicalCenterRegistration.Models;
-using MedicalCenterRegistration.Models.ViewModels;
+using MedicalCenterRegistration.Models.ViewModels.Patients;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,23 +20,80 @@ namespace MedicalCenterRegistration.Controllers
     public class PatientsController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;    
+        private readonly UserManager<IdentityUser> _userManager;
 
         public PatientsController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            _userManager = userManager;         
+            _userManager = userManager;
         }
 
 
 
         // GET: Patients
         [Authorize(Roles = Roles.AdminAndReceptionist)]
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Patient.Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            return View();
         }
+
+        // POST: GetPatients
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        [HttpPost]
+        public async Task<IActionResult> GetPatients()
+        {
+            var query = _context.Patient.Include(p => p.User).AsQueryable();
+
+            var request = DataTableHelper.GetRequest(Request);
+
+            var totalRecords = await query.CountAsync();
+
+            // filtering
+            if (!string.IsNullOrEmpty(request.SearchValue))
+            {
+                var searchValue = request.SearchValue.ToLower();
+                query = query.Where(p =>
+                    p.Name.ToLower().Contains(searchValue.ToLower()) ||
+                    p.LastName.ToLower().Contains(searchValue.ToLower()) ||
+                    p.User.Email.ToLower().Contains(searchValue.ToLower())
+                );
+            }
+
+            var filteredRecords = await query.CountAsync();
+
+            // sorting
+            query = query.ApplySorting(request);
+
+            // paging
+            var patients = await query
+                .Skip(request.Start)
+                .Take(request.Length)
+                .ToListAsync();
+
+
+            var patientsVm = new List<PatientInListViewModel>();
+            foreach (var patient in patients)
+            {
+                patientsVm.Add(new PatientInListViewModel
+                {
+                    Id = patient.Id,
+                    Name = patient.Name,
+                    LastName = patient.LastName,
+                    UserEmail = patient.User.Email,
+                    CreatedAt = patient.CreatedAt.ToString("yyyy-MM-dd"),
+                    mode = PatientsTableMode.Default
+                });
+            }
+
+
+            var response = DataTableHelper.CreateResponse(request, totalRecords, filteredRecords, patientsVm);
+
+
+
+            return Json(response);
+        }
+
 
         // GET: Patients/Details/5
         [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
@@ -54,7 +113,7 @@ namespace MedicalCenterRegistration.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (patient.UserId != userId)
-                    return Forbid(); 
+                    return Forbid();
             }
 
             return View(patient);
@@ -120,7 +179,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -145,7 +204,7 @@ namespace MedicalCenterRegistration.Controllers
             if (existingPatient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -196,7 +255,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -217,7 +276,7 @@ namespace MedicalCenterRegistration.Controllers
             if (patient == null)
                 return NotFound();
 
-            
+
             if (User.IsInRole("Patient"))
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

@@ -1,0 +1,34 @@
+﻿@model MedicalCenterRegistration.Models.ViewModels.Patients.PatientInListViewModel
+
+
+<div class="p-1 p-sm-4">
+
+<h1>Wybierz pacjenta</h1>
+<h4 class="text-muted">Wybierz pacjenta, dla którego chcesz umówić wizytę.</h4>
+<hr/>
+
+
+@await Html.PartialAsync("Patients/_PatientsTable", Model)
+
+</div>
+
+<script>
+    window.dataTableSSConfig = {
+        ajaxUrl: '@Url.Action("GetPatients", "Patients")',
+        columns: [
+            { data: 'name' },
+            { data: 'lastName' },
+            { data: 'userEmail', name: "User.Email" },
+            { data: 'createdAt' },
+            {
+                data: 'id', // The data field must be the ID needed for the links
+                orderable: false,
+                searchable: false,
+                render: function (data, type, row) {
+                    return `<a href="/Visits/ChooseSpecializationType?patientId=${data}" class="btn btn-sm btn-outline-success">Wybierz</a>`;
+                }
+            }
+        ]
+    };
+</script>
+
