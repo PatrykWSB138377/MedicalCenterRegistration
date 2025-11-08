@@ -1,0 +1,77 @@
+﻿@model MedicalCenterRegistration.Models.DoctorRating
+
+@{
+    ViewData["Title"] = "Dodaj ocenę lekarza";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post" autocomplete="off">
+    <div class="form-group mb-3">
+        <label>Ocena</label>
+
+        <div class="star-rating">
+            <input type="radio" id="star5" name="Rating" value="5" @(Model?.Rating == 5 ? "checked" : "") />
+            <label for="star5" title="5 gwiazdek">★</label>
+
+            <input type="radio" id="star4" name="Rating" value="4" @(Model?.Rating == 4 ? "checked" : "") />
+            <label for="star4" title="4 gwiazdki">★</label>
+
+            <input type="radio" id="star3" name="Rating" value="3" @(Model?.Rating == 3 ? "checked" : "") />
+            <label for="star3" title="3 gwiazdki">★</label>
+
+            <input type="radio" id="star2" name="Rating" value="2" @(Model?.Rating == 2 ? "checked" : "") />
+            <label for="star2" title="2 gwiazdki">★</label>
+
+            <input type="radio" id="star1" name="Rating" value="1" @(Model?.Rating == 1 ? "checked" : "") />
+            <label for="star1" title="1 gwiazdka">★</label>
+        </div>
+
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="Comment"></label>
+        <textarea asp-for="Comment" class="form-control" rows="4" maxlength="500"></textarea>
+        <span asp-validation-for="Comment" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="DoctorId" />
+    <input type="hidden" asp-for="PatientId" />
+
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+    <a asp-action="List" class="btn btn-secondary">Anuluj</a>
+</form>
+
+<style>
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse; 
+        gap: 6px;
+        align-items: center;
+        justify-content:left;
+    }
+  
+        .star-rating input[type="radio"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            font-size: 2rem;
+            color: #ccc;
+            user-select: none;
+            line-height: 1;
+        }
+
+            
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: sandybrown;
+            }
+
+        .star-rating input[type="radio"]:checked ~ label {
+            color: gold;
+        }
+</style>

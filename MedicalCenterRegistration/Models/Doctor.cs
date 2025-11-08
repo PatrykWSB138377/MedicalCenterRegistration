@@ -48,6 +48,8 @@ namespace MedicalCenterRegistration.Models
 
 
         public DateTime CreatedAt { get; set; }
+        public ICollection<DoctorRating> Ratings { get; set; } = new List<DoctorRating>();
+        public ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();    
 
     }
 }

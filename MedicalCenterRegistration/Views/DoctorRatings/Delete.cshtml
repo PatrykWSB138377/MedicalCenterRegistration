@@ -1,0 +1,31 @@
+﻿@model MedicalCenterRegistration.Models.DoctorRating
+
+@{
+    ViewData["Title"] = "Usuń ocenę lekarza";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="alert alert-warning">
+    Czy na pewno chcesz usunąć ocenę dla lekarza
+    <strong>@Model.Doctor.Name @Model.Doctor.LastName</strong>?
+</div>
+
+<div class="mb-3">
+    <label><strong>Ocena:</strong></label>
+    <span>@Model.Rating / 5</span>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Comment))
+{
+    <div class="mb-3">
+        <label><strong>Komentarz:</strong></label>
+        <p>@Model.Comment</p>
+    </div>
+}
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="List" class="btn btn-secondary">Anuluj</a>
+</form>
