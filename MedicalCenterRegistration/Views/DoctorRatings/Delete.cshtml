@@ -27,5 +27,5 @@
 <form asp-action="Delete" method="post">
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-danger">Usuń</button>
-    <a asp-action="List" class="btn btn-secondary">Anuluj</a>
+    <a asp-action="List" asp-controller="Doctors" class="btn btn-secondary">Anuluj</a>
 </form>
