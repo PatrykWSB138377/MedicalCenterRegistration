@@ -38,7 +38,8 @@
             {
                 NavbarAction.CreateVisit,
                 NavbarAction.MyVisits,
-                NavbarAction.PatientCard
+                NavbarAction.PatientCard,
+                NavbarAction.DoctorRatings
             }
         },
         {
@@ -53,6 +54,7 @@
     var anonymousActions = new List<NavbarAction>
     {
         NavbarAction.CreateVisit,
+        NavbarAction.DoctorRatings  
     };
 
     // define metadata for each action instead of raw asp-* HTML
@@ -113,7 +115,12 @@
                  <i class=""bi bi-calendar-check navbar__calendar-icon me-2 me-sm-0""></i>
                  <a class=""nav-link text-dark"" href=""{0}"">Umów Wizytę</a>
                </div>")
-        }
+        },
+        {
+            NavbarAction.DoctorRatings,
+            ("Doctors", "List",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Nasi Lekarze</a>")
+        }           
     };
 }
 

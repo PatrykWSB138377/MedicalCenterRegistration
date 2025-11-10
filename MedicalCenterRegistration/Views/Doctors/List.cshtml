@@ -1,0 +1,68 @@
+﻿@model IEnumerable<MedicalCenterRegistration.Models.ViewModels.DoctorCardViewModel>
+
+@{
+    ViewData["Title"] = "Nasi lekarze";
+}
+
+<h2 class="mb-4">Lekarze pracujący w naszej placówce</h2>
+
+ <div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var doc in Model)
+    {
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <img src="/public-images/@doc.Image"
+                     class="card-img-top" alt="Zdjęcie lekarza">
+                     
+                     
+                <div class="card-body">
+                    <h5 class="card-title">@doc.FullName</h5>
+                    <p class="text-muted">@doc.Specializations</p>
+                    <p>@doc.Description</p>
+
+                    <div class="mb-2">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Round(doc.AverageRating))
+                            {
+                                <i class="bi bi-star-fill text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-star text-secondary"></i>
+                            }
+                        }
+                        <span class="ms-1">(@doc.RatingsCount)</span>
+                    </div>
+
+                    @if (User.IsInRole("Patient"))
+                        if(doc.CanRate){
+                    
+                        if (doc.UserHasRated)
+                        {
+                            <a asp-controller="DoctorRatings"
+                               asp-action="Edit"
+                               asp-route-id="@doc.UserRatingId"
+                               class="btn btn-warning btn-sm">
+                                Edytuj ocenę
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="DoctorRatings"
+                               asp-action="Create"
+                               asp-route-doctorId="@doc.DoctorId"
+                               class="btn btn-primary btn-sm">
+                                Oceń lekarza
+                            </a>
+                        
+                        }}
+                        else{<span class="text-muted">Możesz ocenić lekarza po zakończeniu wizyty.</span>      
+                    }
+
+                </div>
+            </div>
+        </div>
+    }
+</div>
+ 

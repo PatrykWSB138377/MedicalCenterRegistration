@@ -21,6 +21,7 @@ namespace MedicalCenterRegistration.Data
         public DbSet<MedicalCenterRegistration.Models.DoctorSpecialization> DoctorSpecialization { get; set; } = default!;
         public DbSet<MedicalCenterRegistration.Models.PublicImage> PublicImage { get; set; } = default!;
         public DbSet<MedicalCenterRegistration.Models.VisitSummary> VisitSummary { get; set; } = default!;
+        public DbSet<MedicalCenterRegistration.Models.DoctorRating> DoctorRating { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
