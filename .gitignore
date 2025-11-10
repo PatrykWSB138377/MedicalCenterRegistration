@@ -44,3 +44,7 @@ MedicalCenterRegistration/AppData/PublicImages/*
 # Ignore user files, add empty folder by using .gitkeep
 MedicalCenterRegistration/AppData/UserFiles/*
 !MedicalCenterRegistration/AppData/UserFiles/.gitkeep
+
+# Ignore all .user files globally (including *.csproj.user)
+*.user
+

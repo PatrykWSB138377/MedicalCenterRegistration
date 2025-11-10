@@ -1,0 +1,29 @@
+﻿.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 6px;
+    align-items: center;
+    justify-content: left;
+}
+
+    .star-rating input[type="radio"] {
+        position: absolute;
+        left: -9999px;
+    }
+
+    .star-rating label {
+        cursor: pointer;
+        font-size: 2rem;
+        color: #ccc;
+        user-select: none;
+        line-height: 1;
+    }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: sandybrown;
+        }
+
+    .star-rating input[type="radio"]:checked ~ label {
+        color: gold;
+    }
