@@ -117,7 +117,7 @@ namespace MedicalCenterRegistration.Controllers
             existing.Comment = doctorRating.Comment;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("List", "DoctorRatings");
+            return RedirectToAction("List", "Doctors");
         }
 
         // GET: DoctorRatings/Delete/5
