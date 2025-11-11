@@ -13,24 +13,28 @@ namespace MedicalCenterRegistration.Data
             : base(options)
         {
         }
-        public DbSet<MedicalCenterRegistration.Models.Doctor> Doctor { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.Patient> Patient { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.Visit> Visit { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.VisitSchedule> VisitSchedule { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.Specialization> Specialization { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.DoctorSpecialization> DoctorSpecialization { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.PublicImage> PublicImage { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.VisitSummary> VisitSummary { get; set; } = default!;
-        public DbSet<MedicalCenterRegistration.Models.DoctorRating> DoctorRating { get; set; } = default!;
+
+        public DbSet<Doctor> Doctor { get; set; } = default!;
+        public DbSet<Patient> Patient { get; set; } = default!;
+        public DbSet<Visit> Visit { get; set; } = default!;
+        public DbSet<VisitSchedule> VisitSchedule { get; set; } = default!;
+        public DbSet<Specialization> Specialization { get; set; } = default!;
+        public DbSet<DoctorSpecialization> DoctorSpecialization { get; set; } = default!;
+        public DbSet<PublicImage> PublicImage { get; set; } = default!;
+        public DbSet<VisitSummary> VisitSummary { get; set; } = default!;
+        public DbSet<DoctorRating> DoctorRating { get; set; } = default!;
+        public DbSet<UserFile> UserFile { get; set; } = default!;
+        public DbSet<UserFileOwner> UserFileOwner { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.Patient)
                 .WithMany()
                 .HasForeignKey(v => v.PatientId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Visit>()
                 .HasOne(v => v.Doctor)
@@ -44,14 +48,40 @@ namespace MedicalCenterRegistration.Data
                 .HasForeignKey(v => v.VisitScheduleId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
             modelBuilder.Entity<VisitSummary>()
                 .HasOne(vs => vs.Visit)
                 .WithOne(v => v.VisitSummary)
                 .HasForeignKey<VisitSummary>(vs => vs.VisitId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserFileOwner>()
+                .HasKey(ufo => ufo.Id);
+
+            modelBuilder.Entity<UserFileOwner>()
+                .HasOne(ufo => ufo.File)
+                .WithMany(f => f.Owners)
+                .HasForeignKey(ufo => ufo.FileId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserFileOwner>()
+                .HasOne(ufo => ufo.User)
+                .WithMany()
+                .HasForeignKey(ufo => ufo.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DoctorRating>()
+                .HasOne(dr => dr.Patient)
+                .WithMany()
+                .HasForeignKey(dr => dr.PatientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DoctorRating>()
+                .HasOne(dr => dr.Doctor)
+                .WithMany(d => d.Ratings)
+                .HasForeignKey(dr => dr.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
-        public DbSet<UserFile> UserFile { get; set; } = default!;
-
-
     }
 }

@@ -16,6 +16,7 @@
             Roles.Admin,
             new List<NavbarAction>
             {
+                NavbarAction.AllVisits,
                 NavbarAction.AddDoctor,
                 NavbarAction.AddSpecialization,
                 NavbarAction.AssignSpecialization,
@@ -27,6 +28,7 @@
             Roles.Receptionist,
             new List<NavbarAction>
             {
+                NavbarAction.AllVisits,
                 NavbarAction.RegisterPatientVisit,
                 NavbarAction.UserManagement,
                 NavbarAction.PatientCards
@@ -72,6 +74,11 @@
             NavbarAction.MyVisits,
             ("Visits", "Index",
              @"<a class=""nav-link text-dark"" href=""{0}"">Moje Wizyty</a>")
+        },
+         {
+            NavbarAction.AllVisits,
+            ("Visits", "AllVisits",
+             @"<a class=""nav-link text-dark"" href=""{0}"">Wizyty</a>")
         },
         {
             NavbarAction.PatientCard,

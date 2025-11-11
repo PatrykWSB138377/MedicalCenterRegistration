@@ -28,6 +28,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Doctors
+        [Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Doctor.Include(d => d.User);
@@ -116,8 +117,6 @@ namespace MedicalCenterRegistration.Controllers
                     Console.WriteLine($"Identity error: {error.Description}");
                 }
 
-                Console.WriteLine("NOT SUCCEEDED");
-
                 ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
                 return View(doctorData);
             }
@@ -138,13 +137,10 @@ namespace MedicalCenterRegistration.Controllers
                 Image = image,
             };
 
-            Console.WriteLine("CREATING DOCTOR");
-
             try
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
-                Console.WriteLine("DOCTOR CREATED");
 
             }
             catch (Exception ex)
@@ -177,7 +173,7 @@ namespace MedicalCenterRegistration.Controllers
         // POST: Doctors/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize(Roles = Roles.Admin)]    
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,LastName,UserId,CreatedAt")] Doctor doctor)
@@ -251,6 +247,7 @@ namespace MedicalCenterRegistration.Controllers
         {
             return _context.Doctor.Any(e => e.Id == id);
         }
+
         public async Task<IActionResult> List()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

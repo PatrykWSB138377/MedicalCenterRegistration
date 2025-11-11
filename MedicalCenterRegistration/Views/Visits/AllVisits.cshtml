@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Wizyty";
+}
+
+
+<div class="p-1 p-sm-4">
+    <h1>Wizyty naszych pacjentów</h1>
+
+    <table id="table" class="table table-striped">
+        <thead>
+            <tr>
+                <th>Pacjent</th>
+                <th>Lekarz</th>
+                <th>Data wizyty</th>
+                <th>Godziny wizyty</th>
+                <th>Typ wizyty</th>
+                <th>Status wizyty</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+
+    <script>
+        window.dataTableSSConfig = {
+            ajaxUrl: '@Url.Action("GetVisits", "Visits")',
+            columns: [
+                { data: 'patient', orderable: false },
+                { data: 'doctor', orderable: false}
+                ,
+                { data: 'date', name: 'visitSchedule.visitDate' },
+                { data: 'time', orderable: false },
+                { data: 'visitType' },
+                {
+                    data: 'visitStatus',
+                    name: 'status',
+                    searchable: false,
+                    render: function (data, type, row) {
+                         const statusColors = {
+                            "Zakończona": "bg-black",
+                            "Zaplanowana": "bg-success",
+                            "Anulowana": "bg-danger"
+                         };
+
+                         const statusColor = statusColors[data] || "bg-secondary";
+
+                        return `<span class="badge ${statusColor}">${data}</span>`;
+                    }
+                },
+            ]
+        };
+    </script>
+
+    <script src="~/js/datatable.js" asp-append-version="true"></script>
+}

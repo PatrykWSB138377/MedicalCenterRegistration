@@ -7,6 +7,8 @@ using System.Security.Claims;
 using Humanizer;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
+using MedicalCenterRegistration.Enums;
+using MedicalCenterRegistration.Helpers;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
 using Microsoft.AspNetCore.Authorization;
@@ -28,15 +30,13 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         // GET: Visits
-        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
+        [Authorize(Roles = Roles.Patient)]
         public async Task<IActionResult> Index()
         {
+
             var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (User.IsInRole(Roles.Patient))
-            {
-                // Jeśli użytkownik ma rolę "Patient", wyświetl tylko wizyty powiązane z jego ID
-                var visits = await _context.Visit
+            var visits = await _context.Visit
                     .Include(v => v.Doctor).ThenInclude(d => d.Image)
                     .Include(v => v.Patient)
                     .Include(v => v.VisitSchedule)
@@ -44,21 +44,24 @@ namespace MedicalCenterRegistration.Controllers
                     .OrderByDescending(v => v.Id) // newest visits first
                     .ToListAsync();
 
-                return View(visits);
-            }
-            // TODO: this should be a separate view and action for receptionist/admin
-            else
-            {
-                // W przeciwnym razie wyświetl wszystkie wizyty
-                var applicationDbContext = _context.Visit
-                    .Include(v => v.Doctor)
-                    .Include(v => v.Patient)
-                    .Include(v => v.VisitSchedule)
-                    .OrderByDescending(v => v.Id); // newest visits first
 
-                return View(await applicationDbContext.ToListAsync());
-            }
+            return View(visits);
         }
+
+
+        // GET: AllVisits
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> AllVisits()
+        {
+            var applicationDbContext = _context.Visit
+                .Include(v => v.Doctor)
+                .Include(v => v.Patient)
+                .Include(v => v.VisitSchedule)
+                .OrderByDescending(v => v.Id); // newest visits first
+
+            return View(await applicationDbContext.ToListAsync());
+        }
+
 
         [Authorize(Roles = Roles.Doctor)]
         public async Task<IActionResult> DoctorVisits()
@@ -73,6 +76,68 @@ namespace MedicalCenterRegistration.Controllers
                 .ToListAsync();
 
             return View(visits);
+        }
+
+        // AJAX endpoint for DataTables to fetch visits data
+        [HttpPost]
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
+        public async Task<IActionResult> GetVisits()
+        {
+            var request = DataTableHelper.GetRequest(Request);
+            var query = _context.Visit.AsQueryable();
+            var recordsTotal = await query.CountAsync();
+
+            query = query.Include(v => v.Doctor).Include(v => v.Patient).Include(v => v.VisitSchedule);
+
+            //  search by patient's and doctor's info
+            if (!string.IsNullOrEmpty(request.SearchValue))
+            {
+                query = query.Where
+                    (u => u.Patient.Name.Contains(request.SearchValue) ||
+                     u.Patient.LastName.Contains(request.SearchValue) ||
+                     u.Doctor.Name.Contains(request.SearchValue) ||
+                     u.Doctor.LastName.Contains(request.SearchValue) ||
+                     u.Patient.PeselNumber.Contains(request.SearchValue)
+                     );
+            }
+
+
+            var recordsFiltered = await query.CountAsync();
+
+            query = query.ApplySorting(request);
+
+            var visits = query
+                .Skip(request.Start)
+                .Take(request.Length)
+            .ToList();
+
+            var vm = new List<AdminReceptionistVisitViewModel>();
+
+
+            DebugLogger.LogList(visits);
+
+
+            foreach (var visit in visits)
+
+
+                vm.Add(new AdminReceptionistVisitViewModel
+                {
+                    Patient = "{0} {1}".FormatWith(visit.Patient.Name, visit.Patient.LastName),
+                    Doctor = "{0} {1}".FormatWith(visit.Doctor.Name, visit.Doctor.LastName),
+                    Date = visit.VisitSchedule.VisitDate,
+                    Time = "{0} - {1}".FormatWith(visit.VisitSchedule.VisitTimeStart.ToString("HH:mm"), visit.VisitSchedule.VisitTimeEnd.ToString("HH:mm")),
+                    VisitType = visit.VisitType,
+                    VisitStatus = EnumHelper.GetDisplayName(visit.Status)
+                });
+
+            var response = DataTableHelper.CreateResponse(
+                request,
+                recordsTotal,
+                recordsFiltered,
+                vm
+            );
+
+            return Json(response);
         }
 
 
@@ -375,9 +440,20 @@ namespace MedicalCenterRegistration.Controllers
                 return View();
             }
 
+            var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+
 
             _context.Visit.Add(visit);
             await _context.SaveChangesAsync();
+
+
+            if (userRole == Roles.Receptionist)
+            {
+                return RedirectToAction(nameof(AllVisits));
+            }
+
+
             return RedirectToAction(nameof(Index));
         }
 

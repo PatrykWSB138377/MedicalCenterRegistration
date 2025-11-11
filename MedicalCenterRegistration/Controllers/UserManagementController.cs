@@ -107,6 +107,7 @@ namespace MedicalCenterRegistration.Controllers
 
         // AJAX endpoint for DataTables to fetch user data
         [HttpPost]
+        [Authorize(Roles = Roles.AdminAndReceptionist)]
         public async Task<IActionResult> GetUsers()
         {
             var request = DataTableHelper.GetRequest(Request);
