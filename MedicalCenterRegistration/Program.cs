@@ -35,6 +35,7 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     await RolesSeeder.SeedRolesAsync(services);
     await AdminSeeder.SeedAdminAsync(services);
+    await ReceptionistsSeeder.SeedReceptionistsAsync(services);
     await PatientsSeeder.SeedPatientsnAsync(services);
     await DoctorsSeeder.SeedDoctorsAsync(services);
     await VisitsSeeder.SeedVisitsAsync(services);
