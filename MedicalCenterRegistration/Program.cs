@@ -34,7 +34,11 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     await RolesSeeder.SeedRolesAsync(services);
-    await IdentitySeeder.SeedAdminAsync(services);
+    await AdminSeeder.SeedAdminAsync(services);
+    await PatientsSeeder.SeedPatientsnAsync(services);
+    await DoctorsSeeder.SeedDoctorsAsync(services);
+    await VisitsSeeder.SeedVisitsAsync(services);
+    await DoctorRatingsSeeder.SeedDoctorRatingsAsync(services);
 }
 
 // Configure the HTTP request pipeline.
@@ -51,11 +55,14 @@ else
 
 app.UseStaticFiles();
 
-// images should be accessible from /public-images/{filename}
+var provider1 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages"));
+var provider2 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "doctors"));
+
+var compositeProvider = new CompositeFileProvider(provider1, provider2);
+
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages")),
+    FileProvider = compositeProvider,
     RequestPath = "/public-images"
 });
 

@@ -1,11 +1,12 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Consts;
 using Microsoft.AspNetCore.Identity;
 
 namespace MedicalCenterRegistration.Seeders
 {
-    public static class IdentitySeeder
+    public static class AdminSeeder
     {
         public static async Task SeedAdminAsync(IServiceProvider serviceProvider)
         {
@@ -14,7 +15,7 @@ namespace MedicalCenterRegistration.Seeders
 
             string adminEmail = "admin@wp.pl";
             string adminPassword = "Admin123!"; // Make sure to use strong password in production
-            string adminRole = "Admin";
+            string adminRole = Roles.Admin;
 
             // Create role if it doesn't exist
             if (!await roleManager.RoleExistsAsync(adminRole))
