@@ -80,6 +80,7 @@ namespace MedicalCenterRegistration.Controllers
         {
             // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
+                              .Include(v => v.Patient)
                               .Where(v => v.Id == visitId && v.Status == Status.Pending) // if the visit is not pending it will not allow to create summary
                               .FirstOrDefaultAsync();
 
@@ -93,8 +94,12 @@ namespace MedicalCenterRegistration.Controllers
 
             visit.Status = Status.Finished;
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+            var userId = visit.Patient.UserId;
+            var creatorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var ownerIds = new List<string> { userId, creatorId };
+
+            var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, ownerIds, _context);
 
             visit.VisitSummary = new VisitSummary
             {
@@ -150,8 +155,11 @@ namespace MedicalCenterRegistration.Controllers
         {
             var visit = await _context.Visit
                               .Include(v => v.VisitSummary).ThenInclude(vs => vs.Files)
+                              .Include(v => v.Patient)
                               .Where(v => v.Id == visitId && v.Status == Status.Finished)
                               .FirstOrDefaultAsync();
+
+
 
             if (visit?.VisitSummary?.Id != visitSummary.Id)
             {
@@ -173,12 +181,13 @@ namespace MedicalCenterRegistration.Controllers
 
                         var visitFiles = visit.VisitSummary.Files;
                         // delete old files as they will be replaced with new ones
-                        await FileService.DeleteUserFilesAsync(visitFiles);
-                        _context.UserFile.RemoveRange(visitFiles);
+                        await FileService.DeleteUserFilesAsync(visitFiles, _context);
 
                         // upload new files
-                        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                        var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, userId);
+                        var userId = visit.Patient.UserId;
+                        var creatorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                        var ownerIds = new List<string> { userId, creatorId };
+                        var uploadedFiles = await FileService.UploadUserFiles(visitSummary.UploadedFiles, ownerIds, _context);
 
                         visit.VisitSummary.Files.AddRange(uploadedFiles);
                     }

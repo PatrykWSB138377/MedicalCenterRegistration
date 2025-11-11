@@ -6,5 +6,5 @@ public class UserFile
     public int Id { get; set; }
     public string FileName { get; set; } = string.Empty;
     public string FilePath { get; set; } = string.Empty;
-    public string OwnerUserId { get; set; } = string.Empty;
+    public ICollection<UserFileOwner> Owners { get; set; }
 }

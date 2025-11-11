@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
 
 namespace MedicalCenterRegistration.Services
@@ -48,7 +49,7 @@ namespace MedicalCenterRegistration.Services
         }
 
 
-        private static UserFile FormFileToUserFile(IFormFile formFile, string userId)
+        private static UserFile FormFileToUserFile(IFormFile formFile)
         {
             var parsedData = new ParsedFileData(formFile);
 
@@ -56,7 +57,6 @@ namespace MedicalCenterRegistration.Services
             {
                 FileName = parsedData.fileNameWithExt,
                 FilePath = Path.Combine(AppDataFilePaths.UserFiles, parsedData.parsedFileName),
-                OwnerUserId = userId,
             };
         }
 
@@ -81,7 +81,7 @@ namespace MedicalCenterRegistration.Services
             }
         }
 
-        public async static Task<List<UserFile>> UploadUserFiles(List<IFormFile> formFiles, string userId)
+        public async static Task<List<UserFile>> UploadUserFiles(List<IFormFile> formFiles, List<string> ownerIds, ApplicationDbContext context)
         {
             List<UserFile> userFiles = new List<UserFile>();
 
@@ -92,10 +92,26 @@ namespace MedicalCenterRegistration.Services
 
             await UploadFiles(formFiles, (formFile) =>
             {
-                UserFile userFile = FormFileToUserFile(formFile, userId);
+                UserFile userFile = FormFileToUserFile(formFile);
+                context.UserFile.Add(userFile);
+
+                context.SaveChanges();
+
+                foreach (var ownerId in ownerIds)
+                {
+                    var owner = new UserFileOwner
+                    {
+                        FileId = userFile.Id,
+                        UserId = ownerId
+                    };
+                    context.Set<UserFileOwner>().Add(owner);
+                }
+
                 userFiles.Add(userFile);
                 return userFile.FilePath;
             });
+
+            await context.SaveChangesAsync();
 
             return userFiles;
         }
@@ -135,12 +151,15 @@ namespace MedicalCenterRegistration.Services
             }
         }
 
-        public async static Task DeleteUserFilesAsync(List<UserFile> userFiles)
+        public async static Task DeleteUserFilesAsync(List<UserFile> userFiles, ApplicationDbContext context)
         {
             foreach (var userFile in userFiles)
             {
                 await DeleteFileAsync(userFile.FilePath);
             }
+
+            context.UserFileOwner.RemoveRange(context.UserFileOwner.Where(owner => userFiles.Select(uf => uf.Id).Contains(owner.FileId)));
+            context.UserFile.RemoveRange(userFiles);
         }
     }
 

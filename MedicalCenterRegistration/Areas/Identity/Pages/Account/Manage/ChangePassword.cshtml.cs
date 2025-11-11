@@ -2,13 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace MedicalCenterRegistration.Areas.Identity.Pages.Account.Manage
 {
@@ -29,51 +26,51 @@ namespace MedicalCenterRegistration.Areas.Identity.Pages.Account.Manage
         }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///       directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
         public InputModel Input { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///       directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
 
         /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
+        ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+        ///       directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public class InputModel
         {
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///       directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Pole 'Obecne hasło' jest wymagane.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Current password")]
+            [Display(Name = "Obecne hasło")]
             public string OldPassword { get; set; }
 
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///       directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Pole 'Nowe hasło' jest wymagane.")]
+            [StringLength(100, ErrorMessage = "Pole '{0}' musi mieć co najmniej {2} i maksymalnie {1} znaków długości.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "New password")]
+            [Display(Name = "Nowe hasło")]
             public string NewPassword { get; set; }
 
             /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
+            ///       This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///       directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm new password")]
-            [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+            [Display(Name = "Potwierdź nowe hasło")]
+            [Compare("NewPassword", ErrorMessage = "Nowe hasło i hasło potwierdzające nie są identyczne.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -82,7 +79,7 @@ namespace MedicalCenterRegistration.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Nie można załadować użytkownika o ID '{_userManager.GetUserId(User)}'.");
             }
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
@@ -104,7 +101,7 @@ namespace MedicalCenterRegistration.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Nie można załadować użytkownika o ID '{_userManager.GetUserId(User)}'.");
             }
 
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, Input.OldPassword, Input.NewPassword);
@@ -119,7 +116,7 @@ namespace MedicalCenterRegistration.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Twoje hasło zostało pomyślnie zmienione.";
 
             return RedirectToPage();
         }
