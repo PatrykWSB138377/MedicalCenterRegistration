@@ -4,10 +4,18 @@
 
 @{
     // dodane do testowania roli
-    var userRoles = SignInManager.IsSignedIn(User)
-    ? UserManager.GetRolesAsync(UserManager.GetUserAsync(User).Result)?.Result
-    : new List<string>();
-    var userRole = userRoles.FirstOrDefault() ?? "Brak roli";
+    IList<string> userRoles = new List<string>();
+    var userRole = "Brak roli";
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        if (currentUser != null)
+        {
+            userRoles = await UserManager.GetRolesAsync(currentUser);
+            userRole = userRoles.FirstOrDefault() ?? "Brak roli";
+        }
+    }
 }
 
 <!DOCTYPE html>
