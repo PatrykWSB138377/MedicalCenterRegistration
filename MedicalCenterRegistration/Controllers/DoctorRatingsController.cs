@@ -1,12 +1,10 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.Linq;
 using System.Security.Claims;
 using MedicalCenterRegistration.Consts;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
-using MedicalCenterRegistration.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +20,7 @@ namespace MedicalCenterRegistration.Controllers
         }
 
         //GET: DoctorRatings/Create
-        [Authorize(Roles = Roles.Patient)]      
+        [Authorize(Roles = Roles.Patient)]
         public async Task<IActionResult> Create(int doctorId)
         {
 
@@ -48,7 +46,7 @@ namespace MedicalCenterRegistration.Controllers
             var rating = new MedicalCenterRegistration.Models.DoctorRating
             {
                 DoctorId = doctorId,
-                PatientId = patient.Id,                
+                PatientId = patient.Id,
             };
             return View(rating);
         }
@@ -81,7 +79,7 @@ namespace MedicalCenterRegistration.Controllers
                 doctorRating.CreatedAt = DateTime.Now;
                 _context.Add(doctorRating);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("List", "DoctorRatings");
+                return RedirectToAction("List", "Doctors");
             }
             return View(doctorRating);
         }
@@ -111,7 +109,7 @@ namespace MedicalCenterRegistration.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var patient = await _context.Patient.FirstOrDefaultAsync(p => p.UserId == userId);
             if (patient == null || existing.PatientId != patient.Id)
-                return Forbid();    
+                return Forbid();
 
             existing.Rating = doctorRating.Rating;
             existing.Comment = doctorRating.Comment;
@@ -161,7 +159,7 @@ namespace MedicalCenterRegistration.Controllers
                 return Forbid();
 
             _context.DoctorRating.Remove(rating);
-            await _context.SaveChangesAsync();  
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("List", "DoctorRatings");
         }
