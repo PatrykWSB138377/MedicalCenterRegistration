@@ -4,96 +4,94 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="p-1 p-sm-4">
-    <h1>Karta pacjenta</h1>
-    <h4 class="text-muted">Wypełnij kartę pacjenta, aby zacząć umawiać się na wizyty w naszej placówce.</h4>
-    <hr />
-    <form asp-action="Create" class="w-100" method="post">
-        <div class="row gx-5 w-100">
+<h1>Karta pacjenta</h1>
+<h4 class="text-muted">Wypełnij kartę pacjenta, aby zacząć umawiać się na wizyty w naszej placówce.</h4>
+<hr />
+<form asp-action="Create" class="w-100" method="post">
+    <div class="row gx-5 w-100">
 
-            <div class="col-4">
-                <div class="mb-3">
-                    <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="LastName" class="form-label"></label>
-                    <input asp-for="LastName" class="form-control" />
-                    <span asp-validation-for="LastName" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="DateOfBirth" class="form-label"></label>
-                    <input asp-for="DateOfBirth" class="form-control" type="date" />
-                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Sex" class="form-label"></label>
-                    @Html.DropDownListFor(m => m.Sex, ViewData["SexOptions"] as List<SelectListItem>, "-- Wybierz płeć --", new { @class = "form-control" })
-                    <span asp-validation-for="Sex" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="PhoneNumber" class="form-label"></label>
-                    <input asp-for="PhoneNumber" class="form-control" maxlength="11" inputmode="numeric" pattern="\d{11}" />
-                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="PeselNumber" class="form-label"></label>
-                    <input asp-for="PeselNumber" class="form-control" maxlength="11" inputmode="numeric" pattern="\d{11}" />
-                    <span asp-validation-for="PeselNumber" class="text-danger"></span>
-                    <div class="form-text">Nigdy nie udostępnimy nikomu twojego numeru pesel.</div>
-                </div>
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
-            <div class="col-4">
-                <div class="mb-3">
-                    <label asp-for="Street" class="form-label"></label>
-                    <input asp-for="Street" class="form-control" />
-                    <span asp-validation-for="Street" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="HouseNumber" class="form-label"></label>
-                    <input asp-for="HouseNumber" class="form-control" />
-                    <span asp-validation-for="HouseNumber" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="DateOfBirth" class="form-label"></label>
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="Province" class="form-label"></label>
-                    <input asp-for="Province" class="form-control" />
-                    <span asp-validation-for="Province" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="Sex" class="form-label"></label>
+                @Html.DropDownListFor(m => m.Sex, ViewData["SexOptions"] as List<SelectListItem>, "-- Wybierz płeć --", new { @class = "form-control" })
+                <span asp-validation-for="Sex" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="District" class="form-label"></label>
-                    <input asp-for="District" class="form-control" />
-                    <span asp-validation-for="District" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" maxlength="11" inputmode="numeric" pattern="\d{11}" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
 
-                <div class="mb-3">
-                    <label asp-for="PostalCode" class="form-label"></label>
-                    <input asp-for="PostalCode" class="form-control" pattern="\d{2}-\d{3}" />
-                    <span asp-validation-for="PostalCode" class="text-danger"></span>
-                    <div class="form-text">Wprowadź kod w formacie 00-000.</div>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="City" class="form-label"></label>
-                    <input asp-for="City" class="form-control" />
-                    <span asp-validation-for="City" class="text-danger"></span>
-                </div>
+            <div class="mb-3">
+                <label asp-for="PeselNumber" class="form-label"></label>
+                <input asp-for="PeselNumber" class="form-control" maxlength="11" inputmode="numeric" pattern="\d{11}" />
+                <span asp-validation-for="PeselNumber" class="text-danger"></span>
+                <div class="form-text">Nigdy nie udostępnimy nikomu twojego numeru pesel.</div>
             </div>
         </div>
-        @* this input allows controller to return to view that redirected user to patient creation after patient is created *@
-        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" /> 
-        <button type="submit" class="btn btn-primary mt-3">Zapisz</button>
-    </form>
-</div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="mb-3">
+                <label asp-for="Street" class="form-label"></label>
+                <input asp-for="Street" class="form-control" />
+                <span asp-validation-for="Street" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="HouseNumber" class="form-label"></label>
+                <input asp-for="HouseNumber" class="form-control" />
+                <span asp-validation-for="HouseNumber" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Province" class="form-label"></label>
+                <input asp-for="Province" class="form-control" />
+                <span asp-validation-for="Province" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="District" class="form-label"></label>
+                <input asp-for="District" class="form-control" />
+                <span asp-validation-for="District" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PostalCode" class="form-label"></label>
+                <input asp-for="PostalCode" class="form-control" pattern="\d{2}-\d{3}" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+                <div class="form-text">Wprowadź kod w formacie 00-000.</div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="City" class="form-label"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    @* this input allows controller to return to view that redirected user to patient creation after patient is created *@
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+    <button type="submit" class="btn btn-primary mt-3">Zapisz</button>
+</form>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

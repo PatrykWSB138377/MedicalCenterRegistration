@@ -47,9 +47,10 @@ namespace MedicalCenterRegistration.Models
         public IdentityUser? User { get; set; }
 
 
+        [Display(Name = "Data utworzenia")]
         public DateTime CreatedAt { get; set; }
         public ICollection<DoctorRating> Ratings { get; set; } = new List<DoctorRating>();
-        public ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();    
+        public ICollection<DoctorSpecialization> DoctorSpecializations { get; set; } = new List<DoctorSpecialization>();
 
     }
 }

@@ -16,6 +16,14 @@
             userRole = userRoles.FirstOrDefault() ?? "Brak roli";
         }
     }
+
+    var customPaddingViews = new List<string>
+    {
+        "/Identity/Account",
+    };
+
+    var currentPath = ViewContext.HttpContext.Request.Path;
+    var isCustomPaddingView = customPaddingViews.Any(view => currentPath.StartsWithSegments(view)) || currentPath == "/";
 }
 
 <!DOCTYPE html>
@@ -96,7 +104,7 @@
         </nav>
     </header>
     <div class="content container-fluid no-inline-p">
-        <main role="main" class="pb-3">
+        <main role="main" class="@(isCustomPaddingView ? "" : $"p-2 p-sm-4 pb-3")">
             @RenderBody()
         </main>
     </div>

@@ -4,15 +4,13 @@
     ViewData["Title"] = "Lista pacjentów";
 }
 
-<div class="p-1 p-sm-4">
-    <h1>Lista naszych pacjentów</h1>
-    <div class="mb-3">
-        <a asp-action="CreateForUser" class="btn btn-primary">Przypisz kartę pacjenta</a>
-    </div>
-    <hr />
-
-    @await Html.PartialAsync("Patients/_PatientsTable")
+<h1>Lista naszych pacjentów</h1>
+<div class="mb-3">
+    <a asp-action="CreateForUser" class="btn btn-primary">Przypisz kartę pacjenta</a>
 </div>
+<hr />
+
+@await Html.PartialAsync("Patients/_PatientsTable")
 
 
 <script>
@@ -29,8 +27,8 @@
                 searchable: false,
                 render: function (data, type, row) {
                     return `<a href="/Patients/Details/${data}" class="btn btn-sm btn-outline-primary">Szczegóły</a>
-                                    <a href="/Patients/Edit/${data}" class="btn btn-sm btn-outline-success">Edytuj</a>
-                                    <a href="/Patients/Delete/${data}" class="btn btn-sm btn-outline-danger">Usuń</a>`;
+                                        <a href="/Patients/Edit/${data}" class="btn btn-sm btn-outline-success">Edytuj</a>
+                                        <a href="/Patients/Delete/${data}" class="btn btn-sm btn-outline-danger">Usuń</a>`;
                 }
             }
         ]
