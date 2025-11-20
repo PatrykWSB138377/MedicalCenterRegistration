@@ -7,19 +7,19 @@
 <h1>Przypisz specjalizację dla lekarza</h1>
 
 <p>
-    <a asp-action="Create">Przypisz nową specjalizację</a>
+    <a class="btn btn-success" asp-action="Create">Przypisz nową specjalizację</a>
 </p>
-<table class="table">
+<table id="table" class="table">
     <thead>
         <tr>
             <th>
-                Imię
+                @Html.DisplayNameFor(model => model.Doctor.Name)
             </th>
             <th>
-                Nazwisko
+                @Html.DisplayNameFor(model => model.Doctor.LastName)
             </th>
             <th>
-                Specjalizacja
+                @Html.DisplayNameFor(model => model.Specialization.Name)
             </th>
             <th></th>
         </tr>
@@ -45,3 +45,5 @@
 }
     </tbody>
 </table>
+
+<script src="~/js/datatable.js" asp-append-version="true"></script>

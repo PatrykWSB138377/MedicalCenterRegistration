@@ -81,7 +81,7 @@ namespace MedicalCenterRegistration.Models
         public string UserId { get; set; }
         public IdentityUser? User { get; set; }
 
-
+        [DisplayName("Data utworzenia")]
         public DateTime CreatedAt { get; set; }
 
     }

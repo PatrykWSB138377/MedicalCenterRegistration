@@ -31,13 +31,13 @@ namespace MedicalCenterRegistration.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             var roles = await _userManager.GetRolesAsync(currentUser);
 
-            if (roles.Contains("Admin"))
+            if (roles.Contains(Roles.Admin))
             {
-                ViewData["Roles"] = new List<string> { "Receptionist", "Patient", "Admin" };
+                ViewData["Roles"] = new List<string> { Roles.Receptionist, Roles.Patient, Roles.Admin };
             }
-            else if (roles.Contains("Receptionist"))
+            else if (roles.Contains(Roles.Receptionist))
             {
-                ViewData["Roles"] = new List<string> { "Patient" };
+                ViewData["Roles"] = new List<string> { Roles.Patient };
             }
             else
             {
@@ -57,10 +57,10 @@ namespace MedicalCenterRegistration.Controllers
 
             // Ustal, jakie role może tworzyć bieżący użytkownik
             List<string> allowedRoles;
-            if (roles.Contains("Admin"))
-                allowedRoles = new List<string> { "Receptionist", "Patient", "Admin" }; //do tworzenia lekarzy jest osobna logika
-            else if (roles.Contains("Receptionist"))
-                allowedRoles = new List<string> { "Patient" };
+            if (roles.Contains(Roles.Admin))
+                allowedRoles = new List<string> { Roles.Receptionist, Roles.Patient, Roles.Admin }; //do tworzenia lekarzy jest osobna logika
+            else if (roles.Contains(Roles.Receptionist))
+                allowedRoles = new List<string> { Roles.Patient };
             else
                 return Forbid();
 
