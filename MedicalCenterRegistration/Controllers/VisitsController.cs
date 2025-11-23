@@ -22,11 +22,13 @@ namespace MedicalCenterRegistration.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly PatientService _patientService;
+         private readonly ILogger<VisitsController> _logger;
 
-        public VisitsController(ApplicationDbContext context, PatientService patientService)
+        public VisitsController(ApplicationDbContext context, PatientService patientService, ILogger<VisitsController> logger)
         {
             _context = context;
             _patientService = patientService;
+            _logger = logger;
         }
 
         // GET: Visits
@@ -43,7 +45,6 @@ namespace MedicalCenterRegistration.Controllers
                     .Where(v => v.Patient.UserId == loggedInUserId)
                     .OrderByDescending(v => v.Id) // newest visits first
                     .ToListAsync();
-
 
             return View(visits);
         }

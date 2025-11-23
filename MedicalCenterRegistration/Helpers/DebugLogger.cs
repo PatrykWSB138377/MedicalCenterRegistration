@@ -4,25 +4,37 @@
 namespace MedicalCenterRegistration.Helpers;
 public static class DebugLogger
 {
-    public static void LogList<T>(IEnumerable<T> list, string title = null)
+    private static void Log(ILogger logger, string message)
+    {
+        if (logger != null)
+        {
+            logger.LogInformation(message);
+        }
+        else
+        {
+            Console.WriteLine(message);
+        }
+    }
+
+    public static void LogList<T>(IEnumerable<T> list, string title = null, ILogger logger = null)
     {
         if (!string.IsNullOrEmpty(title))
-            Console.WriteLine($"\n=== {title} ===");
+            Log(logger, $"\n=== {title} ===");
 
         if (list == null)
         {
-            Console.WriteLine("List is null");
+            Log(logger, "List is null");
             return;
         }
 
         int i = 1;
         foreach (var item in list)
         {
-            Console.WriteLine($"\n-- Item #{i++} --");
-            Console.WriteLine(ObjectToString(item));
+            Log(logger, $"\n-- Item #{i++} --");
+            Log(logger, ObjectToString(item));
         }
 
-        Console.WriteLine($"\nTotal items: {list.Count()}");
+        Log(logger, $"\nTotal items: {list.Count()}");
     }
 
     private static string ObjectToString(object obj)
