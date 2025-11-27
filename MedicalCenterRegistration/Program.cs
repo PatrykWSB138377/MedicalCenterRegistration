@@ -61,7 +61,16 @@ else
 
 app.UseStaticFiles();
 
-var provider1 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages"));
+string publicImagesPath = Path.Combine(Directory.GetCurrentDirectory(), "AppData", "PublicImages");
+
+// this is needed because azure executes from a different directory and throws errors otherwise
+if (!Directory.Exists(publicImagesPath))
+{
+    Directory.CreateDirectory(publicImagesPath);
+}
+
+var provider1 = new PhysicalFileProvider(publicImagesPath);
+
 var provider2 = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "assets", "doctors"));
 
 var compositeProvider = new CompositeFileProvider(provider1, provider2);
