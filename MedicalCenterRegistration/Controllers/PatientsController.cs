@@ -165,7 +165,7 @@ namespace MedicalCenterRegistration.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
-            return RedirectToAction("Index", "Home");
+            return View(patient);
         }
 
         // GET: Patients/Edit/5

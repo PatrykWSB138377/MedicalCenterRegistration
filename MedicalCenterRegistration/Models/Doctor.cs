@@ -5,6 +5,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MedicalCenterRegistration.Enums;
+using MedicalCenterRegistration.Validation;
 using Microsoft.AspNetCore.Identity;
 
 namespace MedicalCenterRegistration.Models
@@ -31,6 +32,7 @@ namespace MedicalCenterRegistration.Models
 
         [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
         [DataType(DataType.Date)]
+        [MinYearsInThePast(18, ErrorMessage = "Lekarz musi mieć minimum 26 lat.")]
         [DisplayName("Data urodzenia")]
         public DateTime DateOfBirth { get; set; }
 
