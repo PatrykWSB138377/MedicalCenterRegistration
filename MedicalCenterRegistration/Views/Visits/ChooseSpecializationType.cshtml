@@ -6,7 +6,6 @@
     ViewData["Title"] = "Umawianie wizyty";
 }
 
-
 @if (!Model.Specializations.Any())
 {
     <div class="alert alert-danger" role="alert">
@@ -25,19 +24,23 @@ else
             @foreach (var specialization in specializations)
             {
                 <label class="list-group-item list-group-item-action">
-                    <input hidden type="radio" name="specializationId" value="@specialization.SpecializationId" required />
+                    <input hidden type="radio" name="specializationId"
+                        value="@specialization.SpecializationId" required />
 
 
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1">@specialization.SpecializationName</h5>
                     </div>
-                    <p class="mb-1 small text-muted">@specialization.DoctorCount @TextHelper.Pluralize(specialization.DoctorCount, "Lekarz dostępny", "Lekarzy dostępnych", "Lekarzy dostępnych")</p>
+                    <p class="mb-1 small text-muted">
+                        @specialization.DoctorCount @TextHelper.Pluralize(specialization.DoctorCount,
+                            "Lekarz dostępny", "Lekarzy dostępnych", "Lekarzy dostępnych")
+                    </p>
                 </label>
             }
-
-
         </div>
-        <button id="chooseSpecializationTypeBtn" disabled type="submit" class="btn btn-primary">Potwierdź wybór</button>
+        <button id="chooseSpecializationTypeBtn" disabled type="submit" class="btn btn-primary">
+            Potwierdź wybór
+        </button>
     </form>
 }
 
@@ -46,7 +49,6 @@ else
     options.forEach(option => {
         option.addEventListener('change', function () {
             const submitButton = document.getElementById('chooseSpecializationTypeBtn');
-            console.log(submitButton);
             submitButton.disabled = false;
 
             const selectedValue = this.value;
@@ -62,3 +64,5 @@ else
         });
     });
 </script>
+
+
