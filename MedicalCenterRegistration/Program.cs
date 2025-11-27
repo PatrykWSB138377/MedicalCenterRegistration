@@ -3,6 +3,7 @@
 
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Seeders;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -24,6 +25,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => { options.SignIn.Re
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<PatientService>();
+builder.Services.AddScoped<VisitsService>();
 
 // Admin ENV variables
 string adminEmail = builder.Configuration["AdminCredentials:Email"];

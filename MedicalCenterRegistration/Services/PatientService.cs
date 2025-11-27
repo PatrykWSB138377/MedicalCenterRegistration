@@ -4,7 +4,6 @@
 using System.Security.Claims;
 using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Models;
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

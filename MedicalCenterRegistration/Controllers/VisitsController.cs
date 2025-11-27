@@ -11,6 +11,7 @@ using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Helpers;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,12 +23,14 @@ namespace MedicalCenterRegistration.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly PatientService _patientService;
-         private readonly ILogger<VisitsController> _logger;
+        private readonly VisitsService _visitsService;
+        private readonly ILogger<VisitsController> _logger;
 
-        public VisitsController(ApplicationDbContext context, PatientService patientService, ILogger<VisitsController> logger)
+        public VisitsController(ApplicationDbContext context, PatientService patientService, VisitsService visitsService, ILogger<VisitsController> logger)
         {
             _context = context;
             _patientService = patientService;
+            _visitsService = visitsService;
             _logger = logger;
         }
 
@@ -143,6 +146,14 @@ namespace MedicalCenterRegistration.Controllers
 
 
 
+        [HttpGet]
+        [Authorize(Roles = Roles.ReceptionistAndPatient)]
+        public async Task<IActionResult> VisitsLimit()
+        {
+            return View();
+        }
+
+
         //GET: ChoosePatient
         [HttpGet]
         [Authorize(Roles = Roles.Receptionist)]
@@ -181,6 +192,12 @@ namespace MedicalCenterRegistration.Controllers
                     return Forbid();
             }
 
+
+            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(patientId);
+            if (hasReachedVisitsLimit)
+            {
+                return RedirectToAction(nameof(VisitsLimit));
+            }
 
 
             var specializations = await _context.DoctorSpecialization
@@ -299,6 +316,12 @@ namespace MedicalCenterRegistration.Controllers
             var specializationId = TempData.Peek("SpecializationId");
             var patientId = TempData.Peek("PatientId")?.ToString();
 
+            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(int.Parse(patientId));
+            if (hasReachedVisitsLimit)
+            {
+                return RedirectToAction(nameof(VisitsLimit));
+            }
+
             if (specializationId == null)
             {
                 return RedirectToAction(nameof(ChooseSpecializationType));
@@ -390,6 +413,13 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("DoctorId, PatientId, Date, Time")] CreateVisitPayloadViewModel visitData)
         {
+
+            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(visitData.PatientId);
+            if (hasReachedVisitsLimit)
+            {
+                return RedirectToAction(nameof(VisitsLimit));
+            }
+
             DateOnly visitDate = DateOnly.ParseExact(visitData.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture);
             TimeOnly visitTimeStart = TimeOnly.ParseExact(visitData.Time, "HH:mm", CultureInfo.InvariantCulture);
             TimeOnly visitTimeEnd = visitTimeStart.AddMinutes(30);
