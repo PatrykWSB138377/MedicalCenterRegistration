@@ -2,11 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.ComponentModel.DataAnnotations;
+using MedicalCenterRegistration.Enums;
 
 namespace MedicalCenterRegistration.Models.ViewModels.Visits
 {
     public class VisitDetailsViewModel
     {
+        public int VisitId { get; set; }
+        public Status Status { get; set; }
+        public DateOnly VisitScheduleDate { get; set; }
+        public TimeOnly VisitTimeStart { get; set; }
+        public bool IsCancellable => Status == Status.Pending && 
+            (VisitScheduleDate > DateOnly.FromDateTime(DateTime.Now) || 
+             (VisitScheduleDate == DateOnly.FromDateTime(DateTime.Now) && VisitTimeStart > TimeOnly.FromDateTime(DateTime.Now)));
         [Display(Name = "Imię i nazwisko lekarza")]
         public string DoctorFullName { get; set; }
         [Display(Name = "Zdjęcie lekarza")]

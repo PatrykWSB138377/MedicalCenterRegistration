@@ -20,7 +20,7 @@ public class VisitsService
         _userManager = userManager;
     }
 
-    public async Task<bool> HasUserReachedActiveVisitsLimit(string userId)
+    public async Task<bool> HasUserReachedActiveVisitsLimit(string? userId)
     {
         if (string.IsNullOrEmpty(userId))
             return false;

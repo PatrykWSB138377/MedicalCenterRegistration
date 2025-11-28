@@ -118,21 +118,24 @@ namespace MedicalCenterRegistration.Controllers
             var vm = new List<AdminReceptionistVisitViewModel>();
 
 
-            DebugLogger.LogList(visits);
-
-
             foreach (var visit in visits)
-
+            {
+                var isCancellable = visit.Status == Status.Pending &&
+                    (visit.VisitSchedule.VisitDate > DateOnly.FromDateTime(DateTime.Now) ||
+                     (visit.VisitSchedule.VisitDate == DateOnly.FromDateTime(DateTime.Now) && visit.VisitSchedule.VisitTimeStart > TimeOnly.FromDateTime(DateTime.Now)));
 
                 vm.Add(new AdminReceptionistVisitViewModel
                 {
+                    Id = visit.Id,
                     Patient = "{0} {1}".FormatWith(visit.Patient.Name, visit.Patient.LastName),
                     Doctor = "{0} {1}".FormatWith(visit.Doctor.Name, visit.Doctor.LastName),
                     Date = visit.VisitSchedule.VisitDate,
                     Time = "{0} - {1}".FormatWith(visit.VisitSchedule.VisitTimeStart.ToString("HH:mm"), visit.VisitSchedule.VisitTimeEnd.ToString("HH:mm")),
                     VisitType = visit.VisitType,
-                    VisitStatus = EnumHelper.GetDisplayName(visit.Status)
+                    VisitStatus = EnumHelper.GetDisplayName(visit.Status),
+                    IsCancellable = isCancellable
                 });
+            }
 
             var response = DataTableHelper.CreateResponse(
                 request,
@@ -170,6 +173,7 @@ namespace MedicalCenterRegistration.Controllers
         {
 
             var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             bool hasPatientInfo;
 
             switch (userRole)
@@ -180,6 +184,11 @@ namespace MedicalCenterRegistration.Controllers
                     {
                         return RedirectToAction("CreateForUser", "Patients");
                     }
+                    var hasPatientReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(patientId);
+                    if (hasPatientReachedVisitsLimit)
+                    {
+                        return RedirectToAction(nameof(VisitsLimit));
+                    }
                     break;
                 case Roles.Patient:
                     hasPatientInfo = await _patientService.HasPatientEntryAsync(User);
@@ -187,16 +196,14 @@ namespace MedicalCenterRegistration.Controllers
                     {
                         return RedirectToAction("Create", "Patients", new { returnUrl = Url.Action(nameof(ChooseSpecializationType)) });
                     }
+                    var hasUserReachedVisitsLimit = await _visitsService.HasUserReachedActiveVisitsLimit(userId);
+                    if (hasUserReachedVisitsLimit)
+                    {
+                        return RedirectToAction(nameof(VisitsLimit));
+                    }
                     break;
                 default:
                     return Forbid();
-            }
-
-
-            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(patientId);
-            if (hasReachedVisitsLimit)
-            {
-                return RedirectToAction(nameof(VisitsLimit));
             }
 
 
@@ -292,6 +299,10 @@ namespace MedicalCenterRegistration.Controllers
 
             VisitDetailsViewModel viewModel = new VisitDetailsViewModel
             {
+                VisitId = visit.Id,
+                Status = visit.Status,
+                VisitScheduleDate = visit.VisitSchedule.VisitDate,
+                VisitTimeStart = visit.VisitSchedule.VisitTimeStart,
                 DoctorFullName = "{0} {1}".FormatWith(visit.Doctor.Name, visit.Doctor.LastName),
                 DoctorImage = visit.Doctor.Image,
                 DoctorSpecializations = doctorSpecializations.Select(ds => ds.Specialization.Name).ToList(),
@@ -316,11 +327,6 @@ namespace MedicalCenterRegistration.Controllers
             var specializationId = TempData.Peek("SpecializationId");
             var patientId = TempData.Peek("PatientId")?.ToString();
 
-            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(int.Parse(patientId));
-            if (hasReachedVisitsLimit)
-            {
-                return RedirectToAction(nameof(VisitsLimit));
-            }
 
             if (specializationId == null)
             {
@@ -356,6 +362,15 @@ namespace MedicalCenterRegistration.Controllers
                 default:
                     return Forbid();
             }
+
+
+
+            var hasReachedVisitsLimit = await _visitsService.HasPatientReachedActiveVisitsLimit(patient?.Id);
+            if (hasReachedVisitsLimit)
+            {
+                return RedirectToAction(nameof(VisitsLimit));
+            }
+
 
             var doctorsForSpecialization = await _context.DoctorSpecialization
                 .Where(ds => ds.SpecializationId == int.Parse(specializationId.ToString()))
@@ -586,6 +601,99 @@ namespace MedicalCenterRegistration.Controllers
         private bool VisitExists(int id)
         {
             return _context.Visit.Any(e => e.Id == id);
+        }
+
+        // GET: Visits/Cancel/5
+        [Authorize(Roles = Roles.ReceptionistAndPatient)]
+        public async Task<IActionResult> Cancel(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var visit = await _context.Visit
+                .Include(v => v.Doctor)
+                .Include(v => v.Patient)
+                .Include(v => v.VisitSchedule)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (visit == null)
+            {
+                return NotFound();
+            }
+
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isReceptionist = User.IsInRole(Roles.Receptionist);
+            var isPatientOwner = visit.Patient.UserId == loggedInUserId;
+
+            if (!isReceptionist && !isPatientOwner)
+            {
+                return Forbid();
+            }
+
+            var visitDateTime = visit.VisitSchedule.VisitDate.ToDateTime(visit.VisitSchedule.VisitTimeStart);
+            var isInFuture = visitDateTime > DateTime.Now;
+
+            if (visit.Status != Status.Pending || !isInFuture)
+            {
+                TempData["Error"] = "Tylko zaplanowane wizyty, które jeszcze się nie rozpoczęły, mogą być anulowane.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(visit);
+        }
+
+        // POST: Visits/Cancel/5
+        [HttpPost, ActionName("Cancel")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.ReceptionistAndPatient)]
+        public async Task<IActionResult> CancelConfirmed(int id)
+        {
+            var visit = await _context.Visit
+                .Include(v => v.Patient)
+                .Include(v => v.VisitSchedule)
+                .FirstOrDefaultAsync(v => v.Id == id);
+
+            if (visit == null)
+            {
+                return NotFound();
+            }
+
+            var loggedInUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isReceptionist = User.IsInRole(Roles.Receptionist);
+            var isPatientOwner = visit.Patient.UserId == loggedInUserId;
+
+            if (!isReceptionist && !isPatientOwner)
+            {
+                return Forbid();
+            }
+
+            var visitDateTime = visit.VisitSchedule.VisitDate.ToDateTime(visit.VisitSchedule.VisitTimeStart);
+            var isInFuture = visitDateTime > DateTime.Now;
+
+            if (visit.Status != Status.Pending || !isInFuture)
+            {
+                TempData["Error"] = "Tylko zaplanowane wizyty, które jeszcze się nie rozpoczęły, mogą być anulowane.";
+                if (isReceptionist)
+                {
+                    return RedirectToAction(nameof(AllVisits));
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            visit.Status = Status.Cancelled;
+            visit.UpdatedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Wizyta została pomyślnie anulowana.";
+
+            if (isReceptionist)
+            {
+                return RedirectToAction(nameof(AllVisits));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

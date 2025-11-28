@@ -4,7 +4,13 @@
 
 @{
     var status = Model;
-    var statusColor = status == Status.Pending ? "bg-success" : "bg-black";
+    var statusColors = new Dictionary<Status, string>
+    {
+        { Status.Pending, "bg-success" },
+        { Status.Finished, "bg-black" },
+        { Status.Cancelled, "bg-danger" }
+    };
+    var statusColor = statusColors[status];
  }
 <span class="badge rounded-pill @statusColor mt-1 mt-sm-0 px-4">
     @EnumHelper.GetDisplayName(status)
