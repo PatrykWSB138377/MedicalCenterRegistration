@@ -385,7 +385,7 @@ namespace MedicalCenterRegistration.Controllers
                 .ToList();
 
             var doctorSchedules = await _context.Visit
-                .Where(v => doctorIds.Contains(v.DoctorId))
+                .Where(v => doctorIds.Contains(v.DoctorId) && v.Status != Status.Cancelled)
                 .Select(v => new
                 {
                     v.DoctorId,
@@ -400,6 +400,7 @@ namespace MedicalCenterRegistration.Controllers
                 .ToListAsync();
 
             var doctorScheduledVisits = doctorSchedules
+                .Where(v => v.Schedule.VisitDate >= DateOnly.FromDateTime(DateTime.Now))
                 .GroupBy(v => v.DoctorId)
                 .ToDictionary(
                     g => g.Key,
