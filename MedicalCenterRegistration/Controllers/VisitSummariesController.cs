@@ -52,13 +52,13 @@ namespace MedicalCenterRegistration.Controllers
         [HttpGet("Create")]
         public async Task<IActionResult> Create(int? visitId)
         {
-            // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             if (visitId == null)
             {
                 return NotFound();
             }
 
             var visit = await _context.Visit
+                            .Include(v => v.VisitSchedule)
                             .Where(v => v.Id == visitId && v.Status == Status.Pending) // if the visit is not pending it will not allow to create summary
                             .FirstOrDefaultAsync();
 
@@ -70,6 +70,12 @@ namespace MedicalCenterRegistration.Controllers
                 return NotFound();
             }
 
+            var visitDateTime = visit.VisitSchedule.VisitDate.ToDateTime(visit.VisitSchedule.VisitTimeStart);
+            if (DateTime.Now < visitDateTime)
+            {
+                return BadRequest("Nie można utworzyć podsumowania przed rozpoczęciem wizyty.");
+            }
+
             return View();
         }
 
@@ -78,9 +84,9 @@ namespace MedicalCenterRegistration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int? visitId, [Bind("Description,UploadedFiles")] CreateVisitSummaryViewModel visitSummary)
         {
-            // TODO: you should only be able to create a summary for visits that have at least happened (date in the past or now)
             var visit = await _context.Visit
                               .Include(v => v.Patient)
+                              .Include(v => v.VisitSchedule)
                               .Where(v => v.Id == visitId && v.Status == Status.Pending) // if the visit is not pending it will not allow to create summary
                               .FirstOrDefaultAsync();
 
@@ -90,6 +96,13 @@ namespace MedicalCenterRegistration.Controllers
             if (visit == null || existingSummary != null)
             {
                 return BadRequest("Nie znaleziono wizyty.");
+            }
+
+            // Check if the visit's scheduled start time has passed
+            var visitDateTime = visit.VisitSchedule.VisitDate.ToDateTime(visit.VisitSchedule.VisitTimeStart);
+            if (DateTime.Now < visitDateTime)
+            {
+                return BadRequest("Nie można utworzyć podsumowania przed rozpoczęciem wizyty.");
             }
 
             visit.Status = Status.Finished;

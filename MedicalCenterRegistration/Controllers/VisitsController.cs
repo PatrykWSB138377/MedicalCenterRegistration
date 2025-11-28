@@ -117,10 +117,12 @@ namespace MedicalCenterRegistration.Controllers
 
             var vm = new List<AdminReceptionistVisitViewModel>();
 
+            var isReceptionist = User.IsInRole(Roles.Receptionist);
 
             foreach (var visit in visits)
             {
-                var isCancellable = visit.Status == Status.Pending &&
+                var isCancellable = isReceptionist && 
+                    visit.Status == Status.Pending &&
                     (visit.VisitSchedule.VisitDate > DateOnly.FromDateTime(DateTime.Now) ||
                      (visit.VisitSchedule.VisitDate == DateOnly.FromDateTime(DateTime.Now) && visit.VisitSchedule.VisitTimeStart > TimeOnly.FromDateTime(DateTime.Now)));
 

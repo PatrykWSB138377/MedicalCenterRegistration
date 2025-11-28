@@ -15,6 +15,43 @@
     }
 
     var timeSlotsLength = timeSlots.Count;
+
+    string GetFirstAvailableSlot(int doctorId)
+    {
+        var scheduledVisits = Model.DoctorScheduledVisits.ContainsKey(doctorId) 
+            ? Model.DoctorScheduledVisits[doctorId] 
+            : new List<MedicalCenterRegistration.Models.VisitSchedule>();
+
+        // visits must be booked at least 1 day in advance
+        var tomorrow = DateOnly.FromDateTime(DateTime.Now.AddDays(1));
+        var maxDate = tomorrow.AddMonths(12);
+
+        for (var date = tomorrow; date <= maxDate; date = date.AddDays(1))
+        {
+            // skip weekends
+            if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                continue;
+
+            // hashset contains only unique values
+            HashSet<TimeOnly>? visitsOnDate = scheduledVisits
+                .Where(v => v.VisitDate == date)
+                .Select(v => v.VisitTimeStart)
+                .ToHashSet();
+
+            // check each time slot
+            for (var time = startTime; time <= endTime; time += interval)
+            {
+                var timeOnly = TimeOnly.FromTimeSpan(time);
+
+                if (!visitsOnDate.Contains(timeOnly))
+                {
+                    return $"{date:dd.MM.yyyy} godz. {timeOnly:HH:mm}";
+                }
+            }
+        }
+
+        return "Brak dostępnych terminów";
+    }
 }
 
 
@@ -47,6 +84,7 @@
                                     </div>
                                 </div>
                                 <p class="mb-1">@doctor.Description</p>
+                                <small class="text-muted"><i class="bi bi-calendar-check me-1"></i>Pierwszy wolny termin: @GetFirstAvailableSlot(doctor.Id)</small>
                             </div>
                         </label>
                     
@@ -120,7 +158,7 @@
             });
 
             // undisable time slots
-                const timeSlotInputs = document.querySelectorAll('input[name="Time"]');
+            const timeSlotInputs = document.querySelectorAll('input[name="Time"]');
             timeSlotInputs.forEach(input => {
                 input.parentElement.classList.remove('disabled');
                 input.disabled = false;
@@ -131,6 +169,7 @@
             if (!doctorVisits.length) {
                 return
             }
+
 
             const visitsByDate = new Map();
 
@@ -193,9 +232,22 @@
             initialView: 'dayGridMonth',
             locale: 'plLocale',
             firstDay: 1,
-            validRange: () => ({ start: new Date(), end: new Date(new Date().setMonth(new Date().getMonth() + 12)) }), // able to register 12 months from now tops
+            hiddenDays: [0, 6], // hide weekends
+            // start from tomorrow - visits must be booked at least 1 day in advance
+            validRange: () => {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+                const maxDate = new Date();
+                maxDate.setMonth(maxDate.getMonth() + 12);
+                return { start: tomorrow, end: maxDate };
+            },
             buttonText: {
                 today: 'Dzisiaj'
+            },
+            // disable weekends
+            dayCellDidMount: function(info) {
+          
             },
             dateClick: function (info) {
                 const clickedDateEl = calendarEl.querySelector('[data-date="' + info.dateStr + '"]');
