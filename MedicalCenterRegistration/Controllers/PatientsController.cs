@@ -241,54 +241,6 @@ namespace MedicalCenterRegistration.Controllers
             return View(patient);
         }
 
-        // GET: Patients/Delete/5
-        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var patient = await _context.Patient
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (patient == null)
-                return NotFound();
-
-
-            if (User.IsInRole("Patient"))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (patient.UserId != userId)
-                    return Forbid();
-            }
-
-            return View(patient);
-        }
-
-        // POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var patient = await _context.Patient.FindAsync(id);
-            if (patient == null)
-                return NotFound();
-
-
-            if (User.IsInRole("Patient"))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (patient.UserId != userId)
-                    return Forbid();
-            }
-
-            _context.Patient.Remove(patient);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
         private bool PatientExists(int id)
         {
             return _context.Patient.Any(e => e.Id == id);
