@@ -59,10 +59,9 @@ else
                         @switch (item.Status)
                         {
                             case Status.Pending:
-                                @{
-                                    var visitDateTime = item.VisitSchedule.VisitDate.ToDateTime(item.VisitSchedule.VisitTimeStart);
-                                    var canCreateSummary = DateTime.Now >= visitDateTime;
-                                }
+                                var visitDateTime = item.VisitSchedule.VisitDate.ToDateTime(item.VisitSchedule.VisitTimeStart);
+                                var canCreateSummary = DateTime.Now >= visitDateTime;
+                                
                                 @if (canCreateSummary)
                                 {
                                     <a class="btn btn-outline-success btn-xs" asp-controller="VisitSummaries" asp-action="Create" asp-route-visitId="@item.Id">Podsumuj wizytę</a>
