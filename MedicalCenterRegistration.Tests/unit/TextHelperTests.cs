@@ -1,5 +1,4 @@
 using MedicalCenterRegistration.Helpers;
-using Xunit;
 
 namespace MedicalCenterRegistration.Tests
 {
@@ -14,7 +13,7 @@ namespace MedicalCenterRegistration.Tests
         [InlineData(11, "wizyta", "wizyty", "wizyt", "wizyt")]
         [InlineData(12, "wizyta", "wizyty", "wizyt", "wizyt")]
         [InlineData(13, "wizyta", "wizyty", "wizyt", "wizyt")]
-  
+
         public void Pluralize_ReturnsCorrectForm(int value, string singular, string few, string many, string expected)
         {
             // act

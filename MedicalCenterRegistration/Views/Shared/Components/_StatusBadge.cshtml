@@ -6,4 +6,9 @@
     var status = Model;
     var statusColor = status == Status.Pending ? "bg-success" : "bg-black";
  }
-<span class="badge rounded-pill @statusColor mt-1 mt-sm-0 px-4">@EnumHelper.GetDisplayName(status)</span>
+<span class="badge rounded-pill @statusColor mt-1 mt-sm-0 px-4">
+    @EnumHelper.GetDisplayName(status)
+</span>
+
+
+
