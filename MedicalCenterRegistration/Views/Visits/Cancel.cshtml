@@ -1,0 +1,48 @@
+@model MedicalCenterRegistration.Models.Visit
+
+@{
+    ViewData["Title"] = "Anuluj wizytę";
+}
+
+<h1>Anuluj wizytę</h1>
+
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle me-2"></i>
+    Czy na pewno chcesz anulować tę wizytę? Ta operacja jest nieodwracalna.
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Szczegóły wizyty</h5>
+        <dl class="row">
+            <dt class="col-sm-3">Pacjent</dt>
+            <dd class="col-sm-9">@Model.Patient.Name @Model.Patient.LastName</dd>
+
+            <dt class="col-sm-3">Lekarz</dt>
+            <dd class="col-sm-9">@Model.Doctor.Name @Model.Doctor.LastName</dd>
+
+            <dt class="col-sm-3">Data wizyty</dt>
+            <dd class="col-sm-9">@Model.VisitSchedule.VisitDate</dd>
+
+            <dt class="col-sm-3">Godziny wizyty</dt>
+            <dd class="col-sm-9">@Model.VisitSchedule.VisitTimeStart.ToString("HH:mm") - @Model.VisitSchedule.VisitTimeEnd.ToString("HH:mm")</dd>
+
+            <dt class="col-sm-3">Typ wizyty</dt>
+            <dd class="col-sm-9">@Model.VisitType</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <form asp-action="Cancel" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-x-circle me-1"></i>
+            Anuluj wizytę
+        </button>
+        <a asp-action="Index" class="btn btn-secondary ms-2">
+            <i class="bi bi-arrow-left me-1"></i>
+            Powrót
+        </a>
+    </form>
+</div>

@@ -14,6 +14,7 @@
             <th>Godziny wizyty</th>
             <th>Typ wizyty</th>
             <th>Status wizyty</th>
+            <th>Akcje</th>
         </tr>
     </thead>
     <tbody>
@@ -46,6 +47,17 @@
                          const statusColor = statusColors[data] || "bg-secondary";
 
                         return `<span class="badge ${statusColor}">${data}</span>`;
+                    }
+                },
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
+                    render: function (data, type, row) {
+                        if (row.isCancellable) {
+                            return `<a href="@Url.Action("Cancel", "Visits")/${row.id}" class="btn btn-sm btn-outline-danger">Anuluj</a>`;
+                        }
+                        return '';
                     }
                 },
             ]

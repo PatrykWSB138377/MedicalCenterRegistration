@@ -29,6 +29,8 @@
                 doctorAge--;
             }
 
+            var visitDateTime = item.VisitSchedule.VisitDate.ToDateTime(item.VisitSchedule.VisitTimeStart);
+            var isCancellable = item.Status == Status.Pending && visitDateTime > DateTime.Now;
 
 
             // Desktop view
@@ -71,10 +73,16 @@
                 </div>
 
                 <div class="col d-flex justify-content-xl-end mt-4 mt-xl-0">
-                    <div class="d-flex flex-column justify-content-center">
+                    <div class="d-flex flex-column justify-content-center gap-2">
                         <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
                             Szczegóły
                         </a>
+                        @if (isCancellable)
+                        {
+                            <a asp-action="Cancel" asp-route-id="@item.Id" class="btn btn-outline-danger text-nowrap">
+                                Anuluj
+                            </a>
+                        }
                     </div>
                 </div>
             </div>
@@ -115,10 +123,16 @@
                     </div>
 
                     <div class="d-xl-none mt-4 mt-sm-0">
-                        <div class="d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-column justify-content-center gap-2">
                             <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary text-nowrap">
                                 Szczegóły
                             </a>
+                            @if (isCancellable)
+                            {
+                                <a asp-action="Cancel" asp-route-id="@item.Id" class="btn btn-outline-danger text-nowrap">
+                                    Anuluj
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

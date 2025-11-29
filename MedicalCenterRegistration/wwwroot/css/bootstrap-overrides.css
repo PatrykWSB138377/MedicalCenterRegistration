@@ -12,12 +12,10 @@
     border: 0px !important;
     border-radius: var(--card-border-radius) !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-    background-color: var(--color-secondary-dark);
 }
 
 .card-body {
     padding: 24px;
-    color: white;
 }
 
 @media (min-width: 992px) {
@@ -136,6 +134,7 @@
 
 .navbar__sections {
     margin-top: 12px;
+    flex-wrap: wrap;
 }
 
 

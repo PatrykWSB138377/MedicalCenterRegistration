@@ -8,6 +8,7 @@ using MedicalCenterRegistration.Data;
 using MedicalCenterRegistration.Enums;
 using MedicalCenterRegistration.Models;
 using MedicalCenterRegistration.Models.ViewModels.Visits;
+using MedicalCenterRegistration.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ namespace MedicalCenterRegistration.Tests.Integration
         private readonly ApplicationDbContext _context;
         private readonly VisitsController _controller;
         private readonly PatientService _patientService;
+        private readonly VisitsService _visitsService;
         private readonly Mock<ILogger<VisitsController>> _loggerMock;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -43,11 +45,12 @@ namespace MedicalCenterRegistration.Tests.Integration
             _userManager = new Mock<UserManager<IdentityUser>>(
                 userStoreMock.Object, null, null, null, null, null, null, null, null).Object;
 
-            // patient service setup
+            // services setup
             _patientService = new PatientService(_context, _userManager);
+            _visitsService = new VisitsService(_context, _userManager);
 
             // controller setup
-            _controller = new VisitsController(_context, _patientService, _loggerMock.Object);
+            _controller = new VisitsController(_context, _patientService, _visitsService, _loggerMock.Object);
 
             // temp data setup
             var tempData = new TempDataDictionary(
@@ -624,6 +627,100 @@ namespace MedicalCenterRegistration.Tests.Integration
             Assert.NotNull(newVisit.Doctor);
             Assert.Equal("Anna", newVisit.Doctor.Name);
             Assert.Equal("Nowak", newVisit.Doctor.LastName);
+        }
+
+        [Fact]
+        public async Task Cancel_AsPatient_WithOwnFutureVisit_ReturnsView()
+        {
+            // arrange
+            SetupControllerWithUser("patient-user-1", Roles.Patient);
+
+            // act
+            var result = await _controller.Cancel(1);
+
+            // assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Visit>(viewResult.Model);
+            Assert.Equal(1, model.Id);
+            Assert.Equal(Status.Pending, model.Status);
+        }
+
+        [Fact]
+        public async Task Cancel_AsReceptionist_WithAnyFutureVisit_ReturnsView()
+        {
+            // arrange
+            SetupControllerWithUser("receptionist-user-1", Roles.Receptionist);
+
+            // act
+            var result = await _controller.Cancel(1);
+
+            // assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<Visit>(viewResult.Model);
+            Assert.Equal(1, model.Id);
+        }
+
+
+        [Fact]
+        public async Task Cancel_WithAlreadyCancelledVisit_RedirectsWithError()
+        {
+            // arrange
+            SetupControllerWithUser("patient-user-1", Roles.Patient);
+            
+            // update visit status to Cancelled
+            var visit = await _context.Visit.FindAsync(1);
+            visit!.Status = Status.Cancelled;
+            await _context.SaveChangesAsync();
+
+            // act
+            var result = await _controller.Cancel(1);
+
+            // assert
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectResult.ActionName);
+            Assert.Equal("Tylko zaplanowane wizyty, które jeszcze się nie rozpoczęły, mogą być anulowane.", _controller.TempData["Error"]);
+        }
+
+        [Fact]
+        public async Task Cancel_WithPastVisit_RedirectsWithError()
+        {
+            // arrange
+            SetupControllerWithUser("patient-user-1", Roles.Patient);
+            
+            // update visit schedule to past date
+            var schedule = await _context.VisitSchedule.FindAsync(1);
+            schedule!.VisitDate = DateOnly.FromDateTime(DateTime.Now.AddDays(-1));
+            await _context.SaveChangesAsync();
+
+            // act
+            var result = await _controller.Cancel(1);
+
+            // assert
+            var redirectResult = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("Index", redirectResult.ActionName);
+            Assert.Equal("Tylko zaplanowane wizyty, które jeszcze się nie rozpoczęły, mogą być anulowane.", _controller.TempData["Error"]);
+        }
+
+
+        [Fact]
+        public async Task CancelConfirmed_ChangesStatusToCancelled()
+        {
+            // arrange
+            SetupControllerWithUser("patient-user-1", Roles.Patient);
+            
+            var visit = await _context.Visit.Include(v => v.VisitSchedule).FirstAsync(v => v.Id == 1);
+            visit.Status = Status.Pending;
+            visit.VisitSchedule.VisitDate = DateOnly.FromDateTime(DateTime.Now.AddDays(7));
+            await _context.SaveChangesAsync();
+            
+            _context.ChangeTracker.Clear();
+
+            // act
+            await _controller.CancelConfirmed(1);
+
+            // assert 
+            var updatedVisit = await _context.Visit.AsNoTracking().FirstAsync(v => v.Id == 1);
+            Assert.Equal(Status.Cancelled, updatedVisit.Status);
         }
 
         // cleans up the in-memory database after each test

@@ -207,41 +207,6 @@ namespace MedicalCenterRegistration.Controllers
             return View(doctor);
         }
 
-        // GET: Doctors/Delete/5
-        [Authorize(Roles = Roles.Admin)]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var doctor = await _context.Doctor
-                .Include(d => d.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (doctor == null)
-            {
-                return NotFound();
-            }
-
-            return View(doctor);
-        }
-
-        // POST: Doctors/Delete/5
-        [Authorize(Roles = "Admin")]
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var doctor = await _context.Doctor.FindAsync(id);
-            if (doctor != null)
-            {
-                _context.Doctor.Remove(doctor);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool DoctorExists(int id)
         {

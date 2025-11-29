@@ -165,7 +165,7 @@ namespace MedicalCenterRegistration.Controllers
 
             ViewData["ReturnUrl"] = returnUrl;
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
-            return RedirectToAction("Index", "Home");
+            return View(patient);
         }
 
         // GET: Patients/Edit/5
@@ -239,54 +239,6 @@ namespace MedicalCenterRegistration.Controllers
 
             ViewData["SexOptions"] = EnumHelper.GetSelectList<Sex>();
             return View(patient);
-        }
-
-        // GET: Patients/Delete/5
-        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var patient = await _context.Patient
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (patient == null)
-                return NotFound();
-
-
-            if (User.IsInRole("Patient"))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (patient.UserId != userId)
-                    return Forbid();
-            }
-
-            return View(patient);
-        }
-
-        // POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [Authorize(Roles = Roles.AdminAndReceptionistAndPatient)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var patient = await _context.Patient.FindAsync(id);
-            if (patient == null)
-                return NotFound();
-
-
-            if (User.IsInRole("Patient"))
-            {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (patient.UserId != userId)
-                    return Forbid();
-            }
-
-            _context.Patient.Remove(patient);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool PatientExists(int id)
