@@ -13,8 +13,10 @@ namespace MedicalCenterRegistration.Seeders
             var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            string adminEmail = "admin@wp.pl";
-            string adminPassword = "Admin123!"; // Make sure to use strong password in production
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+            string adminEmail = configuration["AdminCredentials:Email"];
+            string adminPassword = configuration["AdminCredentials:Password"];
             string adminRole = Roles.Admin;
 
             // Create role if it doesn't exist

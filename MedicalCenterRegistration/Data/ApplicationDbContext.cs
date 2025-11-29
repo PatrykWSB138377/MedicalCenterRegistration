@@ -83,5 +83,42 @@ namespace MedicalCenterRegistration.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+
+
+        public override int SaveChanges()
+        {
+            ConvertDatesToUtc();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ConvertDatesToUtc();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void ConvertDatesToUtc()
+        {
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                foreach (var property in entry.Properties)
+                {
+                    if (property.Metadata.ClrType == typeof(DateTime) &&
+                        property.CurrentValue != null)
+                    {
+                        var date = (DateTime)property.CurrentValue;
+
+                        if (date.Kind == DateTimeKind.Local)
+                        {
+                            property.CurrentValue = date.ToUniversalTime();
+                        }
+                        else if (date.Kind == DateTimeKind.Unspecified)
+                        {
+                            property.CurrentValue = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
