@@ -5,11 +5,13 @@ namespace MedicalCenterRegistration.Models.ViewModels.Visits
 {
     public class AdminReceptionistVisitViewModel
     {
+        public int Id { get; set; }
         public string Patient { get; set; }
         public string Doctor { get; set; }
         public DateOnly Date { get; set; }
         public string Time { get; set; }
         public string VisitType { get; set; }
         public string VisitStatus { get; set; }
+        public bool IsCancellable { get; set; }
     }
 }

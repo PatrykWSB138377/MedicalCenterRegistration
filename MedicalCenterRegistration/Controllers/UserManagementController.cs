@@ -159,7 +159,6 @@ namespace MedicalCenterRegistration.Controllers
                     Id = user.Id,
                     Email = user.Email,
                     Role = userRole,
-                    CreatedAt = DateTime.MinValue
                 });
             }
 

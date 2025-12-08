@@ -11,5 +11,7 @@ namespace MedicalCenterRegistration.Enums
         Pending,
         [Display(Name = "Zakończona")]
         Finished,
+        [Display(Name = "Anulowana")]
+        Cancelled,
     }
 }
